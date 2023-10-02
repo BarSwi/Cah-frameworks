@@ -1,4 +1,6 @@
-import Home from '../views/Home.vue'
+// Async route loading -> Performance improvement
+const Home = () => import('../views/Home.vue');
+
 import { createRouter, createWebHistory } from 'vue-router'
 
 const router = createRouter({

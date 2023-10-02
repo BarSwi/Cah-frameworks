@@ -13,7 +13,10 @@
 import {changeTheme} from '../js/methods'
 export default{
     mounted(){
-        document.querySelector("body").setAttribute("data-theme","dark")
+        const hook = document.querySelector("body");
+        hook.setAttribute("data-theme","dark");
+        hook.classList.add("dark");
+        
     },
     methods:
     {
