@@ -1,38 +1,29 @@
-[data-theme="light"]{
-    --background-login-form-color: black;
-    --background-image: linear-gradient(to right, #8ec0c2,  #87b99c);
+:root {
+    --dark-background-image: linear-gradient(to right, #040b16, #1e0425);
+    --light-background-image: linear-gradient(to right, #8ec0c2, #87b99c);
 }
-[data-theme="dark"]{
-    --background-image: linear-gradient(to right, #040b16,  #1e0425);
-    --background-login-form-color: black;
-}
-body{
-    // background-image: var(--background-image);
-    &:before{
-        opacity: 0;
-        inset: 0;
-        z-index: -1;
-        position: absolute;
-        content: '';
-    }
-    &.light:before{
-        transition: opacity 5s;
-        background-image: var(--background-image);
-        opacity: 1;
-        
-    }
-    &.dark:before{
-        transition: opacity 5s;
-        background-image: var(--background-image);
-        opacity: 1;
-    }
-}
-a
-{
-    &:link, &:visited{
-        outline: none;
-        text-decoration: none;
-        color: white;
-    }
 
+[data-theme="light"] {
+    --dark-opacity: 1;
+}
+
+[data-theme="dark"] {
+    --background-login-form-color: black;
+    --dark-opacity: 0;
+}
+
+body {
+    margin: 0;
+    background-image: var(--dark-background-image);
+
+    &:before {
+        content: "";
+        inset: 0;
+        position: absolute;
+        z-index: -1;
+
+        transition: opacity 0.5s;
+        background-image: var(--light-background-image);
+        opacity: var(--dark-opacity);
+    }
 }
