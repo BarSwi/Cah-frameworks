@@ -1,0 +1,20 @@
+body[data-theme="light"]{
+    --background-login-form-color: black;
+    background-image: linear-gradient(to right, #8ec0c2, #8ac0b6, #8ebfa7, #99bd97, #87b99c);
+    
+}
+body[data-theme="dark"]{
+    background-image: linear-gradient(to right, #040b16, #0b051e, #120216, #110517, #1e0425);
+
+    --background-login-form-color: black;
+
+}
+a
+{
+    &:link, &:visited{
+        outline: none;
+        text-decoration: none;
+        color: white;
+    }
+
+}
