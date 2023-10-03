@@ -39,8 +39,8 @@
   cursor: pointer;
   display: inline-block;
   position: relative;
-  width: 90px;
-  height: 50px;
+  width: 80px;
+  height: 40px;
   background-color: #83D8FF;
   border-radius: 90px - 6;
   transition: background-color var(--transition-theme-method);
@@ -54,8 +54,8 @@
   z-index: 1;
   top: 3px;
   left: 3px;
-  width: 50px - 6;
-  height: 50px - 6;
+  width: 40px - 6;
+  height: 40px - 6;
   background-color: #FFCF96;
   border-radius: 50px;
   transition: all var(--transition-theme-method);
@@ -111,26 +111,26 @@
 
 .star--1 {
   top: 14px;
-  left: 42px;
+  left: 35px;
   z-index: 1;
-  width: 20px;
-  height: 20px;
+  width: 15px;
+  height: 15px;
 }
 
 .star--2 {
   top: 15px;
-  left: 30px;
+  left: 23px;
   z-index: 1;
-  width: 20px;
-  height: 17px;
+  width: 15px;
+  height: 12px;
 }
 
 .star--3 {
   top: 20px;
-  left: 26px;
+  left: 19px;
   z-index: 1;
-  width: 40px;
-  height: 20px;
+  width: 35px;
+  height: 15px;
 }
 .star--4,
 .star--5,
@@ -189,12 +189,14 @@ input:checked {
     }
     
     .star--1 {
+      top: 10px;
       left: 30px;
       width: 2px;
       height: 2px;
     }
     
     .star--2 {
+      top: 13px;
       left: 23px;
       width: 4px;
       height: 4px;
@@ -202,7 +204,7 @@ input:checked {
     }
     
     .star--3 {
-      top: 27px;
+      top: 24px;
       left: 39px;
       width: 2px;
       height: 2px;
@@ -216,12 +218,15 @@ input:checked {
       transform: translateX(0);
     }
     .star--4 {
+      top: 17px;
       transition: all var(--transition-theme-method);
     }
     .star--5 {
+      top: 24px;
       transition: all  var(--transition-theme-method);
     }
     .star--6 {
+      top: 30px;
       transition: all  var(--transition-theme-method);
     }
   }
