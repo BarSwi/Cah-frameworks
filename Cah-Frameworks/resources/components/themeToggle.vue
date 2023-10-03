@@ -30,6 +30,9 @@
     margin: 0;
     opacity: 0;
   }
+  &:hover .toggle__handler{
+    transform: translateX(3px) rotate(20deg);
+  }
 }
 
 .toggle {
@@ -175,12 +178,15 @@ input:checked {
     &:after {
       color: #ffffff;
     }
-    
+    &:hover .toggle__handler{
+        transform: translateX(37px) rotate(-20deg);
+    } 
     .toggle__handler {
       background-color: #FFE5B5;
       transform: translateX(40px) rotate(0);
   
       .crater { opacity: 1; }
+
     }
     
     .star--1 {

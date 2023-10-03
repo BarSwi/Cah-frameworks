@@ -36,6 +36,6 @@ export default{
     {
         topNavbar,
         gameSelection,
-    }
+    },
 }
 </script>

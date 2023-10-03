@@ -20,6 +20,20 @@
             width: 20%;
             min-width: max-content;
             padding: 10px;
+            // &.test{
+            //     position: fixed;
+            // }
         }
     }
 </style>
+<script>
+
+export default{
+    methods:{
+        // onEvent(e){
+        //         e.target.classList.toggle('test');
+        // }
+    }
+}
+
+</script>
