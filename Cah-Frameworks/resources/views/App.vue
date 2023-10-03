@@ -1,6 +1,4 @@
 <template>
-    <a href = "/" >test</a>
-    <button @click="changeTheme()">Change theme</button>
     <router-view />
 </template>
 
@@ -10,7 +8,7 @@
 
 
 <script>
-import {changeTheme} from '../js/methods'
+
 export default{
     mounted(){
         const hook = document.querySelector("body");
@@ -18,10 +16,7 @@ export default{
         hook.classList.add("dark");
         
     },
-    methods:
-    {
-        changeTheme,
-    }
+
     
 }
 </script>

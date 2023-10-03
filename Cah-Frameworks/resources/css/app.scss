@@ -1,20 +1,24 @@
 :root {
-    --dark-background-image: linear-gradient(to right, #040b16, #1e0425);
+    --dark-background-image: linear-gradient(to right, #040b16, #0d0111);
     --light-background-image: linear-gradient(to right, #8ec0c2, #87b99c);
+    --transition-theme-method: 200ms cubic-bezier(0.445, 0.05, 0.55, 0.95);
 }
 
 [data-theme="light"] {
-    --dark-opacity: 1;
+    --light-opacity: 1;
+    --navbar-background-gradient: #87b99c;
 }
 
 [data-theme="dark"] {
     --background-login-form-color: black;
-    --dark-opacity: 0;
+    --light-opacity: 0;
+    --navbar-background-color: #1c0922;
+    --theme-toggler-background-color: #060e2c;
 }
-
 body {
     margin: 0;
     background-image: var(--dark-background-image);
+    
 
     &:before {
         content: "";
@@ -22,8 +26,16 @@ body {
         position: absolute;
         z-index: -1;
 
-        transition: opacity 0.5s;
+        transition: opacity var(--transition-theme-method);
         background-image: var(--light-background-image);
-        opacity: var(--dark-opacity);
+        opacity: var(--light-opacity);
+    }
+}
+
+a{
+    &:link, &:visited{
+        text-decoration: none;
+        outline: none;
+        color: white;
     }
 }
