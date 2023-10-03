@@ -110,29 +110,28 @@
 }
 
 .star--1 {
-  top: 10px;
-  left: 35px;
-  z-index: 0;
-  width: 30px;
-  height: 4px;
+  top: 14px;
+  left: 42px;
+  z-index: 1;
+  width: 20px;
+  height: 20px;
 }
 
 .star--2 {
-  top: 18px;
-  left: 28px;
+  top: 15px;
+  left: 30px;
   z-index: 1;
-  width: 30px;
-  height: 5px;
+  width: 20px;
+  height: 17px;
 }
 
 .star--3 {
-  top: 27px;
-  left: 40px;
-  z-index: 0;
-  width: 30px;
-  height: 6px;
+  top: 20px;
+  left: 26px;
+  z-index: 1;
+  width: 40px;
+  height: 20px;
 }
-    
 .star--4,
 .star--5,
 .star--6 {
@@ -190,17 +189,21 @@ input:checked {
     }
     
     .star--1 {
+      left: 30px;
       width: 2px;
       height: 2px;
     }
     
     .star--2 {
+      left: 23px;
       width: 4px;
       height: 4px;
       transform: translateX(-5px);
     }
     
     .star--3 {
+      top: 27px;
+      left: 39px;
       width: 2px;
       height: 2px;
       transform: translateX(-7px);
