@@ -6,6 +6,7 @@
 </template>
 
 <style lang = "scss">
+    @import '../css/mixins.scss';
     #top-navbar{
         justify-content: space-between;
         align-items: center;
@@ -13,10 +14,9 @@
         position: sticky;
         display: flex;
         top: 0;
-        background-color: #0b0b16;
+        background-color: var(--navbar-background-color);
         height: clamp(100px, 100px, 200px);
-        border-bottom: 1px solid purple;
-        
+        @include bottom-shadow-creator(0,6,5,-5, var(--navbar-shadow-color), moz webkit)
     }
 
 </style>

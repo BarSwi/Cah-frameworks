@@ -5,19 +5,30 @@
 }
 
 [data-theme="light"] {
+    color: black;
     --light-opacity: 1;
-    --navbar-background-gradient: #87b99c;
+    --navbar-background-color: #51a291;
 }
 
 [data-theme="dark"] {
+    color: white;
+    --base-dark-purple: rgb(73, 14, 68);
     --background-login-form-color: black;
     --light-opacity: 0;
-    --navbar-background-color: #1c0922;
+    --navbar-background-color: #0b0b16;
+    --navbar-shadow-color: rgb(73, 14, 68);
     --theme-toggler-background-color: #060e2c;
+}
+html{
+    min-height: 100%;
+    overflow: auto;
+
 }
 body {
     margin: 0;
     background-image: var(--dark-background-image);
+    position: relative;
+    min-height: 100vh;
     
 
     &:before {

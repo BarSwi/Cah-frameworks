@@ -111,7 +111,7 @@
   left: 35px;
   z-index: 0;
   width: 30px;
-  height: 3px;
+  height: 4px;
 }
 
 .star--2 {
@@ -119,7 +119,7 @@
   left: 28px;
   z-index: 1;
   width: 30px;
-  height: 3px;
+  height: 5px;
 }
 
 .star--3 {
@@ -127,7 +127,7 @@
   left: 40px;
   z-index: 0;
   width: 30px;
-  height: 3px;
+  height: 6px;
 }
     
 .star--4,
@@ -143,7 +143,7 @@
   z-index: 0;
   width: 2px;
   height: 2px;
-  transform: translate3d(3px,0,0);
+  transform: translateX(3px);
 }
 
 .star--5 {
@@ -152,7 +152,7 @@
   z-index: 0;
   width: 3px;
   height: 3px;
-  transform: translate3d(3px,0,0);
+  transform: translateX(3px);
 }
 
 .star--6 {
@@ -161,12 +161,12 @@
   z-index: 0;
   width: 2px;
   height: 2px;
-  transform: translate3d(3px,0,0);
+  transform: translateX(3px);
 }
 
 input:checked {
   + .toggle {
-    background-color: var(--theme-toggler-background-color);
+    background-color: #03152e;
   
     &:before {
       color: #749ED7;
@@ -178,7 +178,7 @@ input:checked {
     
     .toggle__handler {
       background-color: #FFE5B5;
-      transform: translate3d(40px, 0, 0) rotate(0);
+      transform: translateX(40px) rotate(0);
   
       .crater { opacity: 1; }
     }
@@ -191,20 +191,20 @@ input:checked {
     .star--2 {
       width: 4px;
       height: 4px;
-      transform: translate3d(-5px, 0, 0);
+      transform: translateX(-5px);
     }
     
     .star--3 {
       width: 2px;
       height: 2px;
-      transform: translate3d(-7px, 0, 0);
+      transform: translateX(-7px);
     }
     
     .star--4,
     .star--5,
     .star--6 {
       opacity: 1;
-      transform: translate3d(0,0,0);
+      transform: translateX(0);
     }
     .star--4 {
       transition: all var(--transition-theme-method);

@@ -1,0 +1,6 @@
+@mixin bottom-shadow-creator($horizontal, $vertical, $blur, $spread, $color, $prefixes: ()) {
+    @each $prefix in $prefixes {
+      #{'-' + $prefix + '-' + 'box-shadow'}: $horizontal $vertical $blur $spread $color;
+    }
+    box-shadow: #{$horizontal}px #{$vertical}px  #{$blur}px  #{$spread}px  $color;
+}
