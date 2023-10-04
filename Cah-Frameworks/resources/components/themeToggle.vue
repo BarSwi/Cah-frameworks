@@ -7,12 +7,12 @@
       <span class="crater crater--2"></span>
       <span class="crater crater--3"></span>
     </span>
+    <span class="cloud"></span>
+    <span class="cloud cloud--2"></span>
     <span class="star star--1"></span>
     <span class="star star--2"></span>
     <span class="star star--3"></span>
     <span class="star star--4"></span>
-    <span class="star star--5"></span>
-    <span class="star star--6"></span>
   </label>
 </div>
 </template>
@@ -31,7 +31,10 @@
     opacity: 0;
   }
   &:hover .toggle__handler{
-    transform: translateX(3px) rotate(20deg);
+    transform: translateX(2px) rotate(20deg);
+  }
+  &:hover .cloud{
+    transform: translateX(2px);
   }
 }
 
@@ -39,8 +42,8 @@
   cursor: pointer;
   display: inline-block;
   position: relative;
-  width: 80px;
-  height: 40px;
+  width: 60px;
+  height: 25px;
   background-color: #83D8FF;
   border-radius: 90px - 6;
   transition: background-color var(--transition-theme-method);
@@ -53,9 +56,9 @@
   position: relative;
   z-index: 1;
   top: 3px;
-  left: 3px;
-  width: 40px - 6;
-  height: 40px - 6;
+  left: 2px;
+  width: 20px;
+  height: 20px;
   background-color: #FFCF96;
   border-radius: 50px;
   transition: all var(--transition-theme-method);
@@ -74,31 +77,66 @@
   }
   .crater {
     position: absolute;
-    background-color: #E8CDA5;
+    background-color: #977540;
     opacity: 0;
     transition: opacity var(--transition-theme-method);
     border-radius: 100%;
   }
+
   
   .crater--1 {
-    top: 18px;
-    left: 10px;
-    width: 4px;
-    height: 4px;
+    top: 5px;
+    left: 3px;
+    width: 2px;
+    height: 2px;
   }
   
   .crater--2 {
-    top: 28px;
-    left: 22px;
-    width: 6px;
-    height: 6px;
+    top: 12px;
+    left: 12px;
+    width: 4px;
+    height: 4px;
+  }
+  .crater--3 {
+    top: 5px;
+    left: 13px;
+    width: 3px;
+    height: 3px;
   }
   
-  .crater--3 {
-    top: 10px;
-    left: 25px;
-    width: 8px;
-    height: 8px;
+}
+.cloud{
+  --cloud-width: 18px;
+  --cloud-height:  6px;
+  position: absolute;
+  top: 15px;
+  left: 13px;
+  z-index: 1;
+  border-radius: calc(0.83*var(--cloud-height));
+  width: var(--cloud-width); 
+  height: var(--cloud-height);
+  background-color: white;
+  transition: all var(--transition-theme-method);
+  &:before, &:after{
+    content: '';
+    position: absolute;
+    background: #f2f9fe;
+  }
+  &:after{
+    width: calc(0.38*var(--cloud-width)); height: calc(0.85*var(--cloud-height));
+    top: -4px;
+    left: 2px;
+    border-radius: 50%;
+  }
+  &:before{
+    width: calc(0.51*var(--cloud-width)); height: calc(1.5*var(--cloud-height));
+    top: -5px;
+    left: 6px;
+    border-radius: 50%;
+  }
+  &.cloud--2{
+    left: 32px;
+    top: 6px;
   }
 }
 
@@ -108,63 +146,23 @@
   transition: all var(--transition-theme-method);
   border-radius: 50%;
 }
-
-.star--1 {
-  top: 14px;
-  left: 35px;
-  z-index: 1;
-  width: 15px;
-  height: 15px;
-}
-
-.star--2 {
-  top: 15px;
-  left: 23px;
-  z-index: 1;
-  width: 15px;
-  height: 12px;
-}
-
-.star--3 {
-  top: 20px;
-  left: 19px;
-  z-index: 1;
-  width: 35px;
-  height: 15px;
-}
-.star--4,
-.star--5,
-.star--6 {
+.star--1,
+.star--2,
+.star--3,
+.star--4 {
+  z-index: 0;
   opacity: 0;
-  transition: all var(var(--transition-theme-method));
+  transition: all var(--transition-theme-method);
+  transform: translateX(3px);
 }
 
 .star--4 {
   top: 16px;
   left: 11px;
-  z-index: 0;
   width: 2px;
   height: 2px;
-  transform: translateX(3px);
 }
 
-.star--5 {
-  top: 32px;
-  left: 17px;
-  z-index: 0;
-  width: 3px;
-  height: 3px;
-  transform: translateX(3px);
-}
-
-.star--6 {
-  top: 36px;
-  left: 28px;
-  z-index: 0;
-  width: 2px;
-  height: 2px;
-  transform: translateX(3px);
-}
 
 input:checked {
   + .toggle {
@@ -178,16 +176,19 @@ input:checked {
       color: #ffffff;
     }
     &:hover .toggle__handler{
-        transform: translateX(37px) rotate(-20deg);
+        transform: translateX(33px) rotate(-20deg);
     } 
     .toggle__handler {
       background-color: #FFE5B5;
-      transform: translateX(40px) rotate(0);
+      transform: translateX(35px) rotate(0);
   
       .crater { opacity: 1; }
 
     }
-    
+    .cloud{
+      transform: translateX(100%) !important;
+      opacity: 0;
+    }
     .star--1 {
       top: 10px;
       left: 30px;
@@ -196,43 +197,30 @@ input:checked {
     }
     
     .star--2 {
-      top: 13px;
+      top: 17px;
       left: 23px;
       width: 4px;
       height: 4px;
-      transform: translateX(-5px);
+
     }
     
     .star--3 {
-      top: 24px;
-      left: 39px;
+      top: 6px;
+      left: 16px;
       width: 2px;
       height: 2px;
-      transform: translateX(-7px);
     }
-    
-    .star--4,
-    .star--5,
-    .star--6 {
+
+    .star--1,
+    .star--2,
+    .star--3,
+    .star--4{
       opacity: 1;
-      transform: translateX(0);
-    }
-    .star--4 {
-      top: 17px;
-      transition: all var(--transition-theme-method);
-    }
-    .star--5 {
-      top: 24px;
-      transition: all  var(--transition-theme-method);
-    }
-    .star--6 {
-      top: 30px;
-      transition: all  var(--transition-theme-method);
     }
   }
 }
 
-
+  
 </style>
 
 <script>
