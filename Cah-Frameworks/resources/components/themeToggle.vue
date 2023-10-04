@@ -68,7 +68,7 @@
     position: absolute;
     inset: 0;
     content: '';
-    border: 2px solid black;
+    border: 2px solid rgb(0, 0, 0);
     height: 100%;
     width: 100%;
     filter: blur(5px);

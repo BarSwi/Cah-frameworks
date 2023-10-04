@@ -1,3 +1,4 @@
+
 <template>
     <top-navbar></top-navbar>
     <div id="container-home">
@@ -28,14 +29,21 @@
         }
     }
 </style>
+
 <script>
 import topNavbar from "../components/topNavbar.vue"
 import gameSelection from "../components/gameSelection.vue";
-export default{
-    components:
+export default {
+
+  data: function () {
+    return {
+    
+    }
+  },
+  components:
     {
         topNavbar,
         gameSelection,
     },
-}
+  }
 </script>
