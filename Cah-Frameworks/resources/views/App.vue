@@ -3,12 +3,11 @@
 </template>
 
 <style lang = scss>
-    @import "../css/app.scss"
+    @import "../css/app.scss";
 </style>
 
 
 <script>
-
 export default{
     mounted(){
         const hook = document.querySelector("body");

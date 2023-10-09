@@ -109,8 +109,8 @@
   --cloud-width: 18px;
   --cloud-height:  6px;
   position: absolute;
-  top: 15px;
-  left: 13px;
+  top: 15px; left: 13px;
+  transform: translateX(0);
   z-index: 1;
   border-radius: calc(0.83*var(--cloud-height));
   width: var(--cloud-width); 
@@ -135,6 +135,7 @@
     border-radius: 50%;
   }
   &.cloud--2{
+    transform: translateX(0);
     left: 32px;
     top: 6px;
   }

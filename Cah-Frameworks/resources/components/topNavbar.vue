@@ -1,7 +1,7 @@
 <template>
     <div id = "top-navbar">
         <theme-toggler></theme-toggler>
-        <div id="div">sda</div>
+        <div id="div"></div>
     </div>
 </template>
 
@@ -10,13 +10,15 @@
     #top-navbar{
         justify-content: space-between;
         align-items: center;
-        width: 100%;
+        z-index: 5;
+        max-width: 100%;
         position: sticky;
         display: flex;
         top: 0;
         background-color: var(--navbar-background-color);
-        height: clamp(100px, 100px, 200px);
-        @include bottom-shadow-creator(0,6,5,-5, var(--navbar-shadow-color), moz webkit)
+        height: 100px;
+        @include bottom-shadow-creator(0,6,5,-5, var(--navbar-shadow-color), moz webkit);
+        transition: all var(--transition-theme-method);
     }
 
 </style>
