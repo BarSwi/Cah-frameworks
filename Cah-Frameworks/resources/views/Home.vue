@@ -7,7 +7,7 @@
         </h1>
         <div id="login-guest-container">
             <button class = "login-button">
-                {{ lang.login }}
+                {{ lang['login'] }}
             </button>
             <button class = "guest-button">
                 Graj jako gość
@@ -30,10 +30,10 @@
         margin: 0 12.5%;
         text-align: center;
         h1{
-            margin: 50px 0 50px 0;
+            margin: 3.5rem 0 3.5rem 0;
         }
         h2{
-            margin: 50px 0 0 0;
+            margin: 2rem 0 0 0;
             padding: 0 0 30px 0;
         }
         #login-guest-container{
@@ -44,33 +44,36 @@
             // flex-direction: column;
             gap: 20px;
             button{
-                padding: 0 25px;
-                transition: transform .3s ease-out !important;
+                -webkit-box-shadow: inset 0px 0px 0.5em 0px var(--base-light-green),
+                0px 0px 0.5em 0px var(--base-light-green);
+                -moz-box-shadow: inset 0px 0px 0.5em 0px var(--base-light-green),
+                    0px 0px 0.5em 0px var(--base-light-green);
+                box-shadow: inset 0px 0px 0.5em 0px var(--base-light-green),
+                    0px 0px 0.5em 0px var(--base-light-green);
+                animation: button-flicker 1.5s linear infinite;
+                box-sizing: border-box;
+                padding: .25rem;
+                color: white;
+                transition: color .3s ease-out !important;
                 font-size: 1.5rem;
                 text-align: center;
                 border: none;
-                min-height: 120px;
-                width: 20vw;
-                min-width: 200px;
+                height: clamp(6rem, 125px, 125px);
+                width: clamp(15rem,20vw,20vw);
                 letter-spacing: 0.2em;
-                margin: 30px 20px;
                 border-radius: 30px;
+                margin: 2rem;
                 border: 4px solid #4EF73B;
                 background-color: transparent;
-                color: white;
                 outline: none;
+                transition: color 1s cubic-bezier(.64,.08,.34,1.41);
+                &:hover,:focus,:active{
+                    cursor: pointer;
+                    color: #4EF73B;
+                }
             }
             .login-button{
                 font-weight: 900;
-            }
-            .login-button, .guest-button{
-            -webkit-box-shadow: inset 0px 0px 0.5em 0px var(--base-light-green),
-            0px 0px 0.5em 0px var(--base-light-green);
-        -moz-box-shadow: inset 0px 0px 0.5em 0px var(--base-light-green),
-            0px 0px 0.5em 0px var(--base-light-green);
-        box-shadow: inset 0px 0px 0.5em 0px var(--base-light-green),
-            0px 0px 0.5em 0px var(--base-light-green);
-            animation: button-flicker 2s linear infinite;
             }
         }
         @keyframes button-flicker{
@@ -81,10 +84,10 @@
                 opacity: 0.85;
             }
             50% {
-                opacity: 0.8;
+                opacity: 0.75;
             }
             75% {
-                opacity: 0.9;
+                opacity: 0.85;
             }
             100% {
                 opacity: 1;
@@ -102,7 +105,7 @@ export default {
   data() {
     return {
         loaded: false,
-        lang: config.language,
+        // lang: config.language,
     }
   },
   components:
@@ -114,6 +117,11 @@ export default {
     },
     provide: {
         config: config
+    },
+    computed:{
+        lang(){
+            return config.language
+        }
     }
   }
 </script>

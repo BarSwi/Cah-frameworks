@@ -4,14 +4,15 @@ export const config = reactive({
     auth: false,
     nickname: String,
     language: Object,
-    currentLang: String
+    currentLang: String,
+
 });
 export function setLanguage(lang){
     config.currentLang = lang;
     config.language = languages[lang];
 }
 
-export const languages = {
+const languages = {
     PL: {
         myAccount: 'Moje konto',
         login: "Zaloguj się",
@@ -21,7 +22,7 @@ export const languages = {
     ENG: {
         myAccount: 'My account',
         login: "Sign in",
-        createGameButton: "Stwórz grę"
+        createGameButton: "Create Game"
 
     }
 }

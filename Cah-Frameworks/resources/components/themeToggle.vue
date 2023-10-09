@@ -234,7 +234,6 @@ export default{
     methods:
     {
         changeTheme(){
-            console.log(this.darkTheme)
             const hook = document.querySelector("body")
             if(!this.darkTheme){
                 hook.setAttribute("data-theme","dark")

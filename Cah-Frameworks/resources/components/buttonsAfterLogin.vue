@@ -1,7 +1,7 @@
 <template>
     <div class="selection-section">
         <div class="selection-section-container">
-            <button class="selection-home-button" id="create-game-btn">{{ lang.createGameButton }}</button>
+            <button class="selection-home-button" id="create-game-btn">{{ lang['createGameButton']}}</button>
             <button class="selection-home-button">test</button>
             <button class="selection-home-button">test</button>
             <button class="selection-home-button">test</button>
@@ -28,15 +28,14 @@
             align-items: center;
             flex-wrap: wrap;
             .selection-home-button{
+                outline: none;
+                border: none;
+                box-sizing: border-box;
                 font-size: 1.5rem;
                 margin: 25px;
                 min-height: 120px;
-                width: 20vw;
+                width: 25%;
                 min-width: 200px;
-            }
-            #create-game-btn{
-                background-color: red;
-                order: -1;
             }
         }
 
@@ -44,16 +43,24 @@
 </style>
 <script>
 import loginRequirment from '../components/loginRequirment.vue'
+// import {config} from '../js/store'
+import {setLanguage} from '../js/store'
 export default{
-    data(){
-        return{
-            lang: this.config.language
-        }
-    },
+    // data(){
+    //     return{
+    //     }
+    // },
     components:{
         loginRequirment,
     },
-    inject: ['config']
+    inject: ['config'],
+    methods:{
+    },
+    computed:{
+        lang(){
+            return this.config.language
+        }
+    }
 }
 
 </script>
