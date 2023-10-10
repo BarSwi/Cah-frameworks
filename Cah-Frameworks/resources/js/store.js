@@ -16,7 +16,10 @@ const languages = {
     PL: {
         myAccount: 'Moje konto',
         login: "Zaloguj się",
-        createGameButton: "Stwórz grę"
+        createGameButton: "Stwórz grę",
+        searchGameButton: "Wyszukaj Lobby",
+        createDeckButton: "Stwórz talię",
+        editDeckButton: "Edytuj talię",
 
     },
     ENG: {

@@ -21,13 +21,16 @@
     color: white;
     --base-dark-green: #0B6E4F;
     --base-light-green: #4EF73B;
+    --base-dark-green-2: #08A045;
+    --base-light-green-2: #6BBF59;
+    --base-light-brown: #DDB771;
     --background-login-form-color: black;
     --light-opacity: 0;
     --navbar-background-color: #0C0E0D;
     --navbar-shadow-color: var(--base-light-green);
     --theme-toggler-background-color: #060e2c;
-    --important-button-background-color: #08A045;
-    --less-important-button-background-color: #6BBF59;
+    // --important-button-background-color: #08A045;
+    // --less-important-button-background-color: #6BBF59;
     transition: color var(--transition-theme-method) !important;
 }
 html{

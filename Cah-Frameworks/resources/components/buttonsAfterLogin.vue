@@ -2,11 +2,11 @@
     <div class="selection-section">
         <div class="selection-section-container">
             <button class="selection-home-button" id="create-game-btn">{{ lang['createGameButton']}}</button>
-            <button class="selection-home-button">test</button>
-            <button class="selection-home-button">test</button>
-            <button class="selection-home-button">test</button>
+            <button class="selection-home-button">{{ lang['searchGameButton']}}</button>
+            <button class="selection-home-button">{{ lang['createDeckButton']}}</button>
+            <button class="selection-home-button">{{ lang['editDeckButton']}}</button>
         </div>
-        <login-requirment></login-requirment>
+        <login-requirment :unlock-potential="unlockPotential"></login-requirment>
     </div>
 </template>
 <style lang="scss">
@@ -14,28 +14,42 @@
         position: relative;
         margin-top: 100px;
         width: 100%;
+        opacity: .7;
         min-height: 300px;
 
 
         .selection-section-container{
-            opacity: 0.5;
             overflow: auto;
             display: flex;
-            background-color: red;
             width: 100%;
-            min-height: 100%;
+            height: 100%;
             justify-content: space-evenly;
             align-items: center;
             flex-wrap: wrap;
             .selection-home-button{
                 outline: none;
-                border: none;
                 box-sizing: border-box;
                 font-size: 1.5rem;
-                margin: 25px;
+                letter-spacing: 0.2em;
+                margin: 2rem;
                 min-height: 120px;
-                width: 25%;
+                width: calc(50% - 4rem);
                 min-width: 200px;
+                -webkit-box-shadow: inset 0px 0px 0.5em 0px var(--base-dark-green-2),
+                0px 0px 0.5em 0px var(--base-dark-green-2);
+                -moz-box-shadow: inset 0px 0px 0.5em 0px var(--base-dark-green-2),
+                    0px 0px 0.5em 0px var(--base-dark-green-2);
+                box-shadow: inset 0px 0px 0.5em 0px var(--base-dark-green-2),
+                    0px 0px 0.5em 0px var(--base-dark-green-2);
+                border-radius: 30px;
+                background-color: transparent;
+                border: 4px solid var(--base-dark-green-2);
+                color: white;
+                transition: color .3s cubic-bezier(.64,.08,.34,1.41);
+                &:hover,:focus,:active{
+                    cursor: pointer;
+                    color: var(--base-light-green-2);
+                }
             }
         }
 
@@ -60,7 +74,8 @@ export default{
         lang(){
             return this.config.language
         }
-    }
+    },
+    props: ['unlockPotential'],
 }
 
 </script>

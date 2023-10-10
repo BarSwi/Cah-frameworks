@@ -6,15 +6,15 @@
             Cards Against Hummanity
         </h1>
         <div id="login-guest-container">
-            <button class = "login-button">
+            <button @mouseover="this.unlockPotential= true" @mouseleave="this.unlockPotential= false" class = "login-button">
                 {{ lang['login'] }}
             </button>
-            <button class = "guest-button">
+            <button  @mouseover="this.unlockPotential= true" @mouseleave="this.unlockPotential= false" class = "guest-button">
                 Graj jako gość
             </button>
         </div>
         
-        <buttons-after-login/>
+        <buttons-after-login :unlock-potential="unlockPotential"/>
         <h2>
             opis
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi diam odio, egestas nec tortor non, posuere viverra justo. Mauris dui metus, pellentesque ut elementum eget, mollis ac sapien. Nunc ligula elit, rutrum quis augue a, consectetur cursus orci. Suspendisse potenti. Vivamus nunc diam, pharetra id pretium sed, lobortis ut ligula. Phasellus porta risus quis vestibulum ornare. Integer ac mauris rutrum, ullamcorper massa id, tempor lorem. Morbi malesuada nulla nec elit condimentum, eu egestas neque rhoncus.
@@ -54,22 +54,20 @@
                 box-sizing: border-box;
                 padding: .25rem;
                 color: white;
-                transition: color .3s ease-out !important;
+                transition: color .3s cubic-bezier(.64,.08,.34,1.41);
                 font-size: 1.5rem;
                 text-align: center;
-                border: none;
                 height: clamp(6rem, 125px, 125px);
                 width: clamp(15rem,20vw,20vw);
                 letter-spacing: 0.2em;
                 border-radius: 30px;
                 margin: 2rem;
-                border: 4px solid #4EF73B;
+                border: 4px solid var(--base-light-green);
                 background-color: transparent;
                 outline: none;
-                transition: color 1s cubic-bezier(.64,.08,.34,1.41);
                 &:hover,:focus,:active{
                     cursor: pointer;
-                    color: #4EF73B;
+                    color: var(--base-light-green);
                 }
             }
             .login-button{
@@ -105,7 +103,7 @@ export default {
   data() {
     return {
         loaded: false,
-        // lang: config.language,
+        unlockPotential: false
     }
   },
   components:
@@ -114,6 +112,9 @@ export default {
         buttonsAfterLogin,
     },
     methods:{
+        test(){
+            alert("test")
+        }
     },
     provide: {
         config: config
