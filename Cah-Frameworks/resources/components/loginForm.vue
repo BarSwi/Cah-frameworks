@@ -1,6 +1,6 @@
 <template>
 <div id="login-form-container" tabindex="0" @keydown.esc="$emit('loginFormOff')">
-    <div id="login-form">
+    <div v-if="!registerForm" id="login-form">
         <div id="login-form-title" >Logowanie</div>
         <div id="username-input-container">
             <input v-focus type="text" placeholder = ' ' id="username-input" name="username-input" class="username-form-input">
@@ -17,6 +17,7 @@
        <button type="submit" id="login-submit">
             Zaloguj się
        </button>
+       <span id="disclaimer">Naciśnij ESC aby opuścić</span>
     </div>
 </div>
 </template>
@@ -37,6 +38,8 @@
             outline: none;
         }
         #login-form{
+
+            transform-origin:center ;
             background-color: #222;
             //background-image: linear-gradient(to bottom, #222, rgb(0, 7, 1));
             min-height: 520px;
@@ -96,9 +99,13 @@
                     color: white;
                 }
                 button{
+                    font-size: 1rem;
                     outline: none;
                     background-color: transparent;
                     border: none;
+                    &:hover{
+                        cursor: pointer;
+                    }
                 }
             }
             #login-submit{
@@ -108,6 +115,7 @@
                 border-radius: 3px;
                 outline: none;
                 height: 50px;
+                transition: all .3s ease-out;
                 font-size: 1.5rem;
                 width: 75%;
                 margin: 3rem auto;
@@ -127,10 +135,18 @@
                     cursor: pointer;
                 }
                 &:hover,&:focus,&:active{
+                    transform: scale(1.03);
                     &:after{
                         opacity: 1;
                     }
                 }
+            }
+            #disclaimer{
+                display: block;
+                margin: 3rem auto;  
+                text-align: center;
+                opacity: .7;
+                width: 75%;
             }
         }
     }
@@ -140,6 +156,12 @@
 
 
 export default{
+    data(){
+        return{
+            registerForm: false,
+        }
+
+    },
     inject: ['config'],
     computed:{
         lang(){

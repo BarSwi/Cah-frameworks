@@ -15,6 +15,7 @@
         <!-- <Transition name = "bounce"> -->
             <div id="login-guest-container"  >
             <button 
+            :disabled="showLoginForm"
             @mouseover="unlockPotentialOn($event)" 
             @mouseleave="unlockPotentialOff($event)" 
             @focus="unlockPotentialOn($event)"
@@ -24,6 +25,7 @@
                 {{ lang['login'] }}
             </button>
             <button  
+            :disabled="showLoginForm"
             @mouseover="unlockPotentialOn($event)" 
             @mouseleave="unlockPotentialOff($event)" 
             @focus="unlockPotentialOn($event)"
