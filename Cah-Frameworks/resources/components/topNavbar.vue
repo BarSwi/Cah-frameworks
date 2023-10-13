@@ -1,5 +1,5 @@
 <template>
-    <div id = "top-navbar">
+    <div id = "top-navbar" :style="showLoginForm ? 'opacity: 0.3' : ' '">
         <theme-toggler></theme-toggler>
         <div id="div"></div>
     </div>
@@ -29,6 +29,7 @@ import themeToggler from "../components/themeToggle.vue";
 export default{
     components:{
         themeToggler,
-    }
+    },
+    props: ['showLoginForm']
 }
 </script>

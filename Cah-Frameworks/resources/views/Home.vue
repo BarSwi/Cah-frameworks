@@ -1,18 +1,37 @@
 
 <template>
-    <top-navbar></top-navbar>
-    <div id="container-home">
+    <nav>
+        <top-navbar :showLoginForm="showLoginForm"></top-navbar>
+    </nav>
+    <Transition name="bounce">
+        <login-form v-if="showLoginForm" @login-form-off="loginFormOff"></login-form>
+    </Transition>
+
+
+    <div id="container-home"  :style="showLoginForm ? 'opacity: 0.3' : ' '">
         <h1>
             Cards Against Hummanity
         </h1>
-        <div id="login-guest-container">
-            <button @mouseover="this.unlockPotential= true" @mouseleave="this.unlockPotential= false" class = "login-button">
+        <!-- <Transition name = "bounce"> -->
+            <div id="login-guest-container"  >
+            <button 
+            @mouseover="unlockPotentialOn($event)" 
+            @mouseleave="unlockPotentialOff($event)" 
+            @focus="unlockPotentialOn($event)"
+            @blur="unlockPotentialOff($event)"
+            @click ="loginFormOn()"
+            class = "login-button">
                 {{ lang['login'] }}
             </button>
-            <button  @mouseover="this.unlockPotential= true" @mouseleave="this.unlockPotential= false" class = "guest-button">
+            <button  
+            @mouseover="unlockPotentialOn($event)" 
+            @mouseleave="unlockPotentialOff($event)" 
+            @focus="unlockPotentialOn($event)"
+            @blur="unlockPotentialOff($event)" class = "guest-button">
                 Graj jako gość
             </button>
         </div>
+        <!-- </Transition> -->
         
         <buttons-after-login :unlock-potential="unlockPotential"/>
         <h2>
@@ -50,7 +69,7 @@
                     0px 0px 0.5em 0px var(--base-light-green);
                 box-shadow: inset 0px 0px 0.5em 0px var(--base-light-green),
                     0px 0px 0.5em 0px var(--base-light-green);
-                animation: button-flicker 1.5s linear infinite;
+                animation: button-clicker 1.5s linear infinite;
                 box-sizing: border-box;
                 padding: .25rem;
                 color: white;
@@ -65,7 +84,7 @@
                 border: 4px solid var(--base-light-green);
                 background-color: transparent;
                 outline: none;
-                &:hover,:focus,:active{
+                &:hover,&:focus,&:active{
                     cursor: pointer;
                     color: var(--base-light-green);
                 }
@@ -74,7 +93,7 @@
                 font-weight: 900;
             }
         }
-        @keyframes button-flicker{
+        @keyframes button-clicker{
             0% {
                 opacity: 0.95;
             }
@@ -90,30 +109,64 @@
             100% {
                 opacity: 1;
             }
+        }
     }
-}
+    .bounce-enter-active{
+        animation: bounce .6s;
+    }
+    .bounce-leave-active{
+        animation: bounce .6s reverse;
+    }
+    @keyframes bounce{
+        0%{
+            transform: translateY(-200%);
+        }
+        50%{
+            transform: translateY(10%);
+        }
+        100%{
+            transform: translateY(0);
+        }
+    }
 </style>
 
 <script>
 import topNavbar from "../components/topNavbar.vue"
 import buttonsAfterLogin from "../components/buttonsAfterLogin.vue";
+import loginForm from "../components/loginForm.vue"
 import {config} from '../js/store'
 export default {
 
   data() {
     return {
         loaded: false,
-        unlockPotential: false
+        unlockPotential: false,
+        showLoginForm: false,
     }
   },
   components:
     {
         topNavbar,
         buttonsAfterLogin,
+        loginForm,
     },
     methods:{
-        test(){
-            alert("test")
+        unlockPotentialOn(event){
+            this.showLoginForm ? event.target.blur() : this.unlockPotential=true
+        },
+        unlockPotentialOff(){
+            this.unlockPotential = false;
+        },
+        loginFormOn(){
+            const hook = document.querySelector('body');
+            hook.style.setProperty('overflow','hidden');
+            
+            this.showLoginForm=true
+        },
+        loginFormOff(){
+            const hook = document.querySelector('body');
+            hook.style.setProperty('overflow','auto');
+            this.showLoginForm=false;
         }
     },
     provide: {

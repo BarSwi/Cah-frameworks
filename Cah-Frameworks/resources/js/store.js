@@ -20,6 +20,8 @@ const languages = {
         searchGameButton: "Wyszukaj Lobby",
         createDeckButton: "Stwórz talię",
         editDeckButton: "Edytuj talię",
+        usernameInputPlaceholder: "Nazwa użytkownika",
+        passwordInputPlaceholder: "Hasło"
 
     },
     ENG: {
