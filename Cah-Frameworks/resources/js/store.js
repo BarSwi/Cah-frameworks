@@ -21,7 +21,9 @@ const languages = {
         createDeckButton: "Stwórz talię",
         editDeckButton: "Edytuj talię",
         usernameInputPlaceholder: "Nazwa użytkownika",
-        passwordInputPlaceholder: "Hasło"
+        passwordInputPlaceholder: "Hasło",
+        passwordRepeatInputPlaceholder: "Potwórz hasło",
+        emailInputPlaceholder: "E-mail (opcjonalnie)"
 
     },
     ENG: {

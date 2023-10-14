@@ -1,7 +1,7 @@
 <template>
 <div id="login-form-container" tabindex="0" @keydown.esc="$emit('loginFormOff')">
-    <div v-if="!registerForm" id="login-form">
-        <div id="login-form-title" >Logowanie</div>
+    <div id="login-form" ref="loginForm">
+        <div id="login-form-title" >{{ showRegisterForm ? 'Rejestracja' : 'Logowanie' }}</div>
         <div id="username-input-container">
             <input v-focus type="text" placeholder = ' ' id="username-input" name="username-input" class="username-form-input">
             <label for="username-input" class ='label' id = 'username-input-label'>{{lang['usernameInputPlaceholder']}}</label>
@@ -9,21 +9,41 @@
         <div id="password-input-container">
             <input type="password" placeholder = ' ' name="password-input" id="password-input" class="login-form-input">
             <label for="password-input" class = 'label' id = 'password-input-label' >{{lang['passwordInputPlaceholder']}}</label>
+        </div> 
+        <Transition name="float-right">
+            <div v-if="showRegisterForm" id="password-repeat-input-container">
+            <input type="password" placeholder = ' ' name="password-repeat-input" id="password-repeat-input" class="register-form-input">
+            <label for="password-repeat-input" class = 'label' id = 'password-repeat-input-label' >{{lang['passwordRepeatInputPlaceholder']}}</label>
         </div>
-        <div id="bottom-inputs-options">
-            <button class="login-form-lower-btn" id="forgot-password-btn">Zapomniałeś hasła?</button>
-            <button class="login-form-lower-btn" id="register-btn">Zarejestruj się  </button>
+        </Transition>
+        <Transition name = "float-left">
+            <div v-if="showRegisterForm" id="email-input-container">
+            <input type="text" placeholder = ' ' name="email-input" id="email-input" class="login-form-input">
+            <label for="email-input" class = 'label' id = 'email-input-label' >{{lang['emailInputPlaceholder']}}</label>
         </div>
-       <button type="submit" id="login-submit">
-            Zaloguj się
-       </button>
-       <span id="disclaimer">Naciśnij ESC aby opuścić</span>
+        </Transition>
+        <div id="login-form-bottom-container" ref="loginFormBottomContainer">
+            <div  id="bottom-inputs-options" :class="{register: showRegisterForm}">
+            <button v-if="!showRegisterForm" class="login-form-lower-btn" id="forgot-password-btn">Zapomniałeś hasła?</button>
+            <button v-show="!showRegisterForm" @click="showRegisterFormOn($event)" ref="showRegisterFormBtn" class="login-form-lower-btn" id="change-to-register-btn">Zarejestruj się  </button>
+            <button v-show="showRegisterForm" @click="showRegisterFormOff()" class="login-form-lower-btn" id="change-to-login-btn">Posiadasz już konto? Zaloguj się</button>
+            </div>
+            <button type="submit" id="login-submit">
+                    {{showRegisterForm ? 'Zarejestruj się' : 'Zaloguj się'}}
+            </button>
+            <span id="disclaimer">Naciśnij ESC aby opuścić</span>
+        </div>
+
     </div>
+
 </div>
 </template>
 
 <style lang = "scss">
     #login-form-container{
+        --change-form-transition: .3s ease-out;
+        --min-height: 520px;
+        --min-height-2: calc(520px + 12rem + 2em);
         width: 75%;
         inset: 0;
         opacity: 1 !important;
@@ -34,17 +54,22 @@
         justify-content: center;
         position: fixed;
         height: 100%;
+
         &:focus, &:active{
             outline: none;
         }
         #login-form{
-
+            overflow: hidden;
+            transition: all var(--change-form-transition);
             transform-origin:center ;
             background-color: #222;
             //background-image: linear-gradient(to bottom, #222, rgb(0, 7, 1));
-            min-height: 520px;
+            min-height: var(--min-height);
             width: 400px;   
             border-radius: 5px;
+            &.register-animation{
+                min-height: var(--min-height-2);
+            }
             input{
                 outline: none;
                 display: block;
@@ -65,7 +90,7 @@
                     }
                 }
             }
-            #username-input-container, #password-input-container{
+            #username-input-container, #password-input-container,#password-repeat-input-container,#email-input-container{
                 position: relative;
                 .label{
                     font-size: 1.2rem;
@@ -92,10 +117,13 @@
                 width: 75%;
                 justify-content: space-between;
                 align-items: center;
-                & #register-btn{
+                &.register{
+                    justify-content: center !important;
+                }
+                #change-to-register-btn, #change-to-login-btn{
                     color: var(--base-light-green);
                 }
-                & #forgot-password-btn{
+                #forgot-password-btn{
                     color: white;
                 }
                 button{
@@ -148,17 +176,63 @@
                 opacity: .7;
                 width: 75%;
             }
+            .float-left-enter-active{
+                animation: float-left .3s;
+            }
+            .float-left-leave-active{
+                animation: float-left .3s reverse;
+            }
+            .float-right-enter-active{
+                animation: float-right .3s;
+            }
+            .float-right-leave-active{
+                animation: float-right .3s reverse;
+            }
         }
+        #login-form-bottom-container{
+            &.register-animation{
+                transition: all var(--change-form-transition);
+                transform: translateY(calc(var(--min-height-2) - var(--min-height) - 30px));
+            }
+            &.login-animation{
+                animation: login-form-bottom var(--change-form-transition);
+            }
+        }
+
+        @keyframes float-right{
+            0%{
+                transform: translateX(100%)
+            }
+            100%{
+                transform: translateX(0);
+            }
+        }
+        @keyframes float-left{
+            0%{
+                transform: translateX(-100%)
+            }
+            100%{
+                transform: translateX(0);
+            }    
+        }
+        @keyframes login-form-bottom{
+            0%{
+                transform: translateY(calc(var(--min-height-2) - var(--min-height) - 30px));
+            }
+            100%{
+                transform: translateY(0);
+            }
+        }
+
     }
 </style>
 
 <script>
 
-
 export default{
     data(){
         return{
-            registerForm: false,
+            showRegisterForm: false,
         }
 
     },
@@ -169,8 +243,38 @@ export default{
         }
     },
     methods:{
+        showRegisterFormOn(e){
+            const loginForm = this.$refs.loginForm
+            const loginFormBottomContainer = this.$refs.loginFormBottomContainer
+            // if(loginFormBottomContainer.classList.contains('login-animation')) return;
+            e.target.disabled=true
+            loginForm.classList.add('register-animation');
+            loginFormBottomContainer.classList.add('register-animation')
+            setTimeout(()=>{
+                this.showRegisterForm=true;
+                // loginForm.classList.remove('register-animation')
+                loginFormBottomContainer.classList.remove('register-animation');
+                e.target.disabled = false
+            },300)
+        },
+        showRegisterFormOff(){
+            this.showRegisterForm=false;
+            const showRegisterFormBtn = this.$refs.showRegisterFormBtn
+            const loginForm = this.$refs.loginForm
+            const loginFormBottomContainer = this.$refs.loginFormBottomContainer
+            showRegisterFormBtn.disabled=true
 
-    },
+            setTimeout(()=>{
+
+                loginForm.classList.remove('register-animation'); 
+                loginFormBottomContainer.classList.add('login-animation'); 
+                setTimeout(()=>{
+                    loginFormBottomContainer.classList.remove('login-animation');
+                    showRegisterFormBtn.disabled=false
+                },300)
+            },300)
+        }
+    },  
     directives: {
 
         focus: (el)=> {{
