@@ -1,41 +1,50 @@
 <template>
 <div id="login-form-container" tabindex="0" @keydown.esc="$emit('loginFormOff')">
-    <div id="login-form" ref="loginForm">
+    <form>
+        <div id="login-form" ref="loginForm">
         <div id="login-form-title" >{{ showRegisterForm ? 'Rejestracja' : 'Logowanie' }}</div>
         <div id="username-input-container">
-            <input v-focus type="text" placeholder = ' ' id="username-input" name="username-input" class="username-form-input">
+            <input v-model="usernameValue" v-focus type="text" placeholder = ' ' id="username-input" name="username" class="username-form-input">
             <label for="username-input" class ='label' id = 'username-input-label'>{{lang['usernameInputPlaceholder']}}</label>
         </div>
+        <div v-if="showRegisterForm && usernameError" class="error-message" id="username-error">
+                {{ loginErrorMessage }}
+        </div>
         <div id="password-input-container">
-            <input type="password" placeholder = ' ' name="password-input" id="password-input" class="login-form-input">
+            <input v-model="passwordValue" type="password" placeholder = ' ' name="password" id="password-input" class="login-form-input">
             <label for="password-input" class = 'label' id = 'password-input-label' >{{lang['passwordInputPlaceholder']}}</label>
         </div> 
         <Transition name="float-right">
-            <div v-if="showRegisterForm" id="password-repeat-input-container">
-            <input type="password" placeholder = ' ' name="password-repeat-input" id="password-repeat-input" class="register-form-input">
+        <div v-if="showRegisterForm" id="password-repeat-input-container">
+            <input v-model="repeatPasswordValue" type="password" placeholder = ' ' name="password-repeat-input" id="password-repeat-input" class="register-form-input">
             <label for="password-repeat-input" class = 'label' id = 'password-repeat-input-label' >{{lang['passwordRepeatInputPlaceholder']}}</label>
         </div>
         </Transition>
+        <div v-if="showRegisterForm && repeatPasswordError" class="error-message" id="repeat-password-error">
+                {{ repeatPasswordErrorMessage }}
+        </div>
         <Transition name = "float-left">
-            <div v-if="showRegisterForm" id="email-input-container">
-            <input type="text" placeholder = ' ' name="email-input" id="email-input" class="login-form-input">
+        <div v-if="showRegisterForm" id="email-input-container">
+            <input v-model="emailValue" type="text" placeholder = ' ' name="email-input" id="email-input" class="login-form-input">
             <label for="email-input" class = 'label' id = 'email-input-label' >{{lang['emailInputPlaceholder']}}</label>
         </div>
         </Transition>
+        <div v-if="showRegisterForm && emailError" class="error-message" id="email-error">
+                {{ emailErrorMessage }}
+        </div>
         <div id="login-form-bottom-container" ref="loginFormBottomContainer">
             <div  id="bottom-inputs-options" :class="{register: showRegisterForm}">
-            <button v-if="!showRegisterForm" class="login-form-lower-btn" id="forgot-password-btn">Zapomniałeś hasła?</button>
-            <button v-show="!showRegisterForm" @click="showRegisterFormOn($event)" ref="showRegisterFormBtn" class="login-form-lower-btn" id="change-to-register-btn">Zarejestruj się  </button>
-            <button v-show="showRegisterForm" @click="showRegisterFormOff()" class="login-form-lower-btn" id="change-to-login-btn">Posiadasz już konto? Zaloguj się</button>
+            <button type="button" v-if="!showRegisterForm" class="login-form-lower-btn" id="forgot-password-btn">Zapomniałeś hasła?</button>
+            <button type="button" v-show="!showRegisterForm" @click="showRegisterFormOn($event)" ref="showRegisterFormBtn" class="login-form-lower-btn" id="change-to-register-btn">Zarejestruj się  </button>
+            <button type="button" v-show="showRegisterForm" @click.prevent="showRegisterFormOff()" class="login-form-lower-btn" id="change-to-login-btn">Posiadasz już konto? Zaloguj się</button>
             </div>
-            <button type="submit" id="login-submit">
+            <button id="login-submit">
                     {{showRegisterForm ? 'Zarejestruj się' : 'Zaloguj się'}}
             </button>
-            <span id="disclaimer">Naciśnij ESC aby opuścić</span>
+            <span @click="$emit('loginFormOff')" id="disclaimer">Naciśnij ESC aby opuścić</span>
         </div>
-
-    </div>
-
+    </div>  
+    </form>
 </div>
 </template>
 
@@ -89,6 +98,10 @@
                         top: -50% !important;
                     }
                 }
+                // &:autofill, &:-webkit-autofill{
+                //     font-size: 1em;
+                //     -webkit-box-shadow:0 0 0 60px #333 inset; 
+                // }
             }
             #username-input-container, #password-input-container,#password-repeat-input-container,#email-input-container{
                 position: relative;
@@ -175,6 +188,9 @@
                 text-align: center;
                 opacity: .7;
                 width: 75%;
+                &:hover{
+                    cursor: pointer;
+                }
             }
             .float-left-enter-active{
                 animation: float-left .3s;
@@ -187,6 +203,20 @@
             }
             .float-right-leave-active{
                 animation: float-right .3s reverse;
+            }
+            .error-message{
+                margin: -1rem auto;
+                color: red;
+                font-size: 1rem;
+                word-wrap: break-word;
+                width: 75%;
+                text-align: center;
+            }
+            .login-form-lower-btn{
+                transition: all .2s ease;
+                &:hover, &:focus{
+                    transform: scale(1.03);
+                }
             }
         }
         #login-form-bottom-container{
@@ -233,6 +263,10 @@ export default{
     data(){
         return{
             showRegisterForm: false,
+            usernameValue: '',
+            passwordValue: '',
+            repeatPasswordValue: '',
+            emailValue: '',
         }
 
     },
@@ -265,9 +299,8 @@ export default{
             showRegisterFormBtn.disabled=true
 
             setTimeout(()=>{
-
-                loginForm.classList.remove('register-animation'); 
                 loginFormBottomContainer.classList.add('login-animation'); 
+                loginForm.classList.remove('register-animation');  
                 setTimeout(()=>{
                     loginFormBottomContainer.classList.remove('login-animation');
                     showRegisterFormBtn.disabled=false
