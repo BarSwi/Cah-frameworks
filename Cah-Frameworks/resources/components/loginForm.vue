@@ -68,6 +68,7 @@
             outline: none;
         }
         #login-form{
+            position: relative;
             overflow: hidden;
             transition: all var(--change-form-transition);
             transform-origin:center ;
@@ -220,13 +221,17 @@
             }
         }
         #login-form-bottom-container{
-            &.register-animation{
-                transition: all var(--change-form-transition);
-                transform: translateY(calc(var(--min-height-2) - var(--min-height) - 30px));
-            }
-            &.login-animation{
-                animation: login-form-bottom var(--change-form-transition);
-            }
+            position: absolute;
+            bottom: -20px;
+            margin-top: 25px;
+            width: 100%;
+            // &.register-animation{
+            //     transition: all var(--change-form-transition);
+            //     transform: translateY(calc(var(--min-height-2) - var(--min-height) - 30px));
+            // }
+            // &.login-animation{
+            //     animation: login-form-bottom var(--change-form-transition);
+            // }
         }
 
         @keyframes float-right{
@@ -245,14 +250,14 @@
                 transform: translateX(0);
             }    
         }
-        @keyframes login-form-bottom{
-            0%{
-                transform: translateY(calc(var(--min-height-2) - var(--min-height) - 30px));
-            }
-            100%{
-                transform: translateY(0);
-            }
-        }
+        // @keyframes login-form-bottom{
+        //     0%{
+        //         transform: translateY(calc(var(--min-height-2) - var(--min-height) - 30px));
+        //     }
+        //     100%{
+        //         transform: translateY(0);
+        //     }
+        // }
 
     }
 </style>
@@ -279,15 +284,15 @@ export default{
     methods:{
         showRegisterFormOn(e){
             const loginForm = this.$refs.loginForm
-            const loginFormBottomContainer = this.$refs.loginFormBottomContainer
+            // const loginFormBottomContainer = this.$refs.loginFormBottomContainer
             // if(loginFormBottomContainer.classList.contains('login-animation')) return;
             e.target.disabled=true
             loginForm.classList.add('register-animation');
-            loginFormBottomContainer.classList.add('register-animation')
+            // loginFormBottomContainer.classList.add('register-animation')
             setTimeout(()=>{
                 this.showRegisterForm=true;
                 // loginForm.classList.remove('register-animation')
-                loginFormBottomContainer.classList.remove('register-animation');
+                // loginFormBottomContainer.classList.remove('register-animation');
                 e.target.disabled = false
             },300)
         },
@@ -295,14 +300,14 @@ export default{
             this.showRegisterForm=false;
             const showRegisterFormBtn = this.$refs.showRegisterFormBtn
             const loginForm = this.$refs.loginForm
-            const loginFormBottomContainer = this.$refs.loginFormBottomContainer
+            // const loginFormBottomContainer = this.$refs.loginFormBottomContainer
             showRegisterFormBtn.disabled=true
 
             setTimeout(()=>{
-                loginFormBottomContainer.classList.add('login-animation'); 
+                // loginFormBottomContainer.classList.add('login-animation'); 
                 loginForm.classList.remove('register-animation');  
                 setTimeout(()=>{
-                    loginFormBottomContainer.classList.remove('login-animation');
+                    // loginFormBottomContainer.classList.remove('login-animation');
                     showRegisterFormBtn.disabled=false
                 },300)
             },300)
