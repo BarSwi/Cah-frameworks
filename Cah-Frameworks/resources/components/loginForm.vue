@@ -4,19 +4,22 @@
         <div id="login-form" ref="loginForm">
         <div id="login-form-title" >{{ showRegisterForm ? 'Rejestracja' : 'Logowanie' }}</div>
         <div id="username-input-container">
-            <input v-model="usernameValue" v-focus type="text" placeholder = ' ' id="username-input" name="username" class="username-form-input">
+            <input v-model="usernameValue" type="text" placeholder = ' ' id="username-input" name="username" class="username-form-input">
             <label for="username-input" class ='label' id = 'username-input-label'>{{lang['usernameInputPlaceholder']}}</label>
         </div>
         <div v-if="showRegisterForm && usernameError" class="error-message" id="username-error">
-                {{ loginErrorMessage }}
+                {{ usernameErrorMessage }}
         </div>
         <div id="password-input-container">
-            <input v-model="passwordValue" type="password" placeholder = ' ' name="password" id="password-input" class="login-form-input">
+            <input @change="checkPasswordRepeat()" v-model="passwordValue" type="password" placeholder = ' ' name="password" id="password-input" class="login-form-input">
             <label for="password-input" class = 'label' id = 'password-input-label' >{{lang['passwordInputPlaceholder']}}</label>
+        </div>
+        <div v-if="showRegisterForm && passwordError" class="error-message" id="password-error">
+                {{ passwordErrorMessage }}
         </div> 
         <Transition name="float-right">
         <div v-if="showRegisterForm" id="password-repeat-input-container">
-            <input v-model="repeatPasswordValue" type="password" placeholder = ' ' name="password-repeat-input" id="password-repeat-input" class="register-form-input">
+            <input @change="checkPasswordRepeat()" v-model="repeatPasswordValue" type="password" placeholder = ' ' name="password-repeat-input" id="password-repeat-input" class="register-form-input">
             <label for="password-repeat-input" class = 'label' id = 'password-repeat-input-label' >{{lang['passwordRepeatInputPlaceholder']}}</label>
         </div>
         </Transition>
@@ -25,13 +28,14 @@
         </div>
         <Transition name = "float-left">
         <div v-if="showRegisterForm" id="email-input-container">
-            <input v-model="emailValue" type="text" placeholder = ' ' name="email-input" id="email-input" class="login-form-input">
+            <input @change="checkEmail()" v-model="emailValue" type="text" placeholder = ' ' name="email-input" id="email-input" class="login-form-input">
             <label for="email-input" class = 'label' id = 'email-input-label' >{{lang['emailInputPlaceholder']}}</label>
         </div>
         </Transition>
-        <div v-if="showRegisterForm && emailError" class="error-message" id="email-error">
+        <div v-if="showRegisterForm && emailError"  class="error-message" id="email-error">
                 {{ emailErrorMessage }}
         </div>
+        <div class="spacer"></div>
         <div id="login-form-bottom-container" ref="loginFormBottomContainer">
             <div  id="bottom-inputs-options" :class="{register: showRegisterForm}">
             <button type="button" v-if="!showRegisterForm" class="login-form-lower-btn" id="forgot-password-btn">Zapomniałeś hasła?</button>
@@ -43,6 +47,8 @@
             </button>
             <span @click="$emit('loginFormOff')" id="disclaimer">Naciśnij ESC aby opuścić</span>
         </div>
+
+
     </div>  
     </form>
 </div>
@@ -83,17 +89,17 @@
             input{
                 outline: none;
                 display: block;
-                color: var(--base-light-brown);
+                
                 border-radius: 5px;
-                font-weight: 900;
                 margin: 3rem auto;
                 padding: 1em .7em;
                 background-color: #333;
+                color: #aaa;
                 border: none;
-                font-size: 1.5em;
+                font-size: 1.1em;
                 width: 75%;
                 height: 50px;
-                &:focus, &:active, &:not(:placeholder-shown){
+                &:focus, &:active, &:not(:placeholder-shown),&:focus-within{
                     +.label{
                         font-size: 1rem !important;
                         top: -50% !important;
@@ -103,6 +109,7 @@
                 //     font-size: 1em;
                 //     -webkit-box-shadow:0 0 0 60px #333 inset; 
                 // }
+                    caret-color: #aaa;
             }
             #username-input-container, #password-input-container,#password-repeat-input-container,#email-input-container{
                 position: relative;
@@ -127,7 +134,7 @@
             }
             #bottom-inputs-options{
                 display: flex;
-                margin: 3rem auto;
+                margin: 1rem auto;
                 width: 75%;
                 justify-content: space-between;
                 align-items: center;
@@ -206,9 +213,9 @@
                 animation: float-right .3s reverse;
             }
             .error-message{
-                margin: -1rem auto;
-                color: red;
-                font-size: 1rem;
+                margin: -2rem auto auto auto;
+                color: yellow;
+                font-size: 1.2rem;
                 word-wrap: break-word;
                 width: 75%;
                 text-align: center;
@@ -222,9 +229,8 @@
         }
         #login-form-bottom-container{
             position: absolute;
-            bottom: -20px;
-            margin-top: 25px;
-            width: 100%;
+            bottom: -10px;
+            width: 100%;    
             // &.register-animation{
             //     transition: all var(--change-form-transition);
             //     transform: translateY(calc(var(--min-height-2) - var(--min-height) - 30px));
@@ -259,6 +265,10 @@
         //     }
         // }
 
+        .spacer{
+            margin-bottom: 270px;
+        }
+
     }
 </style>
 
@@ -272,6 +282,14 @@ export default{
             passwordValue: '',
             repeatPasswordValue: '',
             emailValue: '',
+            repeatPasswordErrorMessage: '',
+            emailErrorMessage: '',
+            usernameErrorMessage: '',
+            passwordErrorMessage: '',
+            usernameError: false,
+            repeatPasswordError: false,
+            emailError: false,
+            passwordError: false,
         }
 
     },
@@ -311,15 +329,53 @@ export default{
                     showRegisterFormBtn.disabled=false
                 },300)
             },300)
+        },
+        checkPasswordRepeat(){
+            const passwordVal = this.passwordValue;
+            const repPasswordVal = this.repeatPasswordValue;
+
+            if(passwordVal!='' && repPasswordVal!='' && passwordVal!=repPasswordVal){
+                this.repeatPasswordError=true;
+                this.repeatPasswordErrorMessage="Hasła są różne!";
+            }
+            else if(this.repeatPasswordError){
+                this.repeatPasswordError=false
+                this.repeatPasswordErrorMessage="";
+            }
+        },
+        checkEmail(){
+            const regex = /^([A-Za-z0-9.\-]*\w)+@+([A-Za-z0-9\-]*\w)+(\.[A-Za-z]*\w)+$/;
+            if(!regex.test(this.emailValue)  && this.emailValue!=""){
+                this.emailErrorMessage = "Nieprawidłowy format adresu email";
+                this.emailError =true;
+            }
+            else{
+                this.emailErrorMessage="";
+                this.emailError = false;
+            }
         }
     },  
-    directives: {
+    watch: {
+        usernameValue(newVal){
+            const regex = /[^A-Za-z0-9]+/g
+            if (regex.test(newVal)){
+                this.usernameErrorMessage = "Niedozwolone znaki";
+                this.usernameError = true;
+            }
+            else{
+                this.usernameErrorMessage = '';
+                this.usernameError = false;
+            }
+        },
 
-        focus: (el)=> {{
+    },
+    // directives: {
 
-        }
-            el.focus();
-        }
-    }
+    //     focus: (el)=> {{
+
+    //     }
+    //         el.focus();
+    //     }
+    // }
 }
 </script>
