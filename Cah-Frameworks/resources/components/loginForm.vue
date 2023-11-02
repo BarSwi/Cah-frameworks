@@ -11,7 +11,7 @@
                 {{ usernameErrorMessage }}
         </div>
         <div id="password-input-container">
-            <input @change="checkPasswordRepeat()" v-model="passwordValue" type="password" placeholder = ' ' name="password" id="password-input" class="login-form-input">
+            <input @change="checkPasswordValidation()" v-model="passwordValue" type="password" placeholder = ' ' name="password" id="password-input" class="login-form-input">
             <label for="password-input" class = 'label' id = 'password-input-label' >{{lang['passwordInputPlaceholder']}}</label>
         </div>
         <div v-if="showRegisterForm && passwordError" class="error-message" id="password-error">
@@ -19,7 +19,7 @@
         </div> 
         <Transition name="float-right">
         <div v-if="showRegisterForm" id="password-repeat-input-container">
-            <input @change="checkPasswordRepeat()" v-model="repeatPasswordValue" type="password" placeholder = ' ' name="password-repeat-input" id="password-repeat-input" class="register-form-input">
+            <input @change="checkPasswordValidation()" v-model="repeatPasswordValue" type="password" placeholder = ' ' name="password-repeat-input" id="password-repeat-input" class="register-form-input">
             <label for="password-repeat-input" class = 'label' id = 'password-repeat-input-label' >{{lang['passwordRepeatInputPlaceholder']}}</label>
         </div>
         </Transition>
@@ -330,11 +330,19 @@ export default{
                 },300)
             },300)
         },
-        checkPasswordRepeat(){
+        checkPasswordValidation(){
             const passwordVal = this.passwordValue;
             const repPasswordVal = this.repeatPasswordValue;
-
-            if(passwordVal!='' && repPasswordVal!='' && passwordVal!=repPasswordVal){
+            console.log(passwordVal.length)
+            if(passwordVal.length < 8 && passwordVal){
+                this.passwordError=true;
+                this.passwordErrorMessage="Hasło jest za krótkie (minimum 8 znaków)";
+            }
+            else{
+                this.passwordError=false;
+                this.passwordErrorMessage="";
+            }
+            if(passwordVal && repPasswordVal && passwordVal!=repPasswordVal){
                 this.repeatPasswordError=true;
                 this.repeatPasswordErrorMessage="Hasła są różne!";
             }

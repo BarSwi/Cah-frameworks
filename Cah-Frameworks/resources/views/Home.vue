@@ -16,20 +16,20 @@
             <div id="login-guest-container"  >
             <button 
             :disabled="showLoginForm"
-            @mouseover="unlockPotentialOn($event)" 
-            @mouseleave="unlockPotentialOff($event)" 
-            @focus="unlockPotentialOn($event)"
-            @blur="unlockPotentialOff($event)"
+            @mouseover="unlockPotentialOn()" 
+            @mouseleave="unlockPotentialOff()" 
+            @focus="unlockPotentialOn()"
+            @blur="unlockPotentialOff()"
             @click ="loginFormOn()"
             class = "login-button">
                 {{ lang['login'] }}
             </button>
             <button  
             :disabled="showLoginForm"
-            @mouseover="unlockPotentialOn($event)" 
-            @mouseleave="unlockPotentialOff($event)" 
-            @focus="unlockPotentialOn($event)"
-            @blur="unlockPotentialOff($event)" class = "guest-button">
+            @mouseover="unlockPotentialOn()" 
+            @mouseleave="unlockPotentialOff()" 
+            @focus="unlockPotentialOn()"
+            @blur="unlockPotentialOff()" class = "guest-button">
                 Graj jako gość
             </button>
         </div>
@@ -153,8 +153,8 @@ export default {
         loginForm,
     },
     methods:{
-        unlockPotentialOn(event){
-            this.showLoginForm ? event.target.blur() : this.unlockPotential=true
+        unlockPotentialOn(){
+            this.unlockPotential=true
         },
         unlockPotentialOff(){
             this.unlockPotential = false;
