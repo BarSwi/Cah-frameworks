@@ -1,6 +1,6 @@
 <template>
 <div id="login-form-container" tabindex="0" @keydown.esc="$emit('loginFormOff')">
-    <form>
+    <form @submit.prevent="registerHandler">
         <div id="login-form" ref="loginForm">
         <div id="login-form-title" >{{ showRegisterForm ? 'Rejestracja' : 'Logowanie' }}</div>
         <div id="username-input-container">
@@ -105,10 +105,6 @@
                         top: -50% !important;
                     }
                 }
-                // &:autofill, &:-webkit-autofill{
-                //     font-size: 1em;
-                //     -webkit-box-shadow:0 0 0 60px #333 inset; 
-                // }
                     caret-color: #aaa;
             }
             #username-input-container, #password-input-container,#password-repeat-input-container,#email-input-container{
@@ -123,6 +119,7 @@
                     width: max-content;
                     color: #aaa;
                     inset: 30% 0 0 15%;
+                    pointer-events: none;
                 }
             }
             #login-form-title{
@@ -273,7 +270,7 @@
 </style>
 
 <script>
-
+import axios from 'axios'
 export default{
     data(){
         return{
@@ -300,17 +297,20 @@ export default{
         }
     },
     methods:{
+        async registerHandler(){
+            axios
+            .post("/api/register",{name: this.usernameValue, email: this.emailValue, password: this.passwordValue})
+            .then((data) => console.log(data))
+            .catch((err)=>{if(err.response.status==422) alert("err")})
+        },
         showRegisterFormOn(e){
             const loginForm = this.$refs.loginForm
-            // const loginFormBottomContainer = this.$refs.loginFormBottomContainer
-            // if(loginFormBottomContainer.classList.contains('login-animation')) return;
+           
             e.target.disabled=true
             loginForm.classList.add('register-animation');
-            // loginFormBottomContainer.classList.add('register-animation')
             setTimeout(()=>{
                 this.showRegisterForm=true;
-                // loginForm.classList.remove('register-animation')
-                // loginFormBottomContainer.classList.remove('register-animation');
+              
                 e.target.disabled = false
             },300)
         },
@@ -318,14 +318,14 @@ export default{
             this.showRegisterForm=false;
             const showRegisterFormBtn = this.$refs.showRegisterFormBtn
             const loginForm = this.$refs.loginForm
-            // const loginFormBottomContainer = this.$refs.loginFormBottomContainer
+           
             showRegisterFormBtn.disabled=true
 
             setTimeout(()=>{
-                // loginFormBottomContainer.classList.add('login-animation'); 
+              
                 loginForm.classList.remove('register-animation');  
                 setTimeout(()=>{
-                    // loginFormBottomContainer.classList.remove('login-animation');
+
                     showRegisterFormBtn.disabled=false
                 },300)
             },300)
@@ -333,7 +333,6 @@ export default{
         checkPasswordValidation(){
             const passwordVal = this.passwordValue;
             const repPasswordVal = this.repeatPasswordValue;
-            console.log(passwordVal.length)
             if(passwordVal.length < 8 && passwordVal){
                 this.passwordError=true;
                 this.passwordErrorMessage="Hasło jest za krótkie (minimum 8 znaków)";
@@ -366,24 +365,20 @@ export default{
     watch: {
         usernameValue(newVal){
             const regex = /[^A-Za-z0-9]+/g
-            if (regex.test(newVal)){
+            if(newVal.length>16){
+                this.usernameErrorMessage = "Nazwa jest za długa";
+                this.usernameError = true;
+            }
+            if(regex.test(newVal)){
                 this.usernameErrorMessage = "Niedozwolone znaki";
                 this.usernameError = true;
             }
-            else{
+            else if(!regex.test(newVal) && newVal.length<=16){
                 this.usernameErrorMessage = '';
                 this.usernameError = false;
             }
         },
 
-    },
-    // directives: {
-
-    //     focus: (el)=> {{
-
-    //     }
-    //         el.focus();
-    //     }
-    // }
+    }
 }
 </script>
