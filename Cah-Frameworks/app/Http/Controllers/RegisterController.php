@@ -12,11 +12,13 @@ class RegisterController extends Controller
 {
     public function store(Request $request){
 
+        $email_regex = 'regex:/^([A-Za-z0-9.\-]*\w)+@+([A-Za-z0-9\-]*\w)+(\.[A-Za-z]*\w)+$/';
+
         $request->validate([
-            'name' => 'bail|required|unique:users|alpha_num|max:16',
-            'email' => 'bail|email|unique:users',
+            'name' => ['bail','required','unique:users','alpha_num' ,'max:16'],
+            'email' => ['bail','required','unique:users', $email_regex],
             'password' => 'min:8'
-        ]);
+        ], ['name.unique' => 'Name Taken', 'email.unique' => 'Email Taken']);
         $input = $request->all();
 
         User::create([
@@ -25,6 +27,6 @@ class RegisterController extends Controller
             'password' => Hash::make($input['password'])
         ]);
 
-        return response()->json(['status' => true, 'message'=>"test"]);
+        return response()->json(['status' => true]);
     }
 }

@@ -1,6 +1,6 @@
 <template>
 <div id="login-form-container" tabindex="0" @keydown.esc="$emit('loginFormOff')">
-    <form @submit.prevent="registerHandler">
+    <form @submit.prevent="showRegisterForm ? registerHandler() : loginHandler()">
         <div id="login-form" ref="loginForm">
         <div id="login-form-title" >{{ showRegisterForm ? 'Rejestracja' : 'Logowanie' }}</div>
         <div id="username-input-container">
@@ -28,7 +28,7 @@
         </div>
         <Transition name = "float-left">
         <div v-if="showRegisterForm" id="email-input-container">
-            <input @change="checkEmail()" v-model="emailValue" type="text" placeholder = ' ' name="email-input" id="email-input" class="login-form-input">
+            <input v-model="emailValue" type="text" placeholder = ' ' name="email-input" id="email-input" class="login-form-input">
             <label for="email-input" class = 'label' id = 'email-input-label' >{{lang['emailInputPlaceholder']}}</label>
         </div>
         </Transition>
@@ -42,7 +42,7 @@
             <button type="button" v-show="!showRegisterForm" @click="showRegisterFormOn($event)" ref="showRegisterFormBtn" class="login-form-lower-btn" id="change-to-register-btn">Zarejestruj się  </button>
             <button type="button" v-show="showRegisterForm" @click.prevent="showRegisterFormOff()" class="login-form-lower-btn" id="change-to-login-btn">Posiadasz już konto? Zaloguj się</button>
             </div>
-            <button id="login-submit">
+            <button :disabled="!registerAvailible" id="login-submit">
                     {{showRegisterForm ? 'Zarejestruj się' : 'Zaloguj się'}}
             </button>
             <span @click="$emit('loginFormOff')" id="disclaimer">Naciśnij ESC aby opuścić</span>
@@ -274,6 +274,8 @@ import axios from 'axios'
 export default{
     data(){
         return{
+            emailTaken: [],
+            usernameTaken: [],
             showRegisterForm: false,
             usernameValue: '',
             passwordValue: '',
@@ -287,6 +289,7 @@ export default{
             repeatPasswordError: false,
             emailError: false,
             passwordError: false,
+
         }
 
     },
@@ -294,6 +297,9 @@ export default{
     computed:{
         lang(){
             return this.config.language
+        },
+        registerAvailible(){
+            return !this.showRegisterForm || (!this.emailError && !this.passwordError && !this.usernameError && !this.repeatPasswordError && this.usernameValue && this.passwordValue && this.repeatPasswordValue) ? true : false
         }
     },
     methods:{
@@ -301,7 +307,18 @@ export default{
             axios
             .post("/api/register",{name: this.usernameValue, email: this.emailValue, password: this.passwordValue})
             .then((data) => console.log(data))
-            .catch((err)=>{if(err.response.status==422) alert("err")})
+            .catch((err)=>{
+                if(err.response.data.errors.email && err.response.data.errors.email[0]==="Email Taken"){
+                    this.emailTaken.push(this.emailValue)
+                    this.emailErrorMessage = "Adres email jest zajęty";
+                    this.emailError =true;
+                } 
+                if(err.response.data.errors.name && err.response.data.errors.name[0]==="Name Taken"){
+                    this.usernameTaken.push(this.usernameValue)
+                    this.usernameErrorMessage = "Nazwa użytkownika jest zajęta";
+                    this.usernameError =true;
+                } 
+            })
         },
         showRegisterFormOn(e){
             const loginForm = this.$refs.loginForm
@@ -350,26 +367,19 @@ export default{
                 this.repeatPasswordErrorMessage="";
             }
         },
-        checkEmail(){
-            const regex = /^([A-Za-z0-9.\-]*\w)+@+([A-Za-z0-9\-]*\w)+(\.[A-Za-z]*\w)+$/;
-            if(!regex.test(this.emailValue)  && this.emailValue!=""){
-                this.emailErrorMessage = "Nieprawidłowy format adresu email";
-                this.emailError =true;
-            }
-            else{
-                this.emailErrorMessage="";
-                this.emailError = false;
-            }
-        }
     },  
     watch: {
         usernameValue(newVal){
             const regex = /[^A-Za-z0-9]+/g
-            if(newVal.length>16){
+            if(this.usernameTaken.includes(newVal)){
+                this.usernameErrorMessage = "Nazwa użytkownika jest zajęta";
+                this.usernameError =true;
+            }
+            else if(newVal.length>16){
                 this.usernameErrorMessage = "Nazwa jest za długa";
                 this.usernameError = true;
             }
-            if(regex.test(newVal)){
+            else if(regex.test(newVal)){
                 this.usernameErrorMessage = "Niedozwolone znaki";
                 this.usernameError = true;
             }
@@ -378,6 +388,21 @@ export default{
                 this.usernameError = false;
             }
         },
+        emailValue(newVal){
+            const regex = /^([A-Za-z0-9.\-]*\w)+@+([A-Za-z0-9\-]*\w)+(\.[A-Za-z]*\w)+$/;
+            if(this.emailTaken.includes(newVal)){
+                this.emailErrorMessage = "Adres email jest zajęty";
+                this.emailError =true;
+            }
+            else if(!regex.test(newVal)  && newVal!=""){
+                this.emailErrorMessage = "Nieprawidłowy format adresu email";
+                this.emailError =true;
+            }
+            else{
+                this.emailErrorMessage="";
+                this.emailError = false;
+            }
+        }
 
     }
 }
