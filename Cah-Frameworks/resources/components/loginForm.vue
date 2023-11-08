@@ -1,56 +1,55 @@
 <template>
 <div id="login-form-container" tabindex="0" @keydown.esc="$emit('loginFormOff')">
-    <form @submit.prevent="showRegisterForm ? registerHandler() : loginHandler()">
         <div id="login-form" ref="loginForm">
-        <div id="login-form-title" >{{ showRegisterForm ? 'Rejestracja' : 'Logowanie' }}</div>
-        <div id="username-input-container">
-            <input v-model="usernameValue" type="text" placeholder = ' ' id="username-input" name="username" class="username-form-input">
-            <label for="username-input" class ='label' id = 'username-input-label'>{{lang['usernameInputPlaceholder']}}</label>
-        </div>
-        <div v-if="showRegisterForm && usernameError" class="error-message" id="username-error">
-                {{ usernameErrorMessage }}
-        </div>
-        <div id="password-input-container">
-            <input @change="checkPasswordValidation()" v-model="passwordValue" type="password" placeholder = ' ' name="password" id="password-input" class="login-form-input">
-            <label for="password-input" class = 'label' id = 'password-input-label' >{{lang['passwordInputPlaceholder']}}</label>
-        </div>
-        <div v-if="showRegisterForm && passwordError" class="error-message" id="password-error">
-                {{ passwordErrorMessage }}
-        </div> 
-        <Transition name="float-right">
-        <div v-if="showRegisterForm" id="password-repeat-input-container">
-            <input @change="checkPasswordValidation()" v-model="repeatPasswordValue" type="password" placeholder = ' ' name="password-repeat-input" id="password-repeat-input" class="register-form-input">
-            <label for="password-repeat-input" class = 'label' id = 'password-repeat-input-label' >{{lang['passwordRepeatInputPlaceholder']}}</label>
-        </div>
-        </Transition>
-        <div v-if="showRegisterForm && repeatPasswordError" class="error-message" id="repeat-password-error">
-                {{ repeatPasswordErrorMessage }}
-        </div>
-        <Transition name = "float-left">
-        <div v-if="showRegisterForm" id="email-input-container">
-            <input v-model="emailValue" type="text" placeholder = ' ' name="email-input" id="email-input" class="login-form-input">
-            <label for="email-input" class = 'label' id = 'email-input-label' >{{lang['emailInputPlaceholder']}}</label>
-        </div>
-        </Transition>
-        <div v-if="showRegisterForm && emailError"  class="error-message" id="email-error">
-                {{ emailErrorMessage }}
-        </div>
-        <div class="spacer"></div>
-        <div id="login-form-bottom-container" ref="loginFormBottomContainer">
-            <div  id="bottom-inputs-options" :class="{register: showRegisterForm}">
-            <button type="button" v-if="!showRegisterForm" class="login-form-lower-btn" id="forgot-password-btn">Zapomniałeś hasła?</button>
-            <button type="button" v-show="!showRegisterForm" @click="showRegisterFormOn($event)" ref="showRegisterFormBtn" class="login-form-lower-btn" id="change-to-register-btn">Zarejestruj się  </button>
-            <button type="button" v-show="showRegisterForm" @click.prevent="showRegisterFormOff()" class="login-form-lower-btn" id="change-to-login-btn">Posiadasz już konto? Zaloguj się</button>
+            <form v-if="!loader" @submit.prevent="showRegisterForm ? registerHandler() : loginHandler()">
+            <div id="login-form-title" >{{ showRegisterForm ? 'Rejestracja' : 'Logowanie' }}</div>
+            <div id="username-input-container">
+                <input v-model="usernameValue" type="text" placeholder = ' ' id="username-input" name="username" class="username-form-input">
+                <label for="username-input" class ='label' id = 'username-input-label'>{{lang['usernameInputPlaceholder']}}</label>
             </div>
-            <button :disabled="!registerAvailible" id="login-submit">
-                    {{showRegisterForm ? 'Zarejestruj się' : 'Zaloguj się'}}
-            </button>
-            <span @click="$emit('loginFormOff')" id="disclaimer">Naciśnij ESC aby opuścić</span>
-        </div>
+            <div v-if="showRegisterForm && usernameError" class="error-message" id="username-error">
+                    {{ usernameErrorMessage }}
+            </div>
+            <div id="password-input-container">
+                <input @change="checkPasswordValidation()" v-model="passwordValue" type="password" placeholder = ' ' name="password" id="password-input" class="login-form-input">
+                <label for="password-input" class = 'label' id = 'password-input-label' >{{lang['passwordInputPlaceholder']}}</label>
+            </div>
+            <div v-if="showRegisterForm && passwordError" class="error-message" id="password-error">
+                    {{ passwordErrorMessage }}
+            </div> 
+            <Transition name="float-right">
+            <div v-if="showRegisterForm" id="password-repeat-input-container">
+                <input @change="checkPasswordValidation()" v-model="repeatPasswordValue" type="password" placeholder = ' ' name="password-repeat-input" id="password-repeat-input" class="register-form-input">
+                <label for="password-repeat-input" class = 'label' id = 'password-repeat-input-label' >{{lang['passwordRepeatInputPlaceholder']}}</label>
+            </div>
+            </Transition>
+            <div v-if="showRegisterForm && repeatPasswordError" class="error-message" id="repeat-password-error">
+                    {{ repeatPasswordErrorMessage }}
+            </div>
+            <Transition name = "float-left">
+            <div v-if="showRegisterForm" id="email-input-container">
+                <input v-model="emailValue" type="text" placeholder = ' ' name="email-input" id="email-input" class="login-form-input">
+                <label for="email-input" class = 'label' id = 'email-input-label' >{{lang['emailInputPlaceholder']}}</label>
+            </div>
+            </Transition>
+            <div v-if="showRegisterForm && emailError"  class="error-message" id="email-error">
+                    {{ emailErrorMessage }}
+            </div>
+            <div class="spacer"></div>
+            <div id="login-form-bottom-container" ref="loginFormBottomContainer">
+                <div  id="bottom-inputs-options" :class="{register: showRegisterForm}">
+                <button type="button" v-if="!showRegisterForm" class="login-form-lower-btn" id="forgot-password-btn">Zapomniałeś hasła?</button>
+                <button type="button" v-show="!showRegisterForm" @click="showRegisterFormOn($event)" ref="showRegisterFormBtn" class="login-form-lower-btn" id="change-to-register-btn">Zarejestruj się  </button>
+                <button type="button" v-show="showRegisterForm" @click.prevent="showRegisterFormOff()" class="login-form-lower-btn" id="change-to-login-btn">Posiadasz już konto? Zaloguj się</button>
+                </div>
+                <button :disabled="!registerAvailible" :class="[registerAvailible ? 'enabled' : 'disabled']" id="login-submit">
+                        {{showRegisterForm ? 'Zarejestruj się' : 'Zaloguj się'}}
+                </button>
+                <span @click="$emit('loginFormOff')" id="disclaimer">Naciśnij ESC aby opuścić</span>
+            </div>
 
-
+        </form>
     </div>  
-    </form>
 </div>
 </template>
 
@@ -79,7 +78,6 @@
             transition: all var(--change-form-transition);
             transform-origin:center ;
             background-color: #222;
-            //background-image: linear-gradient(to bottom, #222, rgb(0, 7, 1));
             min-height: var(--min-height);
             width: 400px;   
             border-radius: 5px;
@@ -89,7 +87,6 @@
             input{
                 outline: none;
                 display: block;
-                
                 border-radius: 5px;
                 margin: 3rem auto;
                 padding: 1em .7em;
@@ -155,23 +152,26 @@
                 }
             }
             #login-submit{
+                &.disabled{
+                    opacity: .5;
+                }
                 display: block;
                 background-color: var(--base-light-green);
                 border: none;
                 border-radius: 3px;
                 outline: none;
                 height: 50px;
-                transition: all .3s ease-out;
+                transition: all .15s ease-out;
                 font-size: 1.5rem;
                 width: 75%;
                 margin: 3rem auto;
                 position: relative;
-                &:after{
+                &.enabled{
+                    &:after{
                     content: '';
                     opacity: 0;
                     height: 100%;
                     position: absolute;
-                    transition: opacity .3s ease-out;
                     width: 100%;
                     inset: 0;
                     filter: blur(3px);
@@ -186,6 +186,8 @@
                         opacity: 1;
                     }
                 }
+                }
+
             }
             #disclaimer{
                 display: block;
@@ -289,6 +291,7 @@ export default{
             repeatPasswordError: false,
             emailError: false,
             passwordError: false,
+            loader: false
 
         }
 
@@ -304,6 +307,7 @@ export default{
     },
     methods:{
         async registerHandler(){
+            this.showRegisterFormOff()
             axios
             .post("/api/register",{name: this.usernameValue, email: this.emailValue, password: this.passwordValue})
             .then((data) => console.log(data))

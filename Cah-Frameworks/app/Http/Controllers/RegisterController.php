@@ -16,7 +16,7 @@ class RegisterController extends Controller
 
         $request->validate([
             'name' => ['bail','required','unique:users','alpha_num' ,'max:16'],
-            'email' => ['bail','required','unique:users', $email_regex],
+            'email' => ['bail','nullable','unique:users', $email_regex],
             'password' => 'min:8'
         ], ['name.unique' => 'Name Taken', 'email.unique' => 'Email Taken']);
         $input = $request->all();
