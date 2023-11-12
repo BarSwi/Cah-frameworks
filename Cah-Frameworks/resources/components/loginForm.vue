@@ -11,7 +11,7 @@
                     {{ usernameErrorMessage }}
             </div>
             <div id="password-input-container">
-                <input @change="checkPasswordValidation()" v-model="passwordValue" type="password" placeholder = ' ' name="password" id="password-input" class="login-form-input">
+                <input v-model="passwordValue" type="password" placeholder = ' ' name="password" id="password-input" class="login-form-input">
                 <label for="password-input" class = 'label' id = 'password-input-label' >{{lang['passwordInputPlaceholder']}}</label>
             </div>
             <div v-if="showRegisterForm && passwordError" class="error-message" id="password-error">
@@ -19,7 +19,7 @@
             </div> 
             <Transition name="float-right">
             <div v-if="showRegisterForm" id="password-repeat-input-container">
-                <input @change="checkPasswordValidation()" v-model="repeatPasswordValue" type="password" placeholder = ' ' name="password-repeat-input" id="password-repeat-input" class="register-form-input">
+                <input v-model="repeatPasswordValue" type="password" placeholder = ' ' name="password-repeat-input" id="password-repeat-input" class="register-form-input">
                 <label for="password-repeat-input" class = 'label' id = 'password-repeat-input-label' >{{lang['passwordRepeatInputPlaceholder']}}</label>
             </div>
             </Transition>
@@ -128,8 +128,9 @@
             }
             #bottom-inputs-options{
                 display: flex;
-                margin: 1rem auto;
+                margin: auto;
                 width: 75%;
+                flex-wrap:wrap;
                 justify-content: space-between;
                 align-items: center;
                 &.register{
@@ -311,7 +312,10 @@ export default{
             axios
             .post("/api/register",{name: this.usernameValue, email: this.emailValue, password: this.passwordValue})
             .then((data) => console.log(data))
-            .catch((err)=>{
+            .catch((err)=>{ 
+             //   if(err.response.status==500){
+             //       return
+              //  } 
                 if(err.response.data.errors.email && err.response.data.errors.email[0]==="Email Taken"){
                     this.emailTaken.push(this.emailValue)
                     this.emailErrorMessage = "Adres email jest zajęty";
@@ -351,26 +355,6 @@ export default{
                 },300)
             },300)
         },
-        checkPasswordValidation(){
-            const passwordVal = this.passwordValue;
-            const repPasswordVal = this.repeatPasswordValue;
-            if(passwordVal.length < 8 && passwordVal){
-                this.passwordError=true;
-                this.passwordErrorMessage="Hasło jest za krótkie (minimum 8 znaków)";
-            }
-            else{
-                this.passwordError=false;
-                this.passwordErrorMessage="";
-            }
-            if(passwordVal && repPasswordVal && passwordVal!=repPasswordVal){
-                this.repeatPasswordError=true;
-                this.repeatPasswordErrorMessage="Hasła są różne!";
-            }
-            else if(this.repeatPasswordError){
-                this.repeatPasswordError=false
-                this.repeatPasswordErrorMessage="";
-            }
-        },
     },  
     watch: {
         usernameValue(newVal){
@@ -406,7 +390,38 @@ export default{
                 this.emailErrorMessage="";
                 this.emailError = false;
             }
+        },
+        passwordValue(newVal){
+            const repeatPasswordVal = this.repeatPasswordValue;
+            if(newVal.length < 8 && newVal){
+                this.passwordError=true;
+                this.passwordErrorMessage="Hasło jest za krótkie (minimum 8 znaków)";
+            }
+            else{
+                this.passwordError=false;
+                this.passwordErrorMessage="";
+            }
+            if(repeatPasswordVal && newVal && repeatPasswordVal!=newVal){
+                this.repeatPasswordError=true;
+                this.repeatPasswordErrorMessage="Hasła są różne!";
+            }
+            else{
+                this.repeatPasswordError=false
+                this.repeatPasswordErrorMessage="";
+            }
+        },
+        repeatPasswordValue(newVal){
+            const passwordVal = this.passwordValue;
+            if(passwordVal && newVal && passwordVal!=newVal){
+                this.repeatPasswordError=true;
+                this.repeatPasswordErrorMessage="Hasła są różne!";
+            }
+            else{
+                this.repeatPasswordError=false
+                this.repeatPasswordErrorMessage="";
+            }
         }
+
 
     }
 }

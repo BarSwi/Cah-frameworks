@@ -11,7 +11,7 @@
         justify-content: space-between;
         align-items: center;
         z-index: 5;
-        max-width: 100%;
+        width: 100%;
         position: sticky;
         display: flex;
         top: 0;

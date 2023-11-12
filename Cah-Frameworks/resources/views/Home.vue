@@ -47,7 +47,7 @@
 <style lang = "scss">
     @import '../css/mixins.scss';
     #container-home{
-        width: 75%;
+        min-width: 75%;
         margin: 0 12.5%;
         text-align: center;
         h1{
@@ -61,6 +61,7 @@
             display: flex;
             align-items: center;
             min-width: 100%;
+            flex-wrap:wrap;
             justify-content: center;
             // flex-direction: column;
             gap: 20px;
