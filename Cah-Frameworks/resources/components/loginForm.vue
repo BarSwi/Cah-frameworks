@@ -1,53 +1,53 @@
 <template>
 <div id="login-form-container" tabindex="0" @keydown.esc="$emit('loginFormOff')">
         <div id="login-form" ref="loginForm">
-            <form v-if="!loader" @submit.prevent="showRegisterForm ? registerHandler() : loginHandler()">
-            <div id="login-form-title" >{{ showRegisterForm ? 'Rejestracja' : 'Logowanie' }}</div>
-            <div id="username-input-container">
-                <input v-model="usernameValue" type="text" placeholder = ' ' id="username-input" name="username" class="username-form-input">
-                <label for="username-input" class ='label' id = 'username-input-label'>{{lang['usernameInputPlaceholder']}}</label>
-            </div>
-            <div v-if="showRegisterForm && usernameError" class="error-message" id="username-error">
-                    {{ usernameErrorMessage }}
-            </div>
-            <div id="password-input-container">
-                <input v-model="passwordValue" type="password" placeholder = ' ' name="password" id="password-input" class="login-form-input">
-                <label for="password-input" class = 'label' id = 'password-input-label' >{{lang['passwordInputPlaceholder']}}</label>
-            </div>
-            <div v-if="showRegisterForm && passwordError" class="error-message" id="password-error">
-                    {{ passwordErrorMessage }}
-            </div> 
-            <Transition name="float-right">
-            <div v-if="showRegisterForm" id="password-repeat-input-container">
-                <input v-model="repeatPasswordValue" type="password" placeholder = ' ' name="password-repeat-input" id="password-repeat-input" class="register-form-input">
-                <label for="password-repeat-input" class = 'label' id = 'password-repeat-input-label' >{{lang['passwordRepeatInputPlaceholder']}}</label>
-            </div>
-            </Transition>
-            <div v-if="showRegisterForm && repeatPasswordError" class="error-message" id="repeat-password-error">
-                    {{ repeatPasswordErrorMessage }}
-            </div>
-            <Transition name = "float-left">
-            <div v-if="showRegisterForm" id="email-input-container">
-                <input v-model="emailValue" type="text" placeholder = ' ' name="email-input" id="email-input" class="login-form-input">
-                <label for="email-input" class = 'label' id = 'email-input-label' >{{lang['emailInputPlaceholder']}}</label>
-            </div>
-            </Transition>
-            <div v-if="showRegisterForm && emailError"  class="error-message" id="email-error">
-                    {{ emailErrorMessage }}
-            </div>
-            <div class="spacer"></div>
-            <div id="login-form-bottom-container" ref="loginFormBottomContainer">
-                <div  id="bottom-inputs-options" :class="{register: showRegisterForm}">
-                <button type="button" v-if="!showRegisterForm" class="login-form-lower-btn" id="forgot-password-btn">Zapomniałeś hasła?</button>
-                <button type="button" v-show="!showRegisterForm" @click="showRegisterFormOn($event)" ref="showRegisterFormBtn" class="login-form-lower-btn" id="change-to-register-btn">Zarejestruj się  </button>
-                <button type="button" v-show="showRegisterForm" @click.prevent="showRegisterFormOff()" class="login-form-lower-btn" id="change-to-login-btn">Posiadasz już konto? Zaloguj się</button>
+            <Loader v-if="loading"></Loader>
+            <form v-else @submit.prevent="showRegisterForm ? registerHandler() : loginHandler()">
+                <div id="login-form-title" >{{ showRegisterForm ? 'Rejestracja' : 'Logowanie' }}</div>
+                <div id="username-input-container">
+                    <input v-model="usernameValue" type="text" placeholder = ' ' id="username-input" name="username" class="username-form-input">
+                    <label for="username-input" class ='label' id = 'username-input-label'>{{lang['usernameInputPlaceholder']}}</label>
                 </div>
-                <button :disabled="!registerAvailible" :class="[registerAvailible ? 'enabled' : 'disabled']" id="login-submit">
-                        {{showRegisterForm ? 'Zarejestruj się' : 'Zaloguj się'}}
-                </button>
-                <span @click="$emit('loginFormOff')" id="disclaimer">Naciśnij ESC aby opuścić</span>
-            </div>
-
+                <div v-if="showRegisterForm && usernameError" class="error-message" id="username-error">
+                        {{ usernameErrorMessage }}
+                </div>
+                <div id="password-input-container">
+                    <input v-model="passwordValue" type="password" placeholder = ' ' name="password" id="password-input" class="login-form-input">
+                    <label for="password-input" class = 'label' id = 'password-input-label' >{{lang['passwordInputPlaceholder']}}</label>
+                </div>
+                <div v-if="showRegisterForm && passwordError" class="error-message" id="password-error">
+                        {{ passwordErrorMessage }}
+                </div> 
+                <Transition name="float-right">
+                <div v-if="showRegisterForm" id="password-repeat-input-container">
+                    <input v-model="repeatPasswordValue" type="password" placeholder = ' ' name="password-repeat-input" id="password-repeat-input" class="register-form-input">
+                    <label for="password-repeat-input" class = 'label' id = 'password-repeat-input-label' >{{lang['passwordRepeatInputPlaceholder']}}</label>
+                </div>
+                </Transition>
+                <div v-if="showRegisterForm && repeatPasswordError" class="error-message" id="repeat-password-error">
+                        {{ repeatPasswordErrorMessage }}
+                </div>
+                <Transition name = "float-left">
+                <div v-if="showRegisterForm" id="email-input-container">
+                    <input v-model="emailValue" type="text" placeholder = ' ' name="email-input" id="email-input" class="login-form-input">
+                    <label for="email-input" class = 'label' id = 'email-input-label' >{{lang['emailInputPlaceholder']}}</label>
+                </div>
+                </Transition>
+                <div v-if="showRegisterForm && emailError"  class="error-message" id="email-error">
+                        {{ emailErrorMessage }}
+                </div>
+                <div class="spacer"></div>
+                <div id="login-form-bottom-container" ref="loginFormBottomContainer">
+                    <div  id="bottom-inputs-options" :class="{register: showRegisterForm}">
+                    <button type="button" v-if="!showRegisterForm" class="login-form-lower-btn" id="forgot-password-btn">Zapomniałeś hasła?</button>
+                    <button type="button" v-show="!showRegisterForm" @click="showRegisterFormOn($event)" ref="showRegisterFormBtn" class="login-form-lower-btn" id="change-to-register-btn">Zarejestruj się  </button>
+                    <button type="button" v-show="showRegisterForm" @click.prevent="showRegisterFormOff()" class="login-form-lower-btn" id="change-to-login-btn">Posiadasz już konto? Zaloguj się</button>
+                    </div>
+                    <button :disabled="!registerAvailible" :class="[registerAvailible ? 'enabled' : 'disabled']" id="login-submit">
+                            {{showRegisterForm ? 'Zarejestruj się' : 'Zaloguj się'}}
+                    </button>
+                    <span @click="$emit('loginFormOff')" id="disclaimer">Naciśnij ESC aby opuścić</span>
+                </div>
         </form>
     </div>  
 </div>
@@ -73,6 +73,7 @@
             outline: none;
         }
         #login-form{
+          //  border: 4px solid #18181a;
             position: relative;
             overflow: hidden;
             transition: all var(--change-form-transition);
@@ -273,7 +274,8 @@
 </style>
 
 <script>
-import axios from 'axios'
+import axios from 'axios';
+import Loader   from './Loader.vue';
 export default{
     data(){
         return{
@@ -292,10 +294,12 @@ export default{
             repeatPasswordError: false,
             emailError: false,
             passwordError: false,
-            loader: false
-
+            loading: false
         }
-
+    },
+    components:
+    {
+        Loader,
     },
     inject: ['config'],
     computed:{
@@ -308,7 +312,7 @@ export default{
     },
     methods:{
         async registerHandler(){
-            this.showRegisterFormOff()
+            this.loading=true;
             axios
             .post("/api/register",{name: this.usernameValue, email: this.emailValue, password: this.passwordValue})
             .then((data) => console.log(data))
@@ -327,16 +331,17 @@ export default{
                     this.usernameError =true;
                 } 
             })
+            .finally(()=> {this.loading=false})
         },
         showRegisterFormOn(e){
             const loginForm = this.$refs.loginForm
            
-            e.target.disabled=true
+            if(e) e.target.disabled=true
             loginForm.classList.add('register-animation');
             setTimeout(()=>{
                 this.showRegisterForm=true;
               
-                e.target.disabled = false
+                if(e) e.target.disabled = false
             },300)
         },
         showRegisterFormOff(){
@@ -401,7 +406,7 @@ export default{
                 this.passwordError=false;
                 this.passwordErrorMessage="";
             }
-            if(repeatPasswordVal && newVal && repeatPasswordVal!=newVal){
+            if(repeatPasswordVal  && newVal.length >=8 && newVal && repeatPasswordVal!=newVal){
                 this.repeatPasswordError=true;
                 this.repeatPasswordErrorMessage="Hasła są różne!";
             }
@@ -412,7 +417,7 @@ export default{
         },
         repeatPasswordValue(newVal){
             const passwordVal = this.passwordValue;
-            if(passwordVal && newVal && passwordVal!=newVal){
+            if(passwordVal && passwordVal.length >=8 && newVal && passwordVal!=newVal){
                 this.repeatPasswordError=true;
                 this.repeatPasswordErrorMessage="Hasła są różne!";
             }

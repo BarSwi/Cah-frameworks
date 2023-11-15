@@ -1,4 +1,5 @@
 <template>
+
     <router-view />
 </template>
 
@@ -8,12 +9,14 @@
 
 
 <script>
+
 export default{
     mounted(){
+
+
         const hook = document.querySelector("body");
         hook.setAttribute("data-theme","dark");
         hook.classList.add("dark");
-        
     },
 
     
