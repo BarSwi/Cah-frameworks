@@ -2,7 +2,8 @@
 <div id="login-form-container" tabindex="0" @keydown.esc="$emit('loginFormOff')">
         <div id="login-form" ref="loginForm">
             <Loader v-if="loading"></Loader>
-            <form v-else @submit.prevent="showRegisterForm ? registerHandler() : loginHandler()">
+            <register-outcome @close="$emit('loginFormOff')"  v-if="registerOutcome" :error="registerError"></register-outcome>
+            <form v-if="!loading && !registerOutcome" @submit.prevent="showRegisterForm ? registerHandler() : loginHandler()">
                 <div id="login-form-title" >{{ showRegisterForm ? 'Rejestracja' : 'Logowanie' }}</div>
                 <div id="username-input-container">
                     <input v-model="usernameValue" type="text" placeholder = ' ' id="username-input" name="username" class="username-form-input">
@@ -276,6 +277,7 @@
 <script>
 import axios from 'axios';
 import Loader   from './Loader.vue';
+import registerOutcome from './registerOutcome.vue';
 export default{
     data(){
         return{
@@ -294,12 +296,15 @@ export default{
             repeatPasswordError: false,
             emailError: false,
             passwordError: false,
-            loading: false
+            loading: false,
+            registerOutcome: false,
+            registerError: false
         }
     },
     components:
     {
         Loader,
+        registerOutcome
     },
     inject: ['config'],
     computed:{
@@ -315,11 +320,23 @@ export default{
             this.loading=true;
             axios
             .post("/api/register",{name: this.usernameValue, email: this.emailValue, password: this.passwordValue})
-            .then((data) => console.log(data))
+            .then(()=>{
+                setTimeout(()=>{
+                    this.$refs.loginForm.classList.remove('register-animation');  
+                },300)
+                this.registerOutcome=true;
+            })
             .catch((err)=>{ 
              //   if(err.response.status==500){
              //       return
               //  } 
+                if(err.response.status!=422){
+                    setTimeout(()=>{
+                        this.$refs.loginForm.classList.remove('register-animation');  
+                    },300)
+                    this.registerOutcome=true;
+                    return
+                }
                 if(err.response.data.errors.email && err.response.data.errors.email[0]==="Email Taken"){
                     this.emailTaken.push(this.emailValue)
                     this.emailErrorMessage = "Adres email jest zajęty";
@@ -331,7 +348,9 @@ export default{
                     this.usernameError =true;
                 } 
             })
-            .finally(()=> {this.loading=false})
+            .finally(()=> {
+                this.loading=false
+            })
         },
         showRegisterFormOn(e){
             const loginForm = this.$refs.loginForm
