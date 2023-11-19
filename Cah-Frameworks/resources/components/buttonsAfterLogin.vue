@@ -1,10 +1,10 @@
 <template>
     <div class="selection-section">
         <div class="selection-section-container">
-            <button class="selection-home-button" id="create-game-btn">{{ lang['createGameButton']}}</button>
-            <button class="selection-home-button">{{ lang['searchGameButton']}}</button>
-            <button class="selection-home-button">{{ lang['createDeckButton']}}</button>
-            <button class="selection-home-button">{{ lang['editDeckButton']}}</button>
+            <button class="selection-home-button" id="create-game-btn"></button>
+            <button class="selection-home-button"></button>
+            <button class="selection-home-button"></button>
+            <button class="selection-home-button"></button>
         </div>
         <login-requirment :unlock-potential="unlockPotential"></login-requirment>
     </div>
@@ -57,23 +57,16 @@
 </style>
 <script>
 import loginRequirment from '../components/loginRequirment.vue'
-// import {config} from '../js/store'
-import {setLanguage} from '../js/store'
+import { userSettings } from '../storage/userSettings';
+import {mapState} from 'pinia'
 export default{
-    // data(){
-    //     return{
-    //     }
-    // },
     components:{
         loginRequirment,
     },
-    inject: ['config'],
     methods:{
     },
     computed:{
-        lang(){
-            return this.config.language
-        }
+        ...mapState(userSettings, ['getLang']),
     },
     props: ['unlockPotential'],
 }

@@ -6,6 +6,7 @@
     <Transition name="bounce">
         <login-form v-if="showLoginForm" @login-form-off="loginFormOff"></login-form>
     </Transition>
+    <div v-if="showLoginForm" id="login-layer"></div>
 
 
     <div id="container-home"  :style="showLoginForm ? 'opacity: 0.3' : ' '">
@@ -22,7 +23,7 @@
             @blur="unlockPotentialOff()"
             @click ="loginFormOn()"
             class = "login-button">
-                {{ lang['login'] }}
+                {{ getLang("login") }}
             </button>
             <button  
             :disabled="showLoginForm"
@@ -46,6 +47,13 @@
 </template>
 <style lang = "scss">
     @import '../css/mixins.scss';
+    #login-layer{
+        background-color: black;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        opacity: .5;
+    }
     #container-home{
         min-width: 75%;
         margin: 0 12.5%;
@@ -122,13 +130,13 @@
     }
     @keyframes bounce{
         0%{
-            transform: translateY(-200%);
+            transform: translateY(-200%) translate(-50%,-50%);
         }
         50%{
-            transform: translateY(10%);
+            transform: translateY(10%) translate(-50%,-50%);
         }
         100%{
-            transform: translateY(0);
+            transform: translateY(0) translate(-50%,-50%);
         }
     }
 </style>
@@ -137,7 +145,9 @@
 import topNavbar from "../components/topNavbar.vue"
 import buttonsAfterLogin from "../components/buttonsAfterLogin.vue";
 import loginForm from "../components/loginForm.vue"
-import {config} from '../js/store'
+//import {config} from '../js/store'
+import {userSettings} from '../storage/userSettings.js'
+import { mapState    } from 'pinia'
 export default {
 
   data() {
@@ -172,13 +182,8 @@ export default {
             this.showLoginForm=false;
         }
     },
-    provide: {
-        config: config
-    },
     computed:{
-        lang(){
-            return config.language
-        }
+        ...mapState(userSettings, ['getLang']),
     }
   }
 </script>

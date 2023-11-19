@@ -1,36 +1,36 @@
-import {reactive} from 'vue';
+// import {reactive} from 'vue';
 
-export const config = reactive({
-    auth: false,
-    nickname: String,
-    language: Object,
-    currentLang: String,
+// export const config = reactive({
+//     auth: false,
+//     nickname: String,
+//     language: Object,
+//     currentLang: String,
 
-});
-export function setLanguage(lang){
-    config.currentLang = lang;
-    config.language = languages[lang];
-}
+// });
+// export function setLanguage(lang){
+//     config.currentLang = lang;
+//     config.language = languages[lang];
+// }
 
-const languages = {
-    PL: {
-        myAccount: 'Moje konto',
-        login: "Zaloguj się",
-        createGameButton: "Stwórz grę",
-        searchGameButton: "Wyszukaj Lobby",
-        createDeckButton: "Stwórz talię",
-        editDeckButton: "Edytuj talię",
-        usernameInputPlaceholder: "Nazwa użytkownika",
-        passwordInputPlaceholder: "Hasło",
-        passwordRepeatInputPlaceholder: "Potwórz hasło",
-        emailInputPlaceholder: "E-mail (opcjonalnie)"
+// const languages = {
+//     PL: {
+//         myAccount: 'Moje konto',
+//         login: "Zaloguj się",
+//         createGameButton: "Stwórz grę",
+//         searchGameButton: "Wyszukaj Lobby",
+//         createDeckButton: "Stwórz talię",
+//         editDeckButton: "Edytuj talię",
+//         usernameInputPlaceholder: "Nazwa użytkownika",
+//         passwordInputPlaceholder: "Hasło",
+//         passwordRepeatInputPlaceholder: "Potwórz hasło",
+//         emailInputPlaceholder: "E-mail (opcjonalnie)"
 
-    },
-    ENG: {
-        myAccount: 'My account',
-        login: "Sign in",
-        createGameButton: "Create Game"
+//     },
+//     ENG: {
+//         myAccount: 'My account',
+//         login: "Sign in",
+//         createGameButton: "Create Game"
 
-    }
-}
-config.language = languages['PL']
+//     }
+// }
+// config.language = languages['PL']

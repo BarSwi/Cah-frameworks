@@ -2,24 +2,24 @@
     <div id="register-outcome-container" :class="props.error ? 'error' : ''">
         <div v-if="!props.error" id="positiv-outcome">
             <div class="icon-register-outcome">
-                <svg ref="svg" viewBox="0 0 21 20" xmlns="http://www.w3.org/2000/svg">
+                <svg  ref="svg" viewBox="0 0 21 20" xmlns="http://www.w3.org/2000/svg">
                     <circle ref="circle" cx="10.5" cy="10" r="5" />
                     <path ref="line" d="M13,8 L10,12 L8,10.5" /> 
                 </svg>
             </div>
             <div class="text-register-outcome">
-                    Rejestracja przebiegła pomyślnie!
+                   {{ getLang('registerSuccesfull') }}
             </div>
         </div>
         <div v-else id="error-outcome">
             <div class="icon-register-outcome">
-                <svg ref="svg" class = "error" viewBox="0 0 21 20" xmlns="http://www.w3.org/2000/svg">
+                <svg  ref="svg" class = "error" viewBox="0 0 21 20" xmlns="http://www.w3.org/2000/svg">
                     <circle ref="circle" cx="10.5" cy="10" r="5" />
                     <path ref="line" d="M13,8 L8,12 M8,8 L13,12" /> 
                 </svg>
             </div>
             <div class="text-register-outcome error">
-                    Coś poszło nie tak, prosimy spróbować później.
+                {{ getLang('registerFailed') }}
             </div>
         </div>
         <span @click="closeForm()" id="disclaimer">Naciśnij ESC aby opuścić</span>
@@ -112,7 +112,7 @@
 </style>
 <script setup>
     import {ref, onMounted} from 'vue'
-
+    import { userSettings } from '../storage/userSettings';
     const circle = ref(null)
     const line = ref(null)
 
@@ -133,4 +133,6 @@
         emit('close')
     }
 
+    const store = userSettings()
+    const {getLang} = store
 </script>

@@ -7,14 +7,14 @@
                 <div id="login-form-title" >{{ showRegisterForm ? 'Rejestracja' : 'Logowanie' }}</div>
                 <div id="username-input-container">
                     <input v-model="usernameValue" type="text" placeholder = ' ' id="username-input" name="username" class="username-form-input">
-                    <label for="username-input" class ='label' id = 'username-input-label'>{{lang['usernameInputPlaceholder']}}</label>
+                    <label for="username-input" class ='label' id = 'username-input-label'>{{getLang('usernameInputPlaceholder')}}</label>
                 </div>
                 <div v-if="showRegisterForm && usernameError" class="error-message" id="username-error">
                         {{ usernameErrorMessage }}
                 </div>
                 <div id="password-input-container">
                     <input v-model="passwordValue" type="password" placeholder = ' ' name="password" id="password-input" class="login-form-input">
-                    <label for="password-input" class = 'label' id = 'password-input-label' >{{lang['passwordInputPlaceholder']}}</label>
+                    <label for="password-input" class = 'label' id = 'password-input-label' >{{getLang('passwordInputPlaceholder')}}</label>
                 </div>
                 <div v-if="showRegisterForm && passwordError" class="error-message" id="password-error">
                         {{ passwordErrorMessage }}
@@ -22,7 +22,7 @@
                 <Transition name="float-right">
                 <div v-if="showRegisterForm" id="password-repeat-input-container">
                     <input v-model="repeatPasswordValue" type="password" placeholder = ' ' name="password-repeat-input" id="password-repeat-input" class="register-form-input">
-                    <label for="password-repeat-input" class = 'label' id = 'password-repeat-input-label' >{{lang['passwordRepeatInputPlaceholder']}}</label>
+                    <label for="password-repeat-input" class = 'label' id = 'password-repeat-input-label' >{{getLang('passwordRepeatInputPlaceholder')}}</label>
                 </div>
                 </Transition>
                 <div v-if="showRegisterForm && repeatPasswordError" class="error-message" id="repeat-password-error">
@@ -31,7 +31,7 @@
                 <Transition name = "float-left">
                 <div v-if="showRegisterForm" id="email-input-container">
                     <input v-model="emailValue" type="text" placeholder = ' ' name="email-input" id="email-input" class="login-form-input">
-                    <label for="email-input" class = 'label' id = 'email-input-label' >{{lang['emailInputPlaceholder']}}</label>
+                    <label for="email-input" class = 'label' id = 'email-input-label' >{{getLang('emailInputPlaceholder')}}</label>
                 </div>
                 </Transition>
                 <div v-if="showRegisterForm && emailError"  class="error-message" id="email-error">
@@ -59,14 +59,12 @@
         --change-form-transition: .3s ease-out;
         --min-height: 520px;
         --min-height-2: calc(520px + 12rem + 2em);
-        width: 75%;
-        inset: 0;
-        opacity: 1 !important;
-        margin: auto;
-        display: flex;
+        width:100%;
         z-index: 1000;
-        align-items: center;
-        justify-content: center;
+        inset: 50% 0 0 50%;
+        transform: translate(-50%,-50%);
+        display: grid;
+        place-items:center;
         position: fixed;
         height: 100%;
 
@@ -98,7 +96,7 @@
                 font-size: 1.1em;
                 width: 75%;
                 height: 50px;
-                &:focus, &:active, &:not(:placeholder-shown),&:focus-within{
+                &:focus, &:active, &:not(:placeholder-shown){
                     +.label{
                         font-size: 1rem !important;
                         top: -50% !important;
@@ -278,6 +276,8 @@
 import axios from 'axios';
 import Loader   from './Loader.vue';
 import registerOutcome from './registerOutcome.vue';
+import { userSettings } from '../storage/userSettings';
+import {mapState} from 'pinia'
 export default{
     data(){
         return{
@@ -306,11 +306,8 @@ export default{
         Loader,
         registerOutcome
     },
-    inject: ['config'],
     computed:{
-        lang(){
-            return this.config.language
-        },
+        ...mapState(userSettings, ['getLang']),
         registerAvailible(){
             return !this.showRegisterForm || (!this.emailError && !this.passwordError && !this.usernameError && !this.repeatPasswordError && this.usernameValue && this.passwordValue && this.repeatPasswordValue) ? true : false
         }
@@ -327,14 +324,12 @@ export default{
                 this.registerOutcome=true;
             })
             .catch((err)=>{ 
-             //   if(err.response.status==500){
-             //       return
-              //  } 
                 if(err.response.status!=422){
                     setTimeout(()=>{
                         this.$refs.loginForm.classList.remove('register-animation');  
                     },300)
                     this.registerOutcome=true;
+                    this.registerError=true
                     return
                 }
                 if(err.response.data.errors.email && err.response.data.errors.email[0]==="Email Taken"){
