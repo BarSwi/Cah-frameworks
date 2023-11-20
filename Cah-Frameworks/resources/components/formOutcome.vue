@@ -8,7 +8,7 @@
                 </svg>
             </div>
             <div class="text-register-outcome">
-                   {{ getLang('registerSuccesfull') }}
+                   {{loginHandler ? 'test' : getLang('registerSuccesfull') }}
             </div>
         </div>
         <div v-else id="error-outcome">
@@ -22,7 +22,7 @@
                 {{ getLang('registerFailed') }}
             </div>
         </div>
-        <span @click="closeForm()" id="disclaimer">Naciśnij ESC aby opuścić</span>
+        <button @click="closeForm()" id="disclaimer">Naciśnij ESC aby opuścić</button>
     </div>
 </template>
 <style lang = "scss">
@@ -75,14 +75,20 @@
         }
         #disclaimer{
                 display: block;
-                margin: 3rem auto;  
                 text-align: center;
+                margin: 3rem auto;  
+                color:#aaa;
+                letter-spacing: .1em;
+                text-align: center;
+                background: none;
+                outline: none;
+                border: none;
                 opacity: .7;
-                width: 75%;
+                width: 100%;
                 &:hover{
                     cursor: pointer;
+                }
             }
-        }
         @keyframes svg-animation-path{
             from{
                 opacity: .25;
@@ -127,7 +133,8 @@
         setTimeout(()=>{emit('close')}, props.error ? 5000 :3000)
     })
     const props = defineProps({
-        error: Boolean
+        error: Boolean,
+        loginHandler: Boolean
     })
     const closeForm = ()=>{
         emit('close')

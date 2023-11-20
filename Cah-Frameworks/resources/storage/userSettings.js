@@ -4,6 +4,7 @@ export const userSettings = defineStore('userSettings', {
     state: () => ({
         currentLang: "PL",
         Auth: false,
+        Nickname: String,
         lang: {
             PL: {
                 myAccount: 'Moje konto',

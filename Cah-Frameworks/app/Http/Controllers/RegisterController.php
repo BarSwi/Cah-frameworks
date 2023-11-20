@@ -10,7 +10,7 @@ use Hash;
 
 class RegisterController extends Controller
 {
-    public function store(Request $request){
+    public function register(Request $request){
 
         $email_regex = 'regex:/^([A-Za-z0-9.\-]*\w)+@+([A-Za-z0-9\-]*\w)+(\.[A-Za-z]*\w)+$/';
 
@@ -21,12 +21,17 @@ class RegisterController extends Controller
         ], ['name.unique' => 'Name Taken', 'email.unique' => 'Email Taken']);
         $input = $request->all();
 
-        User::create([
+        $user = User::create([
             'name' => $input['name'],
             'email' => $input['email'],
             'password' => Hash::make($input['password'])
         ]);
 
-        return response()->json(['status' => true]);
+        auth()->login($user);
+        
+        $request->session()->regenerate();
+
+        return response()->json(['status' => true, 'name' => $input['name']]);
     }
+
 }

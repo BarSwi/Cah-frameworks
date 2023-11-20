@@ -1,12 +1,12 @@
 <template>
-    <div class="selection-section">
+    <div class="selection-section" :class = "Auth ? '' : 'blocked'">
         <div class="selection-section-container">
-            <button class="selection-home-button" id="create-game-btn"></button>
-            <button class="selection-home-button"></button>
-            <button class="selection-home-button"></button>
-            <button class="selection-home-button"></button>
+            <button class="selection-home-button" id="create-game-btn">{{ getLang('createGameButton') }}</button>
+            <button class="selection-home-button">{{ getLang('searchGameButton') }}</button>
+            <button class="selection-home-button">{{ getLang('createDeckButton') }}</button>
+            <button class="selection-home-button">{{ getLang('editDeckButton') }}</button>
         </div>
-        <login-requirment :unlock-potential="unlockPotential"></login-requirment>
+        <login-requirment v-if="!Auth" :unlock-potential="unlockPotential"></login-requirment>
     </div>
 </template>
 <style lang="scss">
@@ -14,9 +14,11 @@
         position: relative;
         margin-top: 100px;
         width: 100%;
-        opacity: .7;
         min-height: 300px;
-
+        &.blocked{
+           opacity: 0.7;
+           pointer-events: none; 
+        }
 
         .selection-section-container{
             overflow: auto;
@@ -66,7 +68,7 @@ export default{
     methods:{
     },
     computed:{
-        ...mapState(userSettings, ['getLang']),
+        ...mapState(userSettings, ['getLang','Auth']),
     },
     props: ['unlockPotential'],
 }

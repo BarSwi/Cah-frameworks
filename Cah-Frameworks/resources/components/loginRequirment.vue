@@ -67,5 +67,6 @@
 <script>
     export default{
         props: ['unlocked', 'unlockPotential'],
+
     }
 </script>

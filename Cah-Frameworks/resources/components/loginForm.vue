@@ -2,17 +2,17 @@
 <div id="login-form-container" tabindex="0" @keydown.esc="$emit('loginFormOff')">
         <div id="login-form" ref="loginForm">
             <Loader v-if="loading"></Loader>
-            <register-outcome @close="$emit('loginFormOff')"  v-if="registerOutcome" :error="registerError"></register-outcome>
-            <form v-if="!loading && !registerOutcome" @submit.prevent="showRegisterForm ? registerHandler() : loginHandler()">
+            <form-outcome @close="$emit('loginFormOff')"  v-if="formOutcome" :error="formError" :loginHandler="!showRegisterForm"></form-outcome>
+            <form v-if="!loading && !formOutcome" @submit.prevent="showRegisterForm ? registerHandler() : loginHandler()">
                 <div id="login-form-title" >{{ showRegisterForm ? 'Rejestracja' : 'Logowanie' }}</div>
-                <div id="username-input-container">
+                <div class = "login-form-input-container">
                     <input v-model="usernameValue" type="text" placeholder = ' ' id="username-input" name="username" class="username-form-input">
                     <label for="username-input" class ='label' id = 'username-input-label'>{{getLang('usernameInputPlaceholder')}}</label>
                 </div>
                 <div v-if="showRegisterForm && usernameError" class="error-message" id="username-error">
                         {{ usernameErrorMessage }}
                 </div>
-                <div id="password-input-container">
+                <div class = "login-form-input-container">
                     <input v-model="passwordValue" type="password" placeholder = ' ' name="password" id="password-input" class="login-form-input">
                     <label for="password-input" class = 'label' id = 'password-input-label' >{{getLang('passwordInputPlaceholder')}}</label>
                 </div>
@@ -20,7 +20,7 @@
                         {{ passwordErrorMessage }}
                 </div> 
                 <Transition name="float-right">
-                <div v-if="showRegisterForm" id="password-repeat-input-container">
+                <div v-if="showRegisterForm && showRegisterForm" class = "login-form-input-container">
                     <input v-model="repeatPasswordValue" type="password" placeholder = ' ' name="password-repeat-input" id="password-repeat-input" class="register-form-input">
                     <label for="password-repeat-input" class = 'label' id = 'password-repeat-input-label' >{{getLang('passwordRepeatInputPlaceholder')}}</label>
                 </div>
@@ -28,10 +28,13 @@
                 <div v-if="showRegisterForm && repeatPasswordError" class="error-message" id="repeat-password-error">
                         {{ repeatPasswordErrorMessage }}
                 </div>
+                <div v-if="!showRegisterForm && validationError">
+                </div>
                 <Transition name = "float-left">
-                <div v-if="showRegisterForm" id="email-input-container">
+                <div v-if="showRegisterForm" class = "login-form-input-container">
                     <input v-model="emailValue" type="text" placeholder = ' ' name="email-input" id="email-input" class="login-form-input">
                     <label for="email-input" class = 'label' id = 'email-input-label' >{{getLang('emailInputPlaceholder')}}</label>
+
                 </div>
                 </Transition>
                 <div v-if="showRegisterForm && emailError"  class="error-message" id="email-error">
@@ -44,10 +47,11 @@
                     <button type="button" v-show="!showRegisterForm" @click="showRegisterFormOn($event)" ref="showRegisterFormBtn" class="login-form-lower-btn" id="change-to-register-btn">Zarejestruj się  </button>
                     <button type="button" v-show="showRegisterForm" @click.prevent="showRegisterFormOff()" class="login-form-lower-btn" id="change-to-login-btn">Posiadasz już konto? Zaloguj się</button>
                     </div>
-                    <button :disabled="!registerAvailible" :class="[registerAvailible ? 'enabled' : 'disabled']" id="login-submit">
+                    <button type="submit" :disabled="(!registerAvailible && showRegisterForm) || !loginAvailible" :class="[(registerAvailible && showRegisterForm) || (loginAvailible && !showRegisterForm) ? 'enabled' : 'disabled']" id="login-submit">
                             {{showRegisterForm ? 'Zarejestruj się' : 'Zaloguj się'}}
                     </button>
-                    <span @click="$emit('loginFormOff')" id="disclaimer">Naciśnij ESC aby opuścić</span>
+                    <!-- <span @click="$emit('loginFormOff')" id="disclaimer">Naciśnij ESC aby opuścić</span> -->
+                    <button @click.prevent="$emit('loginFormOff')" id="disclaimer">Naciśnij ESC aby opuścić</button>
                 </div>
         </form>
     </div>  
@@ -104,7 +108,7 @@
                 }
                     caret-color: #aaa;
             }
-            #username-input-container, #password-input-container,#password-repeat-input-container,#email-input-container{
+            .login-form-input-container{
                 position: relative;
                 .label{
                     font-size: 1.2rem;
@@ -165,7 +169,7 @@
                 transition: all .15s ease-out;
                 font-size: 1.5rem;
                 width: 75%;
-                margin: 3rem auto;
+                margin: 2rem auto;
                 position: relative;
                 &.enabled{
                     &:after{
@@ -192,10 +196,15 @@
             }
             #disclaimer{
                 display: block;
-                margin: 3rem auto;  
                 text-align: center;
+                color:#aaa;
+                letter-spacing: .1em;
+                text-align: center;
+                background: none;
+                outline: none;
+                border: none;
                 opacity: .7;
-                width: 75%;
+                width: 100%;
                 &:hover{
                     cursor: pointer;
                 }
@@ -229,7 +238,7 @@
         }
         #login-form-bottom-container{
             position: absolute;
-            bottom: -10px;
+            bottom: 50px;
             width: 100%;    
             // &.register-animation{
             //     transition: all var(--change-form-transition);
@@ -266,7 +275,7 @@
         // }
 
         .spacer{
-            margin-bottom: 270px;
+            margin-bottom: 240px;
         }
 
     }
@@ -275,9 +284,10 @@
 <script>
 import axios from 'axios';
 import Loader   from './Loader.vue';
-import registerOutcome from './registerOutcome.vue';
+import formOutcome from './formOutcome.vue';
 import { userSettings } from '../storage/userSettings';
 import {mapState} from 'pinia'
+import { mapWritableState } from 'pinia'
 export default{
     data(){
         return{
@@ -292,45 +302,72 @@ export default{
             emailErrorMessage: '',
             usernameErrorMessage: '',
             passwordErrorMessage: '',
+            usernameLoginErrorMessage: 'test',
+            passwordLoginErrorMessage: '',
             usernameError: false,
             repeatPasswordError: false,
             emailError: false,
             passwordError: false,
             loading: false,
-            registerOutcome: false,
-            registerError: false
+            formOutcome: false,
+            formError: false,
+            validationError: false
         }
     },
     components:
     {
         Loader,
-        registerOutcome
+        formOutcome
     },
     computed:{
         ...mapState(userSettings, ['getLang']),
+        ...mapWritableState(userSettings, ['Auth', 'Nickname']),
         registerAvailible(){
             return !this.showRegisterForm || (!this.emailError && !this.passwordError && !this.usernameError && !this.repeatPasswordError && this.usernameValue && this.passwordValue && this.repeatPasswordValue) ? true : false
+        },
+        loginAvailible(){
+            return this.usernameValue && this.passwordValue ? true : false
         }
     },
     methods:{
+        async loginHandler(){
+            this.loading=true;
+            console.log(this.loading)
+            axios
+            .post("/api/login", {name: this.usernameValue, password: this.passwordValue})
+            .then(res =>{
+                if(!res.data.validation) this.validationError = true
+                else{
+                    this.formOutcome = true;
+                }
+            })
+            .catch(()=>{
+                this.formOutcome=true
+                this.formError=true
+            })
+            .finally(this.loading=false)
+        },
         async registerHandler(){
+            if(!this.registerAvailible) return
             this.loading=true;
             axios
             .post("/api/register",{name: this.usernameValue, email: this.emailValue, password: this.passwordValue})
-            .then(()=>{
+            .then((response)=>{
+                this.Nickname = response.data.name
+                this.Auth = true
                 setTimeout(()=>{
                     this.$refs.loginForm.classList.remove('register-animation');  
                 },300)
-                this.registerOutcome=true;
+                this.formOutcome=true;
             })
             .catch((err)=>{ 
                 if(err.response.status!=422){
                     setTimeout(()=>{
                         this.$refs.loginForm.classList.remove('register-animation');  
                     },300)
-                    this.registerOutcome=true;
-                    this.registerError=true
-                    return
+                    this.formOutcome=true;
+                    this.formError=true
+                    return 
                 }
                 if(err.response.data.errors.email && err.response.data.errors.email[0]==="Email Taken"){
                     this.emailTaken.push(this.emailValue)
@@ -341,6 +378,13 @@ export default{
                     this.usernameTaken.push(this.usernameValue)
                     this.usernameErrorMessage = "Nazwa użytkownika jest zajęta";
                     this.usernameError =true;
+                }
+                else{
+                    setTimeout(()=>{
+                        this.$refs.loginForm.classList.remove('register-animation');  
+                    },300)
+                    this.formOutcome=true;
+                    this.formError=true
                 } 
             })
             .finally(()=> {
@@ -440,8 +484,6 @@ export default{
                 this.repeatPasswordErrorMessage="";
             }
         }
-
-
     }
 }
 </script>
