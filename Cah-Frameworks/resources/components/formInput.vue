@@ -1,11 +1,11 @@
 <template>
-<div class = "login-form-input-container">
-    <input @input="$emit('update:title', $event.target.value)" :value="modelValue" :type="inputType" placeholder = ' ' :name="label" class="register-form-input">
-    <label :for="label" class = 'label' >{{getLang('passwordRepeatInputPlaceholder')}}</label>
-</div>
-<div v-if="showRegisterForm && registerValidator.usernameError" class="error-message" id="username-error">
-        {{ usernameErrorMessage }}
-</div>
+    <div class = "login-form-input-container">
+        <input  @input="$emit('update:modelValue', $event.target.value)" :value="modelValue" :type="inputType" placeholder = ' ' :name="`${label}-input`" class="register-form-input">
+        <label :for="`${label}-input`" class = 'label' >{{getLang(`${camelCase(label)}InputPlaceholder`)}}</label>
+    </div>
+    <div v-if="error && registerShown" class="error-message" id="username-error">
+        {{ error }}
+    </div>
 </template>
 
 <style lang="scss">
@@ -37,17 +37,49 @@
 <script setup>
 import { userSettings } from '../storage/userSettings';
 import { storeToRefs } from 'pinia';
-
+import {ref, watch, computed} from 'vue'
 const store = userSettings();
-const { getLang } = storeToRefs(userList)
+const { getLang } = storeToRefs(store)
 const props = defineProps({
-    errorMessage: String,
+    errorMessageInput: String,
+    registerShown: Boolean,
     inputType: String,
     modelValue: String,
     label: String,
 })
+
+const error = ref(props.errorMessageInput)
 const emit = defineEmits([
     'update:modelValue'
 ])
+
+// watch(usernameArray, () => {
+//     if(props.takenUsername.includes(props.modelValue)){
+//         error.value = "Nazwa użytkownika jest zajęta";
+//     }
+// }, { immediate: true });
+
+watch(() => props.modelValue, (newVal)=>{
+    switch(props.label){
+        case "username":
+            const regex = /[^A-Za-z0-9]+/g;
+            // if(props.takenUsername.includes(newVal)){
+            //     error.value = "Nazwa użytkownika jest zajęta";
+            // }
+            if(newVal.length>16){
+                error.value = "Nazwa jest za długa";
+            }
+            else if(regex.test(newVal)){
+                error.value = "Niedozwolone znaki";
+            }
+            else if(!regex.test(newVal) && newVal.length<=16){
+                error.value = '';
+            }
+            break;
+    }
+})
+
+//kebabCase to camelCase
+const camelCase = s => s.replace(/-./g, x=>x[1].toUpperCase())
 
 </script>

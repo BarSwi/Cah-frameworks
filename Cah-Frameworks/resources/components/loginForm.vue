@@ -5,13 +5,21 @@
             <form-outcome @close="$emit('loginFormOff')"  v-if="formOutcome" :error="formError" :loginHandler="!showRegisterForm"></form-outcome>
             <form v-if="!loading && !formOutcome" @submit.prevent="showRegisterForm ? registerHandler() : loginHandler()">
                 <div id="login-form-title" >{{ showRegisterForm ? 'Rejestracja' : 'Logowanie' }}</div>
-                <div class = "login-form-input-container">
+                <!-- <div class = "login-form-input-container">
                     <input v-model="usernameValue" type="text" placeholder = ' ' id="username-input" name="username" class="username-form-input">
                     <label for="username-input" class ='label' id = 'username-input-label'>{{getLang('usernameInputPlaceholder')}}</label>
                 </div>
                 <div v-if="showRegisterForm && registerValidator.usernameError" class="error-message" id="username-error">
                         {{ usernameErrorMessage }}
-                </div>
+                </div> -->
+                <formInput 
+                label="username"
+                inputType="text"
+                :registerShown=showRegisterForm
+                :errorMessageInput=errorMessage
+                
+                v-model="usernameValue"
+                />
                 <div class = "login-form-input-container">
                     <input v-model="passwordValue" type="password" placeholder = ' ' name="password" id="password-input" class="login-form-input">
                     <label for="password-input" class = 'label' id = 'password-input-label' >{{getLang('passwordInputPlaceholder')}}</label>
@@ -209,6 +217,7 @@
                     cursor: pointer;
                 }
             }
+            //Change into data-attr
             .float-left-enter-active{
                 animation: float-left .3s;
             }
@@ -288,23 +297,24 @@ import formOutcome from './formOutcome.vue';
 import { userSettings } from '../storage/userSettings';
 import {mapState} from 'pinia';
 import { mapWritableState } from 'pinia';
-import Input from './formInput.vue';
+import formInput from './formInput.vue';
 export default{
     data(){
         return{
-            emailTaken: [],
-            usernameTaken: [],
+            // emailTaken: [],
+            // usernameTaken: [],
             showRegisterForm: false,
             usernameValue: '',
             passwordValue: '',
             repeatPasswordValue: '',
             emailValue: '',
+            errorMessage: '',
             repeatPasswordErrorMessage: '',
             emailErrorMessage: '',
             usernameErrorMessage: '',
             passwordErrorMessage: '',
-            usernameLoginErrorMessage: '',
-            passwordLoginErrorMessage: '',
+            // usernameLoginErrorMessage: '',
+            // passwordLoginErrorMessage: '',
             registerValidator: {usernameError: false,repeatPasswordError: false,emailError: false,passwordError: false, },
             // usernameError: false,
             // repeatPasswordError: false,
@@ -320,13 +330,12 @@ export default{
     {
         Loader,
         formOutcome,
-        Input
+        formInput
     },
     computed:{
         ...mapState(userSettings, ['getLang']),
         ...mapWritableState(userSettings, ['Auth', 'Nickname']),
         registerAvailible(){
-            console.log("test")
             return this.showRegisterForm && !Object.values(this.registerValidator).includes(true) ? true : false
         },
         loginAvailible(){
@@ -373,13 +382,13 @@ export default{
                     return 
                 }
                 if(err.response.data.errors.email && err.response.data.errors.email[0]==="Email Taken"){
-                    this.emailTaken.push(this.emailValue)
-                    this.emailErrorMessage = "Adres email jest zajęty";
+                    // this.emailTaken.push(this.emailValue)
+                    this.errorMessage = "Adres email jest zajęty";
                     this.registerValidator.emailError =true;
                 } 
                 if(err.response.data.errors.name && err.response.data.errors.name[0]==="Name Taken"){
-                    this.usernameTaken.push(this.usernameValue)
-                    this.usernameErrorMessage = "Nazwa użytkownika jest zajęta";
+                    // this.usernameTaken.push(this.usernameValue)
+                    this.errorMessage = "Nazwa użytkownika jest zajęta";
                     this.registerValidator.usernameError =true;
                 }
                 else{
@@ -424,12 +433,13 @@ export default{
     },  
     watch: {
         usernameValue(newVal){
+
             const regex = /[^A-Za-z0-9]+/g
-            if(this.usernameTaken.includes(newVal)){
-                this.usernameErrorMessage = "Nazwa użytkownika jest zajęta";
-                this.registerValidator.usernameError =true;
-            }
-            else if(newVal.length>16){
+            // if(this.usernameTaken.includes(newVal)){
+            //     this.usernameErrorMessage = "Nazwa użytkownika jest zajęta";
+            //     this.registerValidator.usernameError =true;
+            // }
+            if(newVal.length>16){
                 this.usernameErrorMessage = "Nazwa jest za długa";
                 this.registerValidator.usernameError = true;
             }
@@ -443,12 +453,13 @@ export default{
             }
         },
         emailValue(newVal){
+            //Zmienic regexa
             const regex = /^([A-Za-z0-9.\-]*\w)+@+([A-Za-z0-9\-]*\w)+(\.[A-Za-z]*\w)+$/;
-            if(this.emailTaken.includes(newVal)){
-                this.emailErrorMessage = "Adres email jest zajęty";
-                this.registerValidator.emailError =true;
-            }
-            else if(!regex.test(newVal)  && newVal!=""){
+            // if(this.emailTaken.includes(newVal)){
+            //     this.emailErrorMessage = "Adres email jest zajęty";
+            //     this.registerValidator.emailError =true;
+            // }
+            if(!regex.test(newVal)  && newVal!=""){
                 this.emailErrorMessage = "Nieprawidłowy format adresu email";
                 this.registerValidator.emailError =true;
             }
