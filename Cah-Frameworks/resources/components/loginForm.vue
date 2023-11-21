@@ -9,14 +9,14 @@
                     <input v-model="usernameValue" type="text" placeholder = ' ' id="username-input" name="username" class="username-form-input">
                     <label for="username-input" class ='label' id = 'username-input-label'>{{getLang('usernameInputPlaceholder')}}</label>
                 </div>
-                <div v-if="showRegisterForm && usernameError" class="error-message" id="username-error">
+                <div v-if="showRegisterForm && registerValidator.usernameError" class="error-message" id="username-error">
                         {{ usernameErrorMessage }}
                 </div>
                 <div class = "login-form-input-container">
                     <input v-model="passwordValue" type="password" placeholder = ' ' name="password" id="password-input" class="login-form-input">
                     <label for="password-input" class = 'label' id = 'password-input-label' >{{getLang('passwordInputPlaceholder')}}</label>
                 </div>
-                <div v-if="showRegisterForm && passwordError" class="error-message" id="password-error">
+                <div v-if="showRegisterForm && registerValidator.passwordError" class="error-message" id="password-error">
                         {{ passwordErrorMessage }}
                 </div> 
                 <Transition name="float-right">
@@ -25,7 +25,7 @@
                     <label for="password-repeat-input" class = 'label' id = 'password-repeat-input-label' >{{getLang('passwordRepeatInputPlaceholder')}}</label>
                 </div>
                 </Transition>
-                <div v-if="showRegisterForm && repeatPasswordError" class="error-message" id="repeat-password-error">
+                <div v-if="showRegisterForm && registerValidator.repeatPasswordError" class="error-message" id="repeat-password-error">
                         {{ repeatPasswordErrorMessage }}
                 </div>
                 <div v-if="!showRegisterForm && validationError">
@@ -37,7 +37,7 @@
 
                 </div>
                 </Transition>
-                <div v-if="showRegisterForm && emailError"  class="error-message" id="email-error">
+                <div v-if="showRegisterForm && registerValidator.emailError"  class="error-message" id="email-error">
                         {{ emailErrorMessage }}
                 </div>
                 <div class="spacer"></div>
@@ -286,8 +286,9 @@ import axios from 'axios';
 import Loader   from './Loader.vue';
 import formOutcome from './formOutcome.vue';
 import { userSettings } from '../storage/userSettings';
-import {mapState} from 'pinia'
-import { mapWritableState } from 'pinia'
+import {mapState} from 'pinia';
+import { mapWritableState } from 'pinia';
+import Input from './formInput.vue';
 export default{
     data(){
         return{
@@ -302,12 +303,13 @@ export default{
             emailErrorMessage: '',
             usernameErrorMessage: '',
             passwordErrorMessage: '',
-            usernameLoginErrorMessage: 'test',
+            usernameLoginErrorMessage: '',
             passwordLoginErrorMessage: '',
-            usernameError: false,
-            repeatPasswordError: false,
-            emailError: false,
-            passwordError: false,
+            registerValidator: {usernameError: false,repeatPasswordError: false,emailError: false,passwordError: false, },
+            // usernameError: false,
+            // repeatPasswordError: false,
+            // emailError: false,
+            // passwordError: false,
             loading: false,
             formOutcome: false,
             formError: false,
@@ -317,13 +319,15 @@ export default{
     components:
     {
         Loader,
-        formOutcome
+        formOutcome,
+        Input
     },
     computed:{
         ...mapState(userSettings, ['getLang']),
         ...mapWritableState(userSettings, ['Auth', 'Nickname']),
         registerAvailible(){
-            return !this.showRegisterForm || (!this.emailError && !this.passwordError && !this.usernameError && !this.repeatPasswordError && this.usernameValue && this.passwordValue && this.repeatPasswordValue) ? true : false
+            console.log("test")
+            return this.showRegisterForm && !Object.values(this.registerValidator).includes(true) ? true : false
         },
         loginAvailible(){
             return this.usernameValue && this.passwordValue ? true : false
@@ -332,7 +336,6 @@ export default{
     methods:{
         async loginHandler(){
             this.loading=true;
-            console.log(this.loading)
             axios
             .post("/api/login", {name: this.usernameValue, password: this.passwordValue})
             .then(res =>{
@@ -372,12 +375,12 @@ export default{
                 if(err.response.data.errors.email && err.response.data.errors.email[0]==="Email Taken"){
                     this.emailTaken.push(this.emailValue)
                     this.emailErrorMessage = "Adres email jest zajęty";
-                    this.emailError =true;
+                    this.registerValidator.emailError =true;
                 } 
                 if(err.response.data.errors.name && err.response.data.errors.name[0]==="Name Taken"){
                     this.usernameTaken.push(this.usernameValue)
                     this.usernameErrorMessage = "Nazwa użytkownika jest zajęta";
-                    this.usernameError =true;
+                    this.registerValidator.usernameError =true;
                 }
                 else{
                     setTimeout(()=>{
@@ -424,63 +427,63 @@ export default{
             const regex = /[^A-Za-z0-9]+/g
             if(this.usernameTaken.includes(newVal)){
                 this.usernameErrorMessage = "Nazwa użytkownika jest zajęta";
-                this.usernameError =true;
+                this.registerValidator.usernameError =true;
             }
             else if(newVal.length>16){
                 this.usernameErrorMessage = "Nazwa jest za długa";
-                this.usernameError = true;
+                this.registerValidator.usernameError = true;
             }
             else if(regex.test(newVal)){
                 this.usernameErrorMessage = "Niedozwolone znaki";
-                this.usernameError = true;
+                this.registerValidator.usernameError = true;
             }
             else if(!regex.test(newVal) && newVal.length<=16){
                 this.usernameErrorMessage = '';
-                this.usernameError = false;
+                this.registerValidator.usernameError = false;
             }
         },
         emailValue(newVal){
             const regex = /^([A-Za-z0-9.\-]*\w)+@+([A-Za-z0-9\-]*\w)+(\.[A-Za-z]*\w)+$/;
             if(this.emailTaken.includes(newVal)){
                 this.emailErrorMessage = "Adres email jest zajęty";
-                this.emailError =true;
+                this.registerValidator.emailError =true;
             }
             else if(!regex.test(newVal)  && newVal!=""){
                 this.emailErrorMessage = "Nieprawidłowy format adresu email";
-                this.emailError =true;
+                this.registerValidator.emailError =true;
             }
             else{
                 this.emailErrorMessage="";
-                this.emailError = false;
+                this.registerValidator.emailError = false;
             }
         },
         passwordValue(newVal){
             const repeatPasswordVal = this.repeatPasswordValue;
             if(newVal.length < 8 && newVal){
-                this.passwordError=true;
+                this.registerValidator.passwordError=true;
                 this.passwordErrorMessage="Hasło jest za krótkie (minimum 8 znaków)";
             }
             else{
-                this.passwordError=false;
+                this.registerValidator.passwordError=false;
                 this.passwordErrorMessage="";
             }
             if(repeatPasswordVal  && newVal.length >=8 && newVal && repeatPasswordVal!=newVal){
-                this.repeatPasswordError=true;
+                this.registerValidator.repeatPasswordError=true;
                 this.repeatPasswordErrorMessage="Hasła są różne!";
             }
             else{
-                this.repeatPasswordError=false
+                this.registerValidator.repeatPasswordError=false
                 this.repeatPasswordErrorMessage="";
             }
         },
         repeatPasswordValue(newVal){
             const passwordVal = this.passwordValue;
             if(passwordVal && passwordVal.length >=8 && newVal && passwordVal!=newVal){
-                this.repeatPasswordError=true;
+                this.registerValidator.repeatPasswordError=true;
                 this.repeatPasswordErrorMessage="Hasła są różne!";
             }
             else{
-                this.repeatPasswordError=false
+                this.registerValidator.repeatPasswordError=false
                 this.repeatPasswordErrorMessage="";
             }
         }
