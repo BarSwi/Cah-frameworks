@@ -5,45 +5,18 @@
             <form-outcome @close="$emit('loginFormOff')"  v-if="formOutcome" :error="formError" :loginHandler="!showRegisterForm"></form-outcome>
             <form v-if="!loading && !formOutcome" @submit.prevent="showRegisterForm ? registerHandler() : loginHandler()">
                 <div id="login-form-title" >{{ showRegisterForm ? 'Rejestracja' : 'Logowanie' }}</div>
-                <!-- <div class = "login-form-input-container">
-                    <input v-model="usernameValue" type="text" placeholder = ' ' id="username-input" name="username" class="username-form-input">
-                    <label for="username-input" class ='label' id = 'username-input-label'>{{getLang('usernameInputPlaceholder')}}</label>
-                </div>
-                <div v-if="showRegisterForm && registerValidator.usernameError" class="error-message" id="username-error">
-                        {{ usernameErrorMessage }}
-                </div> -->
                 <formInput label="username" inputType="text" :registerShown=showRegisterForm :errorMessageInput=errorMessage v-model="usernameValue"/>
                 <formInput label="password" inputType="password" :registerShown=showRegisterForm :errorMessageInput=errorMessage v-model="passwordValue" :repeatPasswordVal="repeatPasswordValue"/>  
-                <!-- <div class = "login-form-input-container">
-                    <input v-model="passwordValue" type="password" placeholder = ' ' name="password" id="password-input" class="login-form-input">
-                    <label for="password-input" class = 'label' id = 'password-input-label' >{{getLang('passwordInputPlaceholder')}}</label>
-                </div>
-                <div v-if="showRegisterForm && registerValidator.passwordError" class="error-message" id="password-error">
-                        {{ passwordErrorMessage }}
-                </div>  -->
                 <Transition name="float-right">
-                <!-- <div v-if="showRegisterForm && showRegisterForm" class = "login-form-input-container">
-                    <input v-model="repeatPasswordValue" type="password" placeholder = ' ' name="password-repeat-input" id="password-repeat-input" class="register-form-input">
-                    <label for="password-repeat-input" class = 'label' id = 'password-repeat-input-label' >{{getLang('passwordRepeatInputPlaceholder')}}</label>
-                </div> -->
                 <div v-if ="showRegisterForm">
                     <formInput label="repeat-password" inputType="password" :registerShown=showRegisterForm :errorMessageInput=errorMessage v-model="repeatPasswordValue" :passwordVal="passwordValue"/>  
                 </div>
-                
                 </Transition>
-                <!-- <div v-if="showRegisterForm && registerValidator.repeatPasswordError" class="error-message" id="repeat-password-error">
-                        {{ repeatPasswordErrorMessage }}
-                </div> -->
                 <Transition name = "float-left">
-                <div v-if="showRegisterForm" class = "login-form-input-container">
-                    <input v-model="emailValue" type="text" placeholder = ' ' name="email-input" id="email-input" class="login-form-input">
-                    <label for="email-input" class = 'label' id = 'email-input-label' >{{getLang('emailInputPlaceholder')}}</label>
-
+                <div v-if="showRegisterForm">
+                    <formInput label="email" inputType="text" :registerShown=showRegisterForm :errorMessageInput=errorMessage v-model="emailValue"/>  
                 </div>
                 </Transition>
-                <!-- <div v-if="showRegisterForm && registerValidator.emailError"  class="error-message" id="email-error">
-                        {{ emailErrorMessage }}
-                </div> -->
                 <div class="spacer"></div>
                 <div id="login-form-bottom-container" ref="loginFormBottomContainer">
                     <div  id="bottom-inputs-options" :class="{register: showRegisterForm}">
@@ -54,7 +27,6 @@
                     <button type="submit" :disabled="(!registerAvailible && showRegisterForm) || !loginAvailible" :class="[(registerAvailible && showRegisterForm) || (loginAvailible && !showRegisterForm) ? 'enabled' : 'disabled']" id="login-submit">
                             {{showRegisterForm ? 'Zarejestruj się' : 'Zaloguj się'}}
                     </button>
-                    <!-- <span @click="$emit('loginFormOff')" id="disclaimer">Naciśnij ESC aby opuścić</span> -->
                     <button @click.prevent="$emit('loginFormOff')" id="disclaimer">Naciśnij ESC aby opuścić</button>
                 </div>
         </form>
@@ -212,7 +184,6 @@
                     cursor: pointer;
                 }
             }
-            //Change into data-attr
             .float-left-enter-active{
                 animation: float-left var(--animation-time);
             }
@@ -244,13 +215,6 @@
             position: absolute;
             bottom: 50px;
             width: 100%;    
-            // &.register-animation{
-            //     transition: all var(--change-form-transition);
-            //     transform: translateY(calc(var(--min-height-2) - var(--min-height) - 30px));
-            // }
-            // &.login-animation{
-            //     animation: login-form-bottom var(--change-form-transition);
-            // }
         }
 
         @keyframes float-right{
@@ -269,15 +233,6 @@
                 transform: translateX(0);
             }    
         }
-        // @keyframes login-form-bottom{
-        //     0%{
-        //         transform: translateY(calc(var(--min-height-2) - var(--min-height) - 30px));
-        //     }
-        //     100%{
-        //         transform: translateY(0);
-        //     }
-        // }
-
         .spacer{
             margin-bottom: 240px;
         }
@@ -296,29 +251,16 @@ import formInput from './formInput.vue';
 export default{
     data(){
         return{
-            // emailTaken: [],
-            // usernameTaken: [],
             showRegisterForm: false,
             usernameValue: '',
             passwordValue: '',
             repeatPasswordValue: '',
             emailValue: '',
             errorMessage: {username: "", password: "", repeatPassword: "", email: ""},
-            repeatPasswordErrorMessage: '',
-            emailErrorMessage: '',
-            usernameErrorMessage: '',
-            passwordErrorMessage: '',
-            // usernameLoginErrorMessage: '',
-            // passwordLoginErrorMessage: '',
-            // registerValidator: {usernameError: false,repeatPasswordError: false,emailError: false,passwordError: false, },
-            // usernameError: false,
-            // repeatPasswordError: false,
-            // emailError: false,
-            // passwordError: false,
             loading: false,
             formOutcome: false,
             formError: false,
-            oginValidationError: false
+            loginValidationError: false
         }
     },
     components:
@@ -331,14 +273,18 @@ export default{
         ...mapState(userSettings, ['getLang']),
         ...mapWritableState(userSettings, ['Auth', 'Nickname']),
         registerAvailible(){
-            return this.showRegisterForm && Object.values(this.errorMessage).every(val => val==='') && this.usernameValue && this.passwordValue && this.repeatPasswordValue
+            return this.showRegisterForm && Object.values(this.errorMessage).every(val => val==='') && this.essentialInputsValues
         },
         loginAvailible(){
             return this.usernameValue && this.passwordValue ? true : false
+        },
+        essentialInputsValues(){
+            return this.usernameValue && this.passwordValue && this.repeatPasswordValue
         }
     },
     methods:{
         async loginHandler(){
+            if(!this.loginAvailible) return
             this.loading=true;
             axios
             .post("/api/login", {name: this.usernameValue, password: this.passwordValue})
@@ -373,12 +319,10 @@ export default{
                     return 
                 }
                 if(err.response.data.errors.email && err.response.data.errors.email[0]==="Email Taken"){
-                    // this.emailTaken.push(this.emailValue)
                     this.errorMessage.email = "Adres email jest zajęty";
                     this.registerValidator.emailError =true;
                 } 
                 if(err.response.data.errors.name && err.response.data.errors.name[0]==="Name Taken"){
-                    // this.usernameTaken.push(this.usernameValue)
                     this.errorMessage.username = "Nazwa użytkownika jest zajęta";
                     this.registerValidator.usernameError =true;
                 }
@@ -419,73 +363,5 @@ export default{
             },animationTime)
         },
     },  
-    watch: {
-       // usernameValue(newVal){
-
-           // const regex = /[^A-Za-z0-9]+/g
-            // if(this.usernameTaken.includes(newVal)){
-            //     this.usernameErrorMessage = "Nazwa użytkownika jest zajęta";
-            //     this.registerValidator.usernameError =true;
-            // }
-        //     if(newVal.length>16){
-        //         this.usernameErrorMessage = "Nazwa jest za długa";
-        //         this.registerValidator.usernameError = true;
-        //     }
-        //     else if(regex.test(newVal)){
-        //         this.usernameErrorMessage = "Niedozwolone znaki";
-        //         this.registerValidator.usernameError = true;
-        //     }
-        //     else if(!regex.test(newVal) && newVal.length<=16){
-        //         this.usernameErrorMessage = '';
-        //         this.registerValidator.usernameError = false;
-        //     }
-        // },
-        emailValue(newVal){
-            //Zmienic regexa
-            const regex = /^([A-Za-z0-9.\-]*\w)+@+([A-Za-z0-9\-]*\w)+(\.[A-Za-z]*\w)+$/;
-            // if(this.emailTaken.includes(newVal)){
-            //     this.emailErrorMessage = "Adres email jest zajęty";
-            //     this.registerValidator.emailError =true;
-            // }
-            if(!regex.test(newVal)  && newVal!=""){
-                this.emailErrorMessage = "Nieprawidłowy format adresu email";
-                this.registerValidator.emailError =true;
-            }
-            else{
-                this.emailErrorMessage="";
-                this.registerValidator.emailError = false;
-            }
-        },
-            // passwordValue(newVal){
-            //     const repeatPasswordVal = this.repeatPasswordValue;
-            //     if(newVal.length < 8 && newVal){
-            //         this.registerValidator.passwordError=true;
-            //         this.passwordErrorMessage="Hasło jest za krótkie (minimum 8 znaków)";
-            //     }
-            //     else{
-            //         this.registerValidator.passwordError=false;
-            //         this.passwordErrorMessage="";
-            //     }
-            //     if(repeatPasswordVal  && newVal.length >=8 && newVal && repeatPasswordVal!=newVal){
-            //         this.registerValidator.repeatPasswordError=true;
-            //         this.repeatPasswordErrorMessage="Hasła są różne!";
-            //     }
-            //     else{
-            //         this.registerValidator.repeatPasswordError=false
-            //         this.repeatPasswordErrorMessage="";
-            //     }
-            // },
-        // repeatPasswordValue(newVal){
-        //     const passwordVal = this.passwordValue;
-        //     if(passwordVal && passwordVal.length >=8 && newVal && passwordVal!=newVal){
-        //         this.registerValidator.repeatPasswordError=true;
-        //         this.repeatPasswordErrorMessage="Hasła są różne!";
-        //     }
-        //     else{
-        //         this.registerValidator.repeatPasswordError=false
-        //         this.repeatPasswordErrorMessage="";
-        //     }
-        // }
-    }
 }
 </script>

@@ -37,7 +37,7 @@
 <script setup>
 import { userSettings } from '../storage/userSettings';
 import { storeToRefs } from 'pinia';
-import {ref, watch, computed} from 'vue'
+import {ref, watch} from 'vue'
 const store = userSettings();
 const { getLang } = storeToRefs(store)
 const props = defineProps({
@@ -45,10 +45,6 @@ const props = defineProps({
         type: Object,
         text: String,
         inputType: String
-    },
-    registerShown:{
-        type: Boolean,
-        required: true
     },
     inputType:{
         type: String,
@@ -62,35 +58,30 @@ const props = defineProps({
         type: String,
         required: true
     },
+
+    //loginForm variables
     passwordVal: {
         type: String
     },
     repeatPasswordVal: {
         type: String
-    }
+    },
+    registerShown:{
+        type: Boolean,
+        required: true
+    },
     
 });
 
 const error = ref(props.errorMessageInput)
 const emit = defineEmits([
     'update:modelValue',
-    'update:errorMessage'
 ])
-
-// watch(usernameArray, () => {
-//     if(props.takenUsername.includes(props.modelValue)){
-//         error.value = "Nazwa użytkownika jest zajęta";
-//     }
-// }, { immediate: true });
-
 watch(()=> props.modelValue, ()=>{
     // prop typu obiekt errorMessageInput jest zewnetrznie modyfikowany, co pozwala na utrzymanie listy błędów w konkretnym typie formularza
     switch(props.label){
         case "username":
             const regex = /[^A-Za-z0-9]+/g;
-            // if(props.takenUsername.includes(newVal)){
-            //     error.value = "Nazwa użytkownika jest zajęta";
-            // }
             if(props.modelValue.length>16){
                 error.value[camelCase(props.label)] = "Nazwa jest za długa";
             }
@@ -125,7 +116,15 @@ watch(()=> props.modelValue, ()=>{
                     error.value[camelCase(props.label)]="";
                 }
                 break;
-                
+            case "email":
+                //Zmienic regexa
+            const reg = /^([A-Za-z0-9.\-]*\w)+@+([A-Za-z0-9\-]*\w)+(\.[A-Za-z]*\w)+$/;
+            if(!reg.test(props.modelValue)  && props.modelValue!=""){
+                error.value[camelCase(props.label)] = "Nieprawidłowy format adresu email";
+            }
+            else{
+                error.value[camelCase(props.label)] ="";
+            }
     }
 
 })
