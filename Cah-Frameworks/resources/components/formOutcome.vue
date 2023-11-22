@@ -8,7 +8,7 @@
                 </svg>
             </div>
             <div class="text-register-outcome">
-                   {{loginHandler ? 'test' : getLang('registerSuccesfull') }}
+                {{ messageSuccessType }}
             </div>
         </div>
         <div v-else id="error-outcome">
@@ -19,7 +19,7 @@
                 </svg>
             </div>
             <div class="text-register-outcome error">
-                {{ getLang('registerFailed') }}
+                {{ messageFailedType }}
             </div>
         </div>
         <button @click="closeForm()" id="disclaimer">Naciśnij ESC aby opuścić</button>
@@ -117,7 +117,7 @@
     }
 </style>
 <script setup>
-    import {ref, onMounted} from 'vue'
+    import {ref, onMounted,computed} from 'vue'
     import { userSettings } from '../storage/userSettings';
     const circle = ref(null)
     const line = ref(null)
@@ -134,7 +134,24 @@
     })
     const props = defineProps({
         error: Boolean,
-        loginHandler: Boolean
+        outcomeType: String
+    })
+    const messageSuccessType =  computed(()=>{
+        switch(props.outcomeType){
+            case "login":
+                return "test"
+
+            case "register":
+                return getLang("registerSuccesfull")
+        }
+    })
+    const messageFailedType =  computed(()=>{
+        switch(props.outcomeType){
+            case "login":
+                return "test"
+            case "register":
+                return getLang("registerFailed")
+        }
     })
     const closeForm = ()=>{
         emit('close')

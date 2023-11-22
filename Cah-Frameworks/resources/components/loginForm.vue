@@ -2,7 +2,7 @@
 <div id="login-form-container" tabindex="0" @keydown.esc="$emit('loginFormOff')">
         <div  id="login-form" ref="loginForm" animation-time="300" style="--animation-time: 300ms">
             <Loader v-if="loading"></Loader>
-            <form-outcome @close="$emit('loginFormOff')"  v-if="formOutcome" :error="formError" :loginHandler="!showRegisterForm"></form-outcome>
+            <form-outcome @close="$emit('loginFormOff')"  v-if="formOutcome" :error="formError" :outcomeType="formOutcomeType"></form-outcome>
             <form v-if="!loading && !formOutcome" @submit.prevent="showRegisterForm ? registerHandler() : loginHandler()">
                 <div id="login-form-title" >{{ showRegisterForm ? 'Rejestracja' : 'Logowanie' }}</div>
                 <formInput label="username" inputType="text" :registerShown=showRegisterForm :errorMessageInput=errorMessage v-model="usernameValue"/>
@@ -51,7 +51,6 @@
             outline: none;
         }
         #login-form{
-          //  border: 4px solid #18181a;
             position: relative;
             overflow: hidden;
             transition: all var(--animation-time) ease-out;
@@ -251,14 +250,15 @@ import formInput from './formInput.vue';
 export default{
     data(){
         return{
-            showRegisterForm: false,
             usernameValue: '',
             passwordValue: '',
             repeatPasswordValue: '',
             emailValue: '',
             errorMessage: {username: "", password: "", repeatPassword: "", email: ""},
+            showRegisterForm: false,
             loading: false,
             formOutcome: false,
+            formOutcomeType: String,
             formError: false,
             loginValidationError: false
         }
@@ -285,6 +285,7 @@ export default{
     methods:{
         async loginHandler(){
             if(!this.loginAvailible) return
+            this.formOutcomeType = 'login'
             this.loading=true;
             axios
             .post("/api/login", {name: this.usernameValue, password: this.passwordValue})
@@ -302,14 +303,15 @@ export default{
         },
         async registerHandler(){
             if(!this.registerAvailible) return
+            this.formOutcomeType='register'
             this.loading=true;
             axios
             .post("/api/register",{name: this.usernameValue, email: this.emailValue, password: this.passwordValue})
             .then((response)=>{
                 this.Nickname = response.data.name
                 this.Auth = true
-                this.showRegisterFormOff()
                 this.formOutcome=true;
+                this.showRegisterFormOff()
             })
             .catch((err)=>{ 
                 if(err.response.status!=422){
@@ -320,11 +322,9 @@ export default{
                 }
                 if(err.response.data.errors.email && err.response.data.errors.email[0]==="Email Taken"){
                     this.errorMessage.email = "Adres email jest zajęty";
-                    this.registerValidator.emailError =true;
                 } 
                 if(err.response.data.errors.name && err.response.data.errors.name[0]==="Name Taken"){
                     this.errorMessage.username = "Nazwa użytkownika jest zajęta";
-                    this.registerValidator.usernameError =true;
                 }
                 else{
                     this.showRegisterFormOff()

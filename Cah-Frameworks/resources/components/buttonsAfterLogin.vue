@@ -29,7 +29,9 @@
             align-items: center;
             flex-wrap: wrap;
             .selection-home-button{
+                position: relative;
                 outline: none;
+                border: none;   
                 box-sizing: border-box;
                 font-size: 1.5rem;
                 letter-spacing: 0.2em;
@@ -46,12 +48,30 @@
                 border-radius: 30px;
                 background-color: transparent;
                 border: 4px solid var(--base-dark-green-2);
+                // border-top: 4px solid var(--base-dark-green-2);
                 color: white;
                 transition: color .3s cubic-bezier(.64,.08,.34,1.41);
                 &:hover,:focus,:active{
                     cursor: pointer;
                     color: var(--base-light-green-2);
+                    // &:after{
+                    //     height: 100%;
+                    //     inset: 0 0 100% 0;
+                    // }
                 }
+                // &:after{
+                //     transition: all .3s cubic-bezier(.64,.08,.34,1.41);
+                //     background-color: var(--base-dark-green-2);
+                //     content: '';
+                //     position: absolute;
+                //     width: 100%;
+                //     height: 0;  
+                //     border: 2px solid var(--base-dark-green-2);
+                //     inset: 100% 0 0 0;
+                //     transform-origin: center ;
+                //     background: transparent;
+                //     border-radius: 30px;
+                // }
             }
         }
 
