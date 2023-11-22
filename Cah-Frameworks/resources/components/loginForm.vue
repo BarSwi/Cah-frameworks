@@ -1,6 +1,6 @@
 <template>
 <div id="login-form-container" tabindex="0" @keydown.esc="$emit('loginFormOff')">
-        <div id="login-form" ref="loginForm">
+        <div  id="login-form" ref="loginForm" animation-time="300" style="--animation-time: 300ms">
             <Loader v-if="loading"></Loader>
             <form-outcome @close="$emit('loginFormOff')"  v-if="formOutcome" :error="formError" :loginHandler="!showRegisterForm"></form-outcome>
             <form v-if="!loading && !formOutcome" @submit.prevent="showRegisterForm ? registerHandler() : loginHandler()">
@@ -12,32 +12,28 @@
                 <div v-if="showRegisterForm && registerValidator.usernameError" class="error-message" id="username-error">
                         {{ usernameErrorMessage }}
                 </div> -->
-                <formInput 
-                label="username"
-                inputType="text"
-                :registerShown=showRegisterForm
-                :errorMessageInput=errorMessage
-                
-                v-model="usernameValue"
-                />
-                <div class = "login-form-input-container">
+                <formInput label="username" inputType="text" :registerShown=showRegisterForm :errorMessageInput=errorMessage v-model="usernameValue"/>
+                <formInput label="password" inputType="password" :registerShown=showRegisterForm :errorMessageInput=errorMessage v-model="passwordValue" :repeatPasswordVal="repeatPasswordValue"/>  
+                <!-- <div class = "login-form-input-container">
                     <input v-model="passwordValue" type="password" placeholder = ' ' name="password" id="password-input" class="login-form-input">
                     <label for="password-input" class = 'label' id = 'password-input-label' >{{getLang('passwordInputPlaceholder')}}</label>
                 </div>
                 <div v-if="showRegisterForm && registerValidator.passwordError" class="error-message" id="password-error">
                         {{ passwordErrorMessage }}
-                </div> 
+                </div>  -->
                 <Transition name="float-right">
-                <div v-if="showRegisterForm && showRegisterForm" class = "login-form-input-container">
+                <!-- <div v-if="showRegisterForm && showRegisterForm" class = "login-form-input-container">
                     <input v-model="repeatPasswordValue" type="password" placeholder = ' ' name="password-repeat-input" id="password-repeat-input" class="register-form-input">
                     <label for="password-repeat-input" class = 'label' id = 'password-repeat-input-label' >{{getLang('passwordRepeatInputPlaceholder')}}</label>
+                </div> -->
+                <div v-if ="showRegisterForm">
+                    <formInput label="repeat-password" inputType="password" :registerShown=showRegisterForm :errorMessageInput=errorMessage v-model="repeatPasswordValue" :passwordVal="passwordValue"/>  
                 </div>
+                
                 </Transition>
-                <div v-if="showRegisterForm && registerValidator.repeatPasswordError" class="error-message" id="repeat-password-error">
+                <!-- <div v-if="showRegisterForm && registerValidator.repeatPasswordError" class="error-message" id="repeat-password-error">
                         {{ repeatPasswordErrorMessage }}
-                </div>
-                <div v-if="!showRegisterForm && validationError">
-                </div>
+                </div> -->
                 <Transition name = "float-left">
                 <div v-if="showRegisterForm" class = "login-form-input-container">
                     <input v-model="emailValue" type="text" placeholder = ' ' name="email-input" id="email-input" class="login-form-input">
@@ -45,15 +41,15 @@
 
                 </div>
                 </Transition>
-                <div v-if="showRegisterForm && registerValidator.emailError"  class="error-message" id="email-error">
+                <!-- <div v-if="showRegisterForm && registerValidator.emailError"  class="error-message" id="email-error">
                         {{ emailErrorMessage }}
-                </div>
+                </div> -->
                 <div class="spacer"></div>
                 <div id="login-form-bottom-container" ref="loginFormBottomContainer">
                     <div  id="bottom-inputs-options" :class="{register: showRegisterForm}">
-                    <button type="button" v-if="!showRegisterForm" class="login-form-lower-btn" id="forgot-password-btn">Zapomniałeś hasła?</button>
-                    <button type="button" v-show="!showRegisterForm" @click="showRegisterFormOn($event)" ref="showRegisterFormBtn" class="login-form-lower-btn" id="change-to-register-btn">Zarejestruj się  </button>
-                    <button type="button" v-show="showRegisterForm" @click.prevent="showRegisterFormOff()" class="login-form-lower-btn" id="change-to-login-btn">Posiadasz już konto? Zaloguj się</button>
+                        <button type="button" v-if="!showRegisterForm" class="login-form-lower-btn" id="forgot-password-btn">Zapomniałeś hasła?</button>
+                        <button type="button" v-show="!showRegisterForm" @click="showRegisterFormOn($event)" ref="showRegisterFormBtn" class="login-form-lower-btn" id="change-to-register-btn">Zarejestruj się  </button>
+                        <button type="button" v-show="showRegisterForm" @click.prevent="showRegisterFormOff()" ref="hideRegisterFormBtn" class="login-form-lower-btn" id="change-to-login-btn">Posiadasz już konto? Zaloguj się</button>
                     </div>
                     <button type="submit" :disabled="(!registerAvailible && showRegisterForm) || !loginAvailible" :class="[(registerAvailible && showRegisterForm) || (loginAvailible && !showRegisterForm) ? 'enabled' : 'disabled']" id="login-submit">
                             {{showRegisterForm ? 'Zarejestruj się' : 'Zaloguj się'}}
@@ -68,7 +64,6 @@
 
 <style lang = "scss">
     #login-form-container{
-        --change-form-transition: .3s ease-out;
         --min-height: 520px;
         --min-height-2: calc(520px + 12rem + 2em);
         width:100%;
@@ -87,7 +82,7 @@
           //  border: 4px solid #18181a;
             position: relative;
             overflow: hidden;
-            transition: all var(--change-form-transition);
+            transition: all var(--animation-time) ease-out;
             transform-origin:center ;
             background-color: #222;
             min-height: var(--min-height);
@@ -219,16 +214,16 @@
             }
             //Change into data-attr
             .float-left-enter-active{
-                animation: float-left .3s;
+                animation: float-left var(--animation-time);
             }
             .float-left-leave-active{
-                animation: float-left .3s reverse;
+                animation: float-left var(--animation-time) reverse;
             }
             .float-right-enter-active{
-                animation: float-right .3s;
+                animation: float-right var(--animation-time);
             }
             .float-right-leave-active{
-                animation: float-right .3s reverse;
+                animation: float-right var(--animation-time) reverse;
             }
             .error-message{
                 margin: -2rem auto auto auto;
@@ -308,14 +303,14 @@ export default{
             passwordValue: '',
             repeatPasswordValue: '',
             emailValue: '',
-            errorMessage: '',
+            errorMessage: {username: "", password: "", repeatPassword: "", email: ""},
             repeatPasswordErrorMessage: '',
             emailErrorMessage: '',
             usernameErrorMessage: '',
             passwordErrorMessage: '',
             // usernameLoginErrorMessage: '',
             // passwordLoginErrorMessage: '',
-            registerValidator: {usernameError: false,repeatPasswordError: false,emailError: false,passwordError: false, },
+            // registerValidator: {usernameError: false,repeatPasswordError: false,emailError: false,passwordError: false, },
             // usernameError: false,
             // repeatPasswordError: false,
             // emailError: false,
@@ -323,7 +318,7 @@ export default{
             loading: false,
             formOutcome: false,
             formError: false,
-            validationError: false
+            oginValidationError: false
         }
     },
     components:
@@ -336,7 +331,7 @@ export default{
         ...mapState(userSettings, ['getLang']),
         ...mapWritableState(userSettings, ['Auth', 'Nickname']),
         registerAvailible(){
-            return this.showRegisterForm && !Object.values(this.registerValidator).includes(true) ? true : false
+            return this.showRegisterForm && Object.values(this.errorMessage).every(val => val==='') && this.usernameValue && this.passwordValue && this.repeatPasswordValue
         },
         loginAvailible(){
             return this.usernameValue && this.passwordValue ? true : false
@@ -348,7 +343,7 @@ export default{
             axios
             .post("/api/login", {name: this.usernameValue, password: this.passwordValue})
             .then(res =>{
-                if(!res.data.validation) this.validationError = true
+                if(!res.data.validation) this.loginValidationError = true
                 else{
                     this.formOutcome = true;
                 }
@@ -367,34 +362,28 @@ export default{
             .then((response)=>{
                 this.Nickname = response.data.name
                 this.Auth = true
-                setTimeout(()=>{
-                    this.$refs.loginForm.classList.remove('register-animation');  
-                },300)
+                this.showRegisterFormOff()
                 this.formOutcome=true;
             })
             .catch((err)=>{ 
                 if(err.response.status!=422){
-                    setTimeout(()=>{
-                        this.$refs.loginForm.classList.remove('register-animation');  
-                    },300)
+                    this.showRegisterFormOff()
                     this.formOutcome=true;
                     this.formError=true
                     return 
                 }
                 if(err.response.data.errors.email && err.response.data.errors.email[0]==="Email Taken"){
                     // this.emailTaken.push(this.emailValue)
-                    this.errorMessage = "Adres email jest zajęty";
+                    this.errorMessage.email = "Adres email jest zajęty";
                     this.registerValidator.emailError =true;
                 } 
                 if(err.response.data.errors.name && err.response.data.errors.name[0]==="Name Taken"){
                     // this.usernameTaken.push(this.usernameValue)
-                    this.errorMessage = "Nazwa użytkownika jest zajęta";
+                    this.errorMessage.username = "Nazwa użytkownika jest zajęta";
                     this.registerValidator.usernameError =true;
                 }
                 else{
-                    setTimeout(()=>{
-                        this.$refs.loginForm.classList.remove('register-animation');  
-                    },300)
+                    this.showRegisterFormOff()
                     this.formOutcome=true;
                     this.formError=true
                 } 
@@ -403,55 +392,54 @@ export default{
                 this.loading=false
             })
         },
-        showRegisterFormOn(e){
+        showRegisterFormOn(){
+            const animationTime = this.$refs.loginForm.getAttribute('animation-time')
             const loginForm = this.$refs.loginForm
-           
-            if(e) e.target.disabled=true
+            const hideRegisterFormBtn = this.$refs.hideRegisterFormBtn ? this.$refs.hideRegisterFormBtn : false
+            if(hideRegisterFormBtn) hideRegisterFormBtn.disabled=true
             loginForm.classList.add('register-animation');
             setTimeout(()=>{
                 this.showRegisterForm=true;
-              
-                if(e) e.target.disabled = false
-            },300)
+                if(hideRegisterFormBtn) hideRegisterFormBtn.disabled=false
+            },animationTime)
         },
         showRegisterFormOff(){
+            const animationTime = this.$refs.loginForm.getAttribute('animation-time')
             this.showRegisterForm=false;
-            const showRegisterFormBtn = this.$refs.showRegisterFormBtn
+            const showRegisterFormBtn = this.$refs.showRegisterFormBtn ? this.$refs.showRegisterFormBtn : false
             const loginForm = this.$refs.loginForm
-           
-            showRegisterFormBtn.disabled=true
-
+            if(showRegisterFormBtn) showRegisterFormBtn.disabled=true
             setTimeout(()=>{
-              
                 loginForm.classList.remove('register-animation');  
-                setTimeout(()=>{
-
-                    showRegisterFormBtn.disabled=false
-                },300)
-            },300)
+                if(showRegisterFormBtn) {
+                    setTimeout(()=>{
+                        showRegisterFormBtn.disabled=false
+                    },animationTime)
+                }
+            },animationTime)
         },
     },  
     watch: {
-        usernameValue(newVal){
+       // usernameValue(newVal){
 
-            const regex = /[^A-Za-z0-9]+/g
+           // const regex = /[^A-Za-z0-9]+/g
             // if(this.usernameTaken.includes(newVal)){
             //     this.usernameErrorMessage = "Nazwa użytkownika jest zajęta";
             //     this.registerValidator.usernameError =true;
             // }
-            if(newVal.length>16){
-                this.usernameErrorMessage = "Nazwa jest za długa";
-                this.registerValidator.usernameError = true;
-            }
-            else if(regex.test(newVal)){
-                this.usernameErrorMessage = "Niedozwolone znaki";
-                this.registerValidator.usernameError = true;
-            }
-            else if(!regex.test(newVal) && newVal.length<=16){
-                this.usernameErrorMessage = '';
-                this.registerValidator.usernameError = false;
-            }
-        },
+        //     if(newVal.length>16){
+        //         this.usernameErrorMessage = "Nazwa jest za długa";
+        //         this.registerValidator.usernameError = true;
+        //     }
+        //     else if(regex.test(newVal)){
+        //         this.usernameErrorMessage = "Niedozwolone znaki";
+        //         this.registerValidator.usernameError = true;
+        //     }
+        //     else if(!regex.test(newVal) && newVal.length<=16){
+        //         this.usernameErrorMessage = '';
+        //         this.registerValidator.usernameError = false;
+        //     }
+        // },
         emailValue(newVal){
             //Zmienic regexa
             const regex = /^([A-Za-z0-9.\-]*\w)+@+([A-Za-z0-9\-]*\w)+(\.[A-Za-z]*\w)+$/;
@@ -468,36 +456,36 @@ export default{
                 this.registerValidator.emailError = false;
             }
         },
-        passwordValue(newVal){
-            const repeatPasswordVal = this.repeatPasswordValue;
-            if(newVal.length < 8 && newVal){
-                this.registerValidator.passwordError=true;
-                this.passwordErrorMessage="Hasło jest za krótkie (minimum 8 znaków)";
-            }
-            else{
-                this.registerValidator.passwordError=false;
-                this.passwordErrorMessage="";
-            }
-            if(repeatPasswordVal  && newVal.length >=8 && newVal && repeatPasswordVal!=newVal){
-                this.registerValidator.repeatPasswordError=true;
-                this.repeatPasswordErrorMessage="Hasła są różne!";
-            }
-            else{
-                this.registerValidator.repeatPasswordError=false
-                this.repeatPasswordErrorMessage="";
-            }
-        },
-        repeatPasswordValue(newVal){
-            const passwordVal = this.passwordValue;
-            if(passwordVal && passwordVal.length >=8 && newVal && passwordVal!=newVal){
-                this.registerValidator.repeatPasswordError=true;
-                this.repeatPasswordErrorMessage="Hasła są różne!";
-            }
-            else{
-                this.registerValidator.repeatPasswordError=false
-                this.repeatPasswordErrorMessage="";
-            }
-        }
+            // passwordValue(newVal){
+            //     const repeatPasswordVal = this.repeatPasswordValue;
+            //     if(newVal.length < 8 && newVal){
+            //         this.registerValidator.passwordError=true;
+            //         this.passwordErrorMessage="Hasło jest za krótkie (minimum 8 znaków)";
+            //     }
+            //     else{
+            //         this.registerValidator.passwordError=false;
+            //         this.passwordErrorMessage="";
+            //     }
+            //     if(repeatPasswordVal  && newVal.length >=8 && newVal && repeatPasswordVal!=newVal){
+            //         this.registerValidator.repeatPasswordError=true;
+            //         this.repeatPasswordErrorMessage="Hasła są różne!";
+            //     }
+            //     else{
+            //         this.registerValidator.repeatPasswordError=false
+            //         this.repeatPasswordErrorMessage="";
+            //     }
+            // },
+        // repeatPasswordValue(newVal){
+        //     const passwordVal = this.passwordValue;
+        //     if(passwordVal && passwordVal.length >=8 && newVal && passwordVal!=newVal){
+        //         this.registerValidator.repeatPasswordError=true;
+        //         this.repeatPasswordErrorMessage="Hasła są różne!";
+        //     }
+        //     else{
+        //         this.registerValidator.repeatPasswordError=false
+        //         this.repeatPasswordErrorMessage="";
+        //     }
+        // }
     }
 }
 </script>

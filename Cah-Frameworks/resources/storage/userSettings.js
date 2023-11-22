@@ -15,7 +15,7 @@ export const userSettings = defineStore('userSettings', {
                 editDeckButton: "Edytuj talię",
                 usernameInputPlaceholder: "Nazwa użytkownika",
                 passwordInputPlaceholder: "Hasło",
-                passwordRepeatInputPlaceholder: "Potwórz hasło",
+                repeatPasswordInputPlaceholder: "Potwórz hasło",
                 emailInputPlaceholder: "E-mail (opcjonalnie)",
                 registerSuccesfull: "Rejestracja przebiegła pomyślnie!",
                 registerFailed: "Coś poszło nie tak, prosimy spróbować później."

@@ -1,10 +1,10 @@
 <template>
     <div class = "login-form-input-container">
-        <input  @input="$emit('update:modelValue', $event.target.value)" :value="modelValue" :type="inputType" placeholder = ' ' :name="`${label}-input`" class="register-form-input">
+        <input  @input="$emit('update:modelValue', $event.target.value)" :value="modelValue" :type="inputType" placeholder = ' ' :id = "`${label}-input`" class="register-form-input">
         <label :for="`${label}-input`" class = 'label' >{{getLang(`${camelCase(label)}InputPlaceholder`)}}</label>
-    </div>
-    <div v-if="error && registerShown" class="error-message" id="username-error">
-        {{ error }}
+    </div>  
+    <div v-if="error[camelCase(label)] && registerShown" class="error-message" id="username-error">
+        {{ error[camelCase(label)] }}
     </div>
 </template>
 
@@ -28,7 +28,7 @@
         color: yellow;
         font-size: 1.2rem;
         word-wrap: break-word;
-        width: 75%;
+        width: 100%;
         text-align: center;
     }
 }
@@ -41,16 +41,40 @@ import {ref, watch, computed} from 'vue'
 const store = userSettings();
 const { getLang } = storeToRefs(store)
 const props = defineProps({
-    errorMessageInput: String,
-    registerShown: Boolean,
-    inputType: String,
-    modelValue: String,
-    label: String,
-})
+    errorMessageInput: {
+        type: Object,
+        text: String,
+        inputType: String
+    },
+    registerShown:{
+        type: Boolean,
+        required: true
+    },
+    inputType:{
+        type: String,
+        required: true
+    },
+    modelValue:{
+        type: String,
+        required:true
+    },
+    label:{
+        type: String,
+        required: true
+    },
+    passwordVal: {
+        type: String
+    },
+    repeatPasswordVal: {
+        type: String
+    }
+    
+});
 
 const error = ref(props.errorMessageInput)
 const emit = defineEmits([
-    'update:modelValue'
+    'update:modelValue',
+    'update:errorMessage'
 ])
 
 // watch(usernameArray, () => {
@@ -59,24 +83,51 @@ const emit = defineEmits([
 //     }
 // }, { immediate: true });
 
-watch(() => props.modelValue, (newVal)=>{
+watch(()=> props.modelValue, ()=>{
+    // prop typu obiekt errorMessageInput jest zewnetrznie modyfikowany, co pozwala na utrzymanie listy błędów w konkretnym typie formularza
     switch(props.label){
         case "username":
             const regex = /[^A-Za-z0-9]+/g;
             // if(props.takenUsername.includes(newVal)){
             //     error.value = "Nazwa użytkownika jest zajęta";
             // }
-            if(newVal.length>16){
-                error.value = "Nazwa jest za długa";
+            if(props.modelValue.length>16){
+                error.value[camelCase(props.label)] = "Nazwa jest za długa";
             }
-            else if(regex.test(newVal)){
-                error.value = "Niedozwolone znaki";
+            else if(regex.test(props.modelValue)){
+                error.value[camelCase(props.label)] = "Niedozwolone znaki";
             }
-            else if(!regex.test(newVal) && newVal.length<=16){
-                error.value = '';
+            else{
+                error.value[camelCase(props.label)] = '';
             }
             break;
+            case "password":
+                const repeatPasswordVal = props.repeatPasswordVal
+                if(props.modelValue.length < 8 && props.modelValue){
+                    error.value[camelCase(props.label)]="Hasło jest za krótkie (minimum 8 znaków)";
+                }
+                else{
+                    error.value[camelCase(props.label)]="";
+                }
+                if(repeatPasswordVal  && props.modelValue.length >=8 && repeatPasswordVal!=props.modelValue){
+                    error.value.repeatPassword="Hasła są różne!";
+                }
+                else if((repeatPasswordVal  && repeatPasswordVal==props.modelValue) || props.modelValue.length <8){
+                    error.value.repeatPassword="";
+                }
+                break;
+            case "repeat-password":
+            const passwordVal = props.passwordVal;
+                if(passwordVal && passwordVal.length >=8 && props.modelValue && passwordVal!=props.modelValue){
+                    error.value[camelCase(props.label)]="Hasła są różne!";
+                }
+                else{
+                    error.value[camelCase(props.label)]="";
+                }
+                break;
+                
     }
+
 })
 
 //kebabCase to camelCase
