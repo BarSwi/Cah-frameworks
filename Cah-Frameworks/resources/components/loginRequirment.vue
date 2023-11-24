@@ -14,7 +14,8 @@
         justify-content: center;
         height: 100%;
         inset: 0;
-        background-color: rgba(34, 33, 33, 0.95); 
+        background-color: rgb(32, 30, 30); 
+        opacity: .5;
         border-radius: 10px;
         #lock{
             width: 2.9rem;

@@ -28,22 +28,27 @@
     --background-login-form-color: black;
     --light-opacity: 0;
     --navbar-background-color: #0C0E0D;
+    --navbar-background-color: black;
     --navbar-shadow-color: var(--base-light-green);
     --theme-toggler-background-color: #060e2c;
+    
     // --important-button-background-color: #08A045;
     // --less-important-button-background-color: #6BBF59;
     transition: color var(--transition-theme-method) !important;
 }
 html{
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;900&display=swap');
+    
     min-height: 100%;
 
 
 }
 body {
+    font-family: 'Roboto', sans-serif;
     padding: 0;
     border: 0;
     margin: 0;
-    background-image: var(--dark-background-image);
+    background-color: black;
     position: relative;
     min-height: 100vh;
     height: 100%;

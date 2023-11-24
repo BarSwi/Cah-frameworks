@@ -1,6 +1,6 @@
 <template>
     <div class = "login-form-input-container">
-        <input  @input="$emit('update:modelValue', $event.target.value)" :value="modelValue" :type="inputType" placeholder = ' ' :id = "`${label}-input`" class="register-form-input">
+        <input :autocomplete="autoComplete"  @input="$emit('update:modelValue', $event.target.value)" :value="modelValue" :type="inputType" placeholder = ' ' :id = "`${label}-input`" class="register-form-input">
         <label :for="`${label}-input`" class = 'label' >{{getLang(`${camelCase(label)}InputPlaceholder`)}}</label>
     </div>  
     <div v-if="error[camelCase(label)] && registerShown" class="error-message" id="username-error">
@@ -37,7 +37,7 @@
 <script setup>
 import { userSettings } from '../storage/userSettings';
 import { storeToRefs } from 'pinia';
-import {ref, watch} from 'vue'
+import {ref, watch, computed} from 'vue'
 const store = userSettings();
 const { getLang } = storeToRefs(store)
 const props = defineProps({
@@ -72,7 +72,14 @@ const props = defineProps({
     },
     
 });
-
+const autoComplete = computed(()=>{
+    switch(props.label){
+        case 'username':
+            return 'username'
+        case 'password':
+            return props.registerShown ? 'new-password' : 'current-password'
+    }
+})
 const error = ref(props.errorMessageInput)
 const emit = defineEmits([
     'update:modelValue',

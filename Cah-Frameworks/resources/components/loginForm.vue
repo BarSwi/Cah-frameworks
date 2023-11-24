@@ -36,6 +36,7 @@
 
 <style lang = "scss">
     #login-form-container{
+        
         --min-height: 520px;
         --min-height-2: calc(520px + 12rem + 2em);
         width:100%;
@@ -46,7 +47,6 @@
         place-items:center;
         position: fixed;
         height: 100%;
-
         &:focus, &:active{
             outline: none;
         }
@@ -99,6 +99,7 @@
             }
             #login-form-title{
                 width: 100%;
+                font-weight: 900;
                 text-align: center;
                 color: var(--base-light-green);
                 margin-top: 2rem;
@@ -146,23 +147,26 @@
                 margin: 2rem auto;
                 position: relative;
                 &.enabled{
+                    transform: translateY(-2px);
                     &:after{
                     content: '';
-                    opacity: 0;
+                    //opacity: 1;
                     height: 100%;
                     position: absolute;
+                    z-index: -1;
                     width: 100%;
                     inset: 0;
-                    filter: blur(3px);
-                    border: 3px solid var(--base-light-green);
+                    transition: opacity .3s ease;
+                    filter: blur(2px);
+                    border: 1px solid var(--base-light-green);
                 }
                 &:hover{
                     cursor: pointer;
                 }
                 &:hover,&:focus,&:active{
-                    transform: scale(1.03);
+                    transform: translateY(0);
                     &:after{
-                        opacity: 1;
+                        opacity: 0;
                     }
                 }
                 }
@@ -293,13 +297,15 @@ export default{
                 if(!res.data.validation) this.loginValidationError = true
                 else{
                     this.formOutcome = true;
+                    this.Auth = true;
+                    this.Nickname = res.data.name;
                 }
             })
             .catch(()=>{
                 this.formOutcome=true
                 this.formError=true
             })
-            .finally(this.loading=false)
+            .finally(()=>this.loading=false)
         },
         async registerHandler(){
             if(!this.registerAvailible) return

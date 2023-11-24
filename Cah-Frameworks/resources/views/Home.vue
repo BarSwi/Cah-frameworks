@@ -41,13 +41,13 @@
     </div>
 </template>
 <style lang = "scss">
-    @import '../css/mixins.scss';
+    @import '../css/homeBtn.scss';
     #login-layer{
         background-color: black;
         position: absolute;
         width: 100%;
         height: 100%;
-        opacity: .5;
+        opacity: .6 ;
     }
     #container-home{
         min-width: 75%;
@@ -69,51 +69,11 @@
             // flex-direction: column;
             gap: 20px;
             button{
-                -webkit-box-shadow: inset 0px 0px 0.5em 0px var(--base-light-green),
-                0px 0px 0.5em 0px var(--base-light-green);
-                -moz-box-shadow: inset 0px 0px 0.5em 0px var(--base-light-green),
-                    0px 0px 0.5em 0px var(--base-light-green);
-                box-shadow: inset 0px 0px 0.5em 0px var(--base-light-green),
-                    0px 0px 0.5em 0px var(--base-light-green);
-                animation: button-clicker 1.5s linear infinite;
-                box-sizing: border-box;
-                padding: .25rem;
-                color: white;
-                transition: color .3s cubic-bezier(.64,.08,.34,1.41);
-                font-size: 1.5rem;
-                text-align: center;
-                height: clamp(6rem, 125px, 125px);
-                width: clamp(15rem,20vw,20vw);
-                letter-spacing: 0.2em;
-                border-radius: 30px;
-                margin: 2rem;
-                border: 4px solid var(--base-light-green);
-                background-color: transparent;
-                outline: none;
-                &:hover,&:focus,&:active{
-                    cursor: pointer;
-                    color: var(--base-light-green);
-                }
+                @include button(clamp(15rem,20vw,20vw), clamp(6rem, 125px, 125px));
+            
             }
             .login-button{
                 font-weight: 900;
-            }
-        }
-        @keyframes button-clicker{
-            0% {
-                opacity: 0.95;
-            }
-            25% {
-                opacity: 0.85;
-            }
-            50% {
-                opacity: 0.75;
-            }
-            75% {
-                opacity: 0.85;
-            }
-            100% {
-                opacity: 1;
             }
         }
     }
