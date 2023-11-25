@@ -17,12 +17,15 @@
                     <formInput label="email" inputType="text" :registerShown=showRegisterForm :errorMessageInput=errorMessage v-model="emailValue"/>  
                 </div>
                 </Transition>
+                <div v-if="loginValidationError" id="login-error-validation-message">
+                    {{ getLang('loginValidationError') }}
+                </div>
                 <div class="spacer"></div>
                 <div id="login-form-bottom-container" ref="loginFormBottomContainer">
                     <div  id="bottom-inputs-options" :class="{register: showRegisterForm}">
-                        <button type="button" v-if="!showRegisterForm" class="login-form-lower-btn" id="forgot-password-btn">Zapomniałeś hasła?</button>
-                        <button type="button" v-show="!showRegisterForm" @click="showRegisterFormOn($event)" ref="showRegisterFormBtn" class="login-form-lower-btn" id="change-to-register-btn">Zarejestruj się  </button>
-                        <button type="button" v-show="showRegisterForm" @click.prevent="showRegisterFormOff()" ref="hideRegisterFormBtn" class="login-form-lower-btn" id="change-to-login-btn">Posiadasz już konto? Zaloguj się</button>
+                        <button type="button" :class="loginValidationError ? 'validation-error' : ''" v-if="!showRegisterForm" class="login-form-lower-btn" id="forgot-password-btn">{{ getLang('forgetPasswordText') }}</button>
+                        <button type="button" v-show="!showRegisterForm" @click="showRegisterFormOn($event)" ref="showRegisterFormBtn" class="login-form-lower-btn" id="change-to-register-btn">{{ getLang('registerText') }}</button>
+                        <button type="button" v-show="showRegisterForm" @click.prevent="showRegisterFormOff()" ref="hideRegisterFormBtn" class="login-form-lower-btn" id="change-to-login-btn">{{ getLang('accAlreadyExistsText') }}</button>
                     </div>
                     <button type="submit" :disabled="(!registerAvailible && showRegisterForm) || !loginAvailible" :class="[(registerAvailible && showRegisterForm) || (loginAvailible && !showRegisterForm) ? 'enabled' : 'disabled']" id="login-submit">
                             {{showRegisterForm ? 'Zarejestruj się' : 'Zaloguj się'}}
@@ -120,6 +123,9 @@
                 }
                 #forgot-password-btn{
                     color: white;
+                    &.validation-error{
+                        animation: pulsing 2.5s ease-in-out infinite;
+                    }
                 }
                 button{
                     font-size: 1rem;
@@ -213,6 +219,14 @@
                     transform: scale(1.03);
                 }
             }
+            #login-error-validation-message{
+                margin: -2rem auto auto auto;
+                color: yellow;
+                font-size: 1.2rem;
+                word-wrap: break-word;
+                width: 100%;
+                text-align: center;
+            }
         }
         #login-form-bottom-container{
             position: absolute;
@@ -235,6 +249,17 @@
             100%{
                 transform: translateX(0);
             }    
+        }
+        @keyframes pulsing{
+            0%{
+                transform: scale(1);
+            }
+            50%{
+                transform: scale(1.05);
+            }
+            100%{
+                transform: scale(1);
+            }
         }
         .spacer{
             margin-bottom: 240px;
@@ -348,6 +373,7 @@ export default{
             const hideRegisterFormBtn = this.$refs.hideRegisterFormBtn ? this.$refs.hideRegisterFormBtn : false
             if(hideRegisterFormBtn) hideRegisterFormBtn.disabled=true
             loginForm.classList.add('register-animation');
+            this.loginValidationError=false;
             setTimeout(()=>{
                 this.showRegisterForm=true;
                 if(hideRegisterFormBtn) hideRegisterFormBtn.disabled=false

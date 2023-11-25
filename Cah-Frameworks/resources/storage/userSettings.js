@@ -18,7 +18,11 @@ export const userSettings = defineStore('userSettings', {
                 repeatPasswordInputPlaceholder: "Potwórz hasło",
                 emailInputPlaceholder: "E-mail (opcjonalnie)",
                 registerSuccesfull: "Rejestracja przebiegła pomyślnie!",
-                registerFailed: "Coś poszło nie tak, prosimy spróbować później."
+                registerFailed: "Coś poszło nie tak, prosimy spróbować później.",
+                loginValidationError: "Niepoprawne dane logowania.",
+                forgetPasswordText: "Nie pamiętasz hasła?",
+                registerText: 'Zarejestruj się',
+                accAlreadyExistsText: 'Posiadasz już konto? Zaloguj się'
             },
             ENG: {
                 myAccount: 'My account',
