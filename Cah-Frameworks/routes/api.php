@@ -22,8 +22,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::group(['middleware'=>'api-session'], function(){
-    Route::post('/register',[RegisterController::class, 'register']);
-    Route::post('/login', [LoginController::class, 'login']);
-    Route::post('/authCheck', [AuthCheckController::class, 'authCheck']);
-});
+
+Route::post('/register',[RegisterController::class, 'register']);
+Route::post('/login', [LoginController::class, 'login']);
+Route::post('/authCheck', [AuthCheckController::class, 'authCheck']);

@@ -7,9 +7,7 @@
         <login-form v-if="showLoginForm" @login-form-off="loginFormOff"></login-form>
     </Transition>
     <div v-if="showLoginForm" id="login-layer"></div>
-
-
-    <div id="container-home"  :style="showLoginForm ? 'opacity: 0.3' : ' '">
+    <main v-if="loaded" id="container-home"  :style="showLoginForm ? 'opacity: 0.3' : ' '">
         <h1>
             Cards Against Hummanity
         </h1>
@@ -38,7 +36,8 @@
         <buttons-after-login  :unlock-potential="unlockPotential"/>
         <h2>
         </h2>
-    </div>
+    </main>
+    <Loader v-else />
 </template>
 <style lang = "scss">
     @import '../css/homeBtn.scss';
@@ -97,12 +96,13 @@
 </style>
 
 <script>
-import topNavbar from "../components/topNavbar.vue"
+import topNavbar from "../components/topNavbar.vue";
 import buttonsAfterLogin from "../components/buttonsAfterLogin.vue";
-import loginForm from "../components/loginForm.vue"
-//import {config} from '../js/store'
-import {userSettings} from '../storage/userSettings.js'
-import { mapState } from 'pinia'
+import loginForm from "../components/loginForm.vue";
+import Loader from '../components/Loader.vue';
+import {userSettings} from '../storage/userSettings.js';
+import { mapState } from 'pinia';
+import { mapWritableState } from "pinia";
 export default {
 
   data() {
@@ -117,6 +117,7 @@ export default {
         topNavbar,
         buttonsAfterLogin,
         loginForm,
+        Loader
     },
     methods:{
         unlockPotentialOn(){
@@ -139,6 +140,20 @@ export default {
     },
     computed:{
         ...mapState(userSettings, ['getLang','Auth']),
+        ...mapWritableState(userSettings, ['Auth','Nickname'])
+    },
+    mounted(){
+        axios
+        .post('/api/authCheck')
+        .then((res)=>{
+            const validation = res.data.auth;
+            if(validation){
+                this.Auth = validation;
+                this.Nickname = res.data.nickname;
+            } 
+            
+        })
+        .finally(()=>{this.loaded=true})
     }
   }
 </script>

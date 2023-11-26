@@ -249,7 +249,7 @@
         #login-form-bottom-container{
             // position: absolute;
             // bottom: 50px;
-            margin: 80px auto 17px auto;
+            margin: 40px auto 17px auto;
             width: 100%;    
            // transition: all var(--animation-time) ease-out;
             &.register{

@@ -15,7 +15,8 @@ class LoginController extends Controller
 
         $name = $credentials['name'];
         if(Auth::attempt($credentials)){
-            $request->session()->regenerate();
+            $user = Auth::user();
+            $token = $user->createToken('auth-token')->plainTextToken;
 
             return response()->json(['validation' => true, 'nickname'=> $name]);
         }

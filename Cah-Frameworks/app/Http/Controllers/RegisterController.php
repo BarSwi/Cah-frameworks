@@ -28,8 +28,8 @@ class RegisterController extends Controller
         ]);
 
         auth()->login($user);
+        $token = $user->createToken('auth-token')->plainTextToken;
         
-        $request->session()->regenerate();
 
         return response()->json(['status' => true, 'name' => $input['name']]);
     }
