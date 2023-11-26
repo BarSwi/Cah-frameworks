@@ -20,7 +20,6 @@
                 <div v-if="loginValidationError" id="login-error-validation-message">
                     {{ getLang('loginValidationError') }}
                 </div>
-                <div class="spacer"></div>
                 <div id="login-form-bottom-container" ref="loginFormBottomContainer">
                     <div  id="bottom-inputs-options" :class="{register: showRegisterForm}">
                         <button type="button" :class="loginValidationError ? 'validation-error' : ''" v-if="!showRegisterForm" class="login-form-lower-btn" id="forgot-password-btn">{{ getLang('forgetPasswordText') }}</button>
@@ -30,7 +29,8 @@
                     <button type="submit" :disabled="(!registerAvailible && showRegisterForm) || !loginAvailible" :class="[(registerAvailible && showRegisterForm) || (loginAvailible && !showRegisterForm) ? 'enabled' : 'disabled']" id="login-submit">
                             {{showRegisterForm ? 'Zarejestruj się' : 'Zaloguj się'}}
                     </button>
-                    <button @click.prevent="$emit('loginFormOff')" id="disclaimer">Naciśnij ESC aby opuścić</button>
+                    <button @click.prevent="$emit('loginFormOff')" class="exit-form" id="disclaimer">Naciśnij ESC aby opuścić formularz</button>
+                    <button @click.prevent="$emit('loginFormOff')" class = "exit-form" id="disclaimer-phone">Naciśnij aby opuścić formularz</button>
                 </div>
         </form>
     </div>  
@@ -41,7 +41,7 @@
     #login-form-container{
         
         --min-height: 520px;
-        --min-height-2: calc(520px + 12rem + 2em);
+        --min-height-2: calc(720px);
         width:100%;
         z-index: 1000;
         inset: 50% 0 0 50%;
@@ -54,16 +54,20 @@
             outline: none;
         }
         #login-form{
+            overflow: auto;
+            overflow-x: hidden;
             position: relative;
-            overflow: hidden;
             transition: all var(--animation-time) ease-out;
             transform-origin:center ;
             background-color: #222;
-            min-height: var(--min-height);
-            width: 400px;   
+            height: var(--min-height);
+            max-height: 100vh;
+            width: clamp(300px, 400px, calc(100vw - 20px));   
+            margin: 0 10px 0 10px;
             border-radius: 5px;
             &.register-animation{
-                min-height: var(--min-height-2);
+                height: var(--min-height-2);
+                max-height: 100vh;
             }
             input{
                 outline: none;
@@ -110,10 +114,10 @@
             }
             #bottom-inputs-options{
                 display: flex;
-                margin: auto;
+                margin:  auto;
                 width: 75%;
                 flex-wrap:wrap;
-                justify-content: space-between;
+                justify-content: center;
                 align-items: center;
                 &.register{
                     justify-content: center !important;
@@ -123,8 +127,11 @@
                 }
                 #forgot-password-btn{
                     color: white;
+                    &:hover,&:focus,&:active{
+                        transform: scale(1.05);
+                    }
                     &.validation-error{
-                        animation: pulsing 2.5s ease-in-out infinite;
+                        animation: pulsing 5s ease-in-out infinite ;
                     }
                 }
                 button{
@@ -153,10 +160,10 @@
                 margin: 2rem auto;
                 position: relative;
                 &.enabled{
-                    transform: translateY(-2px);
+                    transform: translateY(0px);
                     &:after{
                     content: '';
-                    //opacity: 1;
+                    opacity: 0;
                     height: 100%;
                     position: absolute;
                     z-index: -1;
@@ -170,15 +177,15 @@
                     cursor: pointer;
                 }
                 &:hover,&:focus,&:active{
-                    transform: translateY(0);
+                    transform: translateY(-2px);
                     &:after{
-                        opacity: 0;
+                        opacity: 1;
                     }
                 }
                 }
 
             }
-            #disclaimer{
+            .exit-form{
                 display: block;
                 text-align: center;
                 color:#aaa;
@@ -191,6 +198,17 @@
                 width: 100%;
                 &:hover{
                     cursor: pointer;
+                }
+                &#disclaimer-phone{
+                    display: none;
+                    @media (max-width: 780px){
+                        display: block;
+                    }
+                }
+                &#disclaimer{
+                    @media (max-width: 780px){
+                        display: none;
+                    }
                 }
             }
             .float-left-enter-active{
@@ -229,11 +247,27 @@
             }
         }
         #login-form-bottom-container{
-            position: absolute;
-            bottom: 50px;
+            // position: absolute;
+            // bottom: 50px;
+            margin: 80px auto 17px auto;
             width: 100%;    
+           // transition: all var(--animation-time) ease-out;
+            &.register{
+                transition: all var(--animation-time) ease-out;
+                transform: translateY(calc(var(--min-height-2) - var(--min-height)));
+            }
+            &.login{
+                animation: login-bottom-cont-animation var(--animation-time) ease-out;
+            }
         }
-
+        @keyframes login-bottom-cont-animation{
+            0%{
+                transform: translateY(calc(var(--min-height-2) - var(--min-height)));
+            }
+            100%{
+                transform: translateY(0);
+            }
+        }
         @keyframes float-right{
             0%{
                 transform: translateX(100%)
@@ -254,17 +288,16 @@
             0%{
                 transform: scale(1);
             }
-            50%{
+            20%{
                 transform: scale(1.05);
+            }
+            40%{
+                transform: scale(1);
             }
             100%{
                 transform: scale(1);
             }
         }
-        .spacer{
-            margin-bottom: 240px;
-        }
-
     }
 </style>
 
@@ -371,12 +404,15 @@ export default{
             const animationTime = this.$refs.loginForm.getAttribute('animation-time')
             const loginForm = this.$refs.loginForm
             const hideRegisterFormBtn = this.$refs.hideRegisterFormBtn ? this.$refs.hideRegisterFormBtn : false
+            const loginFormBottomContainer = this.$refs.loginFormBottomContainer ? this.$refs.loginFormBottomContainer : false
             if(hideRegisterFormBtn) hideRegisterFormBtn.disabled=true
             loginForm.classList.add('register-animation');
+            if(loginFormBottomContainer) loginFormBottomContainer.classList.add('register');
             this.loginValidationError=false;
             setTimeout(()=>{
                 this.showRegisterForm=true;
                 if(hideRegisterFormBtn) hideRegisterFormBtn.disabled=false
+                if(loginFormBottomContainer) loginFormBottomContainer.classList.remove('register');
             },animationTime)
         },
         showRegisterFormOff(){
@@ -384,11 +420,14 @@ export default{
             this.showRegisterForm=false;
             const showRegisterFormBtn = this.$refs.showRegisterFormBtn ? this.$refs.showRegisterFormBtn : false
             const loginForm = this.$refs.loginForm
+            const loginFormBottomContainer = this.$refs.loginFormBottomContainer ? this.$refs.loginFormBottomContainer : false
             if(showRegisterFormBtn) showRegisterFormBtn.disabled=true
             setTimeout(()=>{
                 loginForm.classList.remove('register-animation');  
+                if(loginFormBottomContainer) loginFormBottomContainer.classList.add('login');
                 if(showRegisterFormBtn) {
                     setTimeout(()=>{
+                        if(loginFormBottomContainer) loginFormBottomContainer.classList.remove('login');
                         showRegisterFormBtn.disabled=false
                     },animationTime)
                 }

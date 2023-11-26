@@ -27,6 +27,7 @@
 </template>
 <style lang = "scss">
     #register-outcome-container{
+        overflow: hidden;
         width: 100%;
         height: 100%;
         .icon-register-outcome svg{
@@ -76,7 +77,7 @@
         #disclaimer{
                 display: block;
                 text-align: center;
-                margin: 3rem auto;  
+                margin: 3rem auto 0 auto;  
                 color:#aaa;
                 letter-spacing: .1em;
                 text-align: center;
