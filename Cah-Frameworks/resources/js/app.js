@@ -1,7 +1,7 @@
 import './bootstrap';
 import {createApp} from 'vue/dist/vue.esm-bundler.js'
 import {createPinia} from 'pinia'
-import {userSettings} from '../storage/userSettings.js'
+//import {userSettings} from '../storage/userSettings.js'
 import App from '../views/App.vue'
 import router from './router.js'
 

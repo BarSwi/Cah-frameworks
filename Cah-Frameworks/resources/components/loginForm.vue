@@ -29,8 +29,8 @@
                     <button type="submit" :disabled="(!registerAvailible && showRegisterForm) || !loginAvailible" :class="[(registerAvailible && showRegisterForm) || (loginAvailible && !showRegisterForm) ? 'enabled' : 'disabled']" id="login-submit">
                             {{showRegisterForm ? 'Zarejestruj się' : 'Zaloguj się'}}
                     </button>
-                    <button @click.prevent="$emit('loginFormOff')" class="exit-form" id="disclaimer">Naciśnij ESC aby opuścić formularz</button>
-                    <button @click.prevent="$emit('loginFormOff')" class = "exit-form" id="disclaimer-phone">Naciśnij aby opuścić formularz</button>
+                    <button @click.prevent="$emit('loginFormOff')" class="exit-form" id="disclaimer">{{ getLang('exitFormDisclaimerDesktop') }}</button>
+                    <button @click.prevent="$emit('loginFormOff')" class = "exit-form" id="disclaimer-phone">{{ getLang('exitFormDisclaimerMobile') }}</button>
                 </div>
         </form>
     </div>  
@@ -303,7 +303,7 @@
 
 <script>
 import axios from 'axios';
-import Loader   from './Loader.vue';
+import Loader from './Loader.vue';
 import formOutcome from './formOutcome.vue';
 import { userSettings } from '../storage/userSettings';
 import {mapState} from 'pinia';

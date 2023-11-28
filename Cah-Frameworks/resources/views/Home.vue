@@ -1,12 +1,9 @@
 
 <template>
-    <nav>
+    <Loader v-if="!loaded" />
+    <nav v-if="loaded">
         <top-navbar :showLoginForm="showLoginForm"></top-navbar>
     </nav>
-    <Transition name="bounce">
-        <login-form v-if="showLoginForm" @login-form-off="loginFormOff"></login-form>
-    </Transition>
-    <div v-if="showLoginForm" id="login-layer"></div>
     <main v-if="loaded" id="container-home"  :style="showLoginForm ? 'opacity: 0.3' : ' '">
         <h1>
             Cards Against Hummanity
@@ -37,7 +34,10 @@
         <h2>
         </h2>
     </main>
-    <Loader v-else />
+    <Transition name="bounce">
+        <login-form v-if="showLoginForm" @login-form-off="loginFormOff"></login-form>
+    </Transition>
+    <div v-if="showLoginForm" id="login-layer"></div>
 </template>
 <style lang = "scss">
     @import '../css/homeBtn.scss';
@@ -100,6 +100,7 @@ import topNavbar from "../components/topNavbar.vue";
 import buttonsAfterLogin from "../components/buttonsAfterLogin.vue";
 import loginForm from "../components/loginForm.vue";
 import Loader from '../components/Loader.vue';
+import { checkAuth } from "../js/methods";
 import {userSettings} from '../storage/userSettings.js';
 import { mapState } from 'pinia';
 import { mapWritableState } from "pinia";
@@ -136,24 +137,20 @@ export default {
             const hook = document.querySelector('body');
             hook.style.setProperty('overflow','auto');
             this.showLoginForm=false;
-        }
+        },
     },
     computed:{
         ...mapState(userSettings, ['getLang','Auth']),
-        ...mapWritableState(userSettings, ['Auth','Nickname'])
+       // ...mapWritableState(userSettings, ['Auth','Nickname'])
     },
     mounted(){
-        axios
-        .post('/api/authCheck')
-        .then((res)=>{
-            const validation = res.data.auth;
-            if(validation){
-                this.Auth = validation;
-                this.Nickname = res.data.nickname;
-            } 
-            
-        })
-        .finally(()=>{this.loaded=true})
+        if(!this.Auth){
+            //checkAuth is function from methods.js
+            checkAuth().then(()=>{
+                this.loaded=true
+            })
+        }
+
     }
   }
 </script>

@@ -2,9 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\RegisterController;
-use App\Http\Controllers\LoginController;
-use App\Http\Controllers\AuthCheckController;
+use App\Http\Controllers\userAuthController;
 
 
 /*
@@ -18,11 +16,14 @@ use App\Http\Controllers\AuthCheckController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/auth-check', [userAuthController::class, 'authCheck']);
+    Route::post('/logout', [userAuthController::class, 'logout']);
 });
 
-
-Route::post('/register',[RegisterController::class, 'register']);
-Route::post('/login', [LoginController::class, 'login']);
-Route::post('/authCheck', [AuthCheckController::class, 'authCheck']);
+Route::post('/register',[userAuthController::class, 'register']);
+Route::post('/login', [userAuthController::class, 'login']);

@@ -1,11 +1,12 @@
 <template>
     <div class = "login-form-input-container">
-        <input :autocomplete="autoComplete"  @input="$emit('update:modelValue', $event.target.value)" :value="modelValue" :type="inputType" placeholder = ' ' :id = "`${label}-input`" class="register-form-input">
+        <input  :autocomplete="autoComplete" :name="label"  @input="$emit('update:modelValue', $event.target.value)" :value="modelValue" :type="inputType" placeholder = ' ' :id = "`${label}-input`" class="register-form-input">
         <label :for="`${label}-input`" class = 'label' >{{getLang(`${camelCase(label)}InputPlaceholder`)}}</label>
     </div>  
     <div v-if="error[camelCase(label)] && registerShown" class="error-message" id="username-error">
         {{ error[camelCase(label)] }}
     </div>
+
 </template>
 
 <style lang="scss">
@@ -72,12 +73,15 @@ const props = defineProps({
     },
     
 });
+//Autocomplete for inputs based on input label
 const autoComplete = computed(()=>{
     switch(props.label){
         case 'username':
-            return 'username'
+            return 'nickname'
         case 'password':
             return props.registerShown ? 'new-password' : 'current-password'
+        case 'repeat-password':
+            return 'new-password'
     }
 })
 const error = ref(props.errorMessageInput)

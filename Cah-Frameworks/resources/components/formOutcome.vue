@@ -22,7 +22,7 @@
                 {{ messageFailedType }}
             </div>
         </div>
-        <button @click="closeForm()" id="disclaimer">Naciśnij ESC aby opuścić</button>
+        <button @click="closeForm()" id="disclaimer">{{ getLang('exitFormDisclaimerDesktop') }}</button>
     </div>
 </template>
 <style lang = "scss">
@@ -141,18 +141,18 @@
     const messageSuccessType =  computed(()=>{
         switch(props.outcomeType){
             case "login":
-                return "test"
+                return getLang("loginSuccesfullFormOutcome")
 
             case "register":
-                return getLang("registerSuccesfull")
+                return getLang("registerSuccesfullFormOutcome")
         }
     })
     const messageFailedType =  computed(()=>{
         switch(props.outcomeType){
             case "login":
-                return "test"
+                return getLang("loginFailedFormOutcome")
             case "register":
-                return getLang("registerFailed")
+                return getLang("registerFailedFormOutcome")
         }
     })
     const closeForm = ()=>{

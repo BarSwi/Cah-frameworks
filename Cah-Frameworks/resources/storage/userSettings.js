@@ -17,17 +17,36 @@ export const userSettings = defineStore('userSettings', {
                 passwordInputPlaceholder: "Hasło",
                 repeatPasswordInputPlaceholder: "Potwórz hasło",
                 emailInputPlaceholder: "E-mail (opcjonalnie)",
-                registerSuccesfull: "Rejestracja przebiegła pomyślnie!",
-                registerFailed: "Coś poszło nie tak, prosimy spróbować później.",
+                registerSuccesfullFormOutcome: "Rejestracja przebiegła pomyślnie!",
+                registerFailedFormOutcome: "Coś poszło nie tak, prosimy spróbować później.",
                 loginValidationError: "Niepoprawne dane logowania.",
                 forgetPasswordText: "Nie pamiętasz hasła?",
                 registerText: 'Zarejestruj się',
-                accAlreadyExistsText: 'Posiadasz już konto? Zaloguj się'
+                accAlreadyExistsText: 'Posiadasz już konto? Zaloguj się',
+                loginFailedFormOutcome: "Coś poszło nie tak, prosimy spróbować później",
+                loginSuccesfullFormOutcome: "Witamy ponownie!",
+                exitFormDisclaimerDesktop: "Naciśnij ESC aby opuścić formularz",
+                exitFormDisclaimerMobile: "Naciśnij aby opuścić formularz",
             },
             ENG: {
                 myAccount: 'My account',
                 login: "Sign in",
-                createGameButton: "Create Game"
+                createGameButton: "Create Game",
+                searchGameButton: "Search for Lobby",
+                createDeckButton: "Create Deck",
+                editDeckButton: "Edit Deck",
+                usernameInputPlaceholder: "Username",
+                passwordInputPlaceholder: "Password",
+                repeatPasswordInputPlaceholder: "Repeat Password",
+                emailInputPlaceholder: "Email (optional)",
+                registerSuccesfullFormOutcome: "Registration successful!",
+                registerFailedFormOutcome: "Something went wrong, please try again later.",
+                loginValidationError: "Invalid login credentials.",
+                forgetPasswordText: "Forgot your password?",
+                registerText: 'Register',
+                accAlreadyExistsText: 'Already have an account? Log in',
+                loginFailedFormOutcome: "Something went wrong, please try again later.",
+                loginSuccesfullFormOutcome: "Welcome back!",
         
             }
         }
@@ -35,6 +54,14 @@ export const userSettings = defineStore('userSettings', {
     getters: {
         getLang: (state) => {
             return (val) => state.lang[state.currentLang][val]
+        }
+    },
+    actions: {
+        setAuth(authStatus){
+            this.Auth = authStatus;
+        },
+        setNickname(nickname){
+            this.Nickname = nickname;
         }
     }
 })
