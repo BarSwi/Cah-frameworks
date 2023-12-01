@@ -1,7 +1,7 @@
 <template>
     <div class="selection-section" :class = "Auth ? '' : 'blocked'">
         <div class="selection-section-container">
-            <button @click="test()" class="selection-home-button" id="create-game-btn">{{ getLang('createGameButton') }}</button>
+            <button class="selection-home-button" id="create-game-btn">{{ getLang('createGameButton') }}</button>
             <button class="selection-home-button">{{ getLang('searchGameButton') }}</button>
             <button class="selection-home-button">{{ getLang('createDeckButton') }}</button>
             <button class="selection-home-button">{{ getLang('editDeckButton') }}</button>
@@ -89,9 +89,7 @@ export default{
         loginRequirment,
     },
     methods:{
-        test(){
-            axios.post('api/logout');
-        }
+
     },
     computed:{
         ...mapState(userSettings, ['getLang','Auth']),

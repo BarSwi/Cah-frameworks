@@ -28,12 +28,12 @@ class userAuthController extends Controller
             'email' => $input['email'],
             'password' => Hash::make($input['password'])
         ]);
+ 
+        $token = $user->createToken('auth-token');
+        $token->expires_at = now()->addMinutes(120);
+        $responseData = ['status' => true, 'name' => $input['name']];
 
-        auth()->login($user);   
-        $token = $user->createToken('auth-token')->plainTextToken;
-        
-
-        return response()->json(['status' => true, 'name' => $input['name'],'token'=>$token]);
+        return response($responseData)->withCookie('auth-token', $token->plainTextToken);
     }
 
     public function login(Request $request){
@@ -41,24 +41,31 @@ class userAuthController extends Controller
             'name' => ['required'],
             'password' => ['required']
         ]);
+        $user = User::where('name', request('name'));
 
-        $name = $credentials['name'];
-        if(Auth::attempt($credentials)){
-            $user = Auth::user();
-            $token = $user->createToken('auth-token')->plainTextToken;
-           // $request->session()->regenerate();
+        if(!$user->exists()) return response()->json(['validation'=>false]);
 
-            return response()->json(['validation' => true, 'nickname'=> $name,'token'=>$token]);
+        $user = $user->first();
+        
+
+        if(Hash::check(request('password'), $user->getAuthPassword())){
+            $token = $user->createToken(time());
+            $token->expires_at = now()->addMinutes(120);
+            $responseData = ['validation' => true];
+            return response($responseData)->withCookie('auth-token', $token->plainTextToken); 
         }
-        return response()->json(['validation'=>false]);
     }
 
     public function authCheck(Request $request){
-        if (Auth::check()) {
-            return response()->json(['auth' => true, 'nickname' => Auth::user()->name]);
-        }
+        return response()->json(['auth' => true, 'nickname' => Auth::user()->name]);
+        
+        // if (Auth::check()) {
+        //     return response()->json(['auth' => true, 'nickname' => Auth::user()->name]);
+        // }
+       
+        // return response()->json(['auth' => false]);
 
-        return response()->json(['auth' => false]);
+        // Commented code is not required, since this path is guarded by auth:sanctum, uncomment if anything changes.
     }
 
     public function logout(){
@@ -67,9 +74,9 @@ class userAuthController extends Controller
         try {
             $deletedTokens = $user->tokens()->delete();
             //Session::flush();
-            return response()->json(['status' => true, 'deleted_tokens' => $deletedTokens]);
-        } catch (\Exception $e) {
-            return response()->json(['status' => false, 'error' => $e->getMessage()], 500);
+            return response()->json(['status' => true]);
+        } catch (Exception $e) {
+            return response()->json(['status' => false, 'error' => $e->getMessage()]);
         }
     }
 }
