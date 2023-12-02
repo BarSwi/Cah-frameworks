@@ -36,7 +36,7 @@
 </style>
 
 <script setup>
-import { userSettings } from '../storage/userSettings';
+import { userSettings } from '@/storage/userSettings.js';
 import { storeToRefs } from 'pinia';
 import {ref, watch, computed} from 'vue'
 const store = userSettings();

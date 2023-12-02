@@ -47,6 +47,8 @@ export const userSettings = defineStore('userSettings', {
                 accAlreadyExistsText: 'Already have an account? Log in',
                 loginFailedFormOutcome: "Something went wrong, please try again later.",
                 loginSuccesfullFormOutcome: "Welcome back!",
+                exitFormDisclaimerDesktop: "Press ESC to exit the form.",
+                exitFormDisclaimerMobile: "Tap to exit the form.",
         
             }
         }

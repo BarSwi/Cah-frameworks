@@ -1,7 +1,7 @@
 <template>
     <div class="selection-section" :class = "Auth ? '' : 'blocked'">
         <div class="selection-section-container">
-            <button class="selection-home-button" id="create-game-btn">{{ getLang('createGameButton') }}</button>
+            <button @click="logout()" class="selection-home-button" id="create-game-btn">{{ getLang('createGameButton') }}</button>
             <button class="selection-home-button">{{ getLang('searchGameButton') }}</button>
             <button class="selection-home-button">{{ getLang('createDeckButton') }}</button>
             <button class="selection-home-button">{{ getLang('editDeckButton') }}</button>
@@ -80,16 +80,18 @@
     }
 </style>
 <script>
-import loginRequirment from '../components/loginRequirment.vue'
+import loginRequirment from '../components/loginRequirment.vue';
 import axios from 'axios';
-import { userSettings } from '../storage/userSettings';
+import { userSettings } from '@/storage/userSettings';
 import {mapState} from 'pinia'
 export default{
     components:{
         loginRequirment,
     },
     methods:{
-
+        logout(){
+            axios.post('/api/logout');
+        }
     },
     computed:{
         ...mapState(userSettings, ['getLang','Auth']),

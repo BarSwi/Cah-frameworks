@@ -21,6 +21,9 @@
                     {{ getLang('loginValidationError') }}
                 </div>
                 <div id="login-form-bottom-container" ref="loginFormBottomContainer">
+                    <div v-if="!showRegisterForm" id="checkbox-input-container">
+                        <checkbox @inputChanged="remember=!remember" :checked="remember">Zapamiętaj dane logowania</checkbox>
+                    </div>
                     <div  id="bottom-inputs-options" :class="{register: showRegisterForm}">
                         <button type="button" :class="loginValidationError ? 'validation-error' : ''" v-if="!showRegisterForm" class="login-form-lower-btn" id="forgot-password-btn">{{ getLang('forgetPasswordText') }}</button>
                         <button type="button" v-show="!showRegisterForm" @click="showRegisterFormOn($event)" ref="showRegisterFormBtn" class="login-form-lower-btn" id="change-to-register-btn">{{ getLang('registerText') }}</button>
@@ -89,27 +92,30 @@
                 }
                     caret-color: #aaa;
             }
-            .login-form-input-container{
-                position: relative;
-                .label{
-                    font-size: 1.2rem;
-                    height: max-content;
-                    position: absolute;
-                    transition: all .2s ease-out;
-                    user-select: none;
-                    display: block;
-                    width: max-content;
-                    color: #aaa;
-                    inset: 30% 0 0 15%;
-                    pointer-events: none;
-                }
+            #checkbox-input-container{
+                margin: 20px auto;
             }
+            // .login-form-input-container{
+            //     position: relative;
+            //     .label{
+            //         font-size: 1.2rem;
+            //         height: max-content;
+            //         position: absolute;
+            //         transition: all .2s ease-out;
+            //         user-select: none;
+            //         display: block;
+            //         width: max-content;
+            //         color: #aaa;
+            //         inset: 30% 0 0 15%;
+            //         pointer-events: none;
+            //     }
+            // }
             #login-form-title{
                 width: 100%;
                 font-weight: 900;
                 text-align: center;
                 color: var(--base-light-green);
-                margin-top: 2rem;
+                margin-top: 1.8rem;
                 font-size: 2rem;
             }
             #bottom-inputs-options{
@@ -157,7 +163,7 @@
                 transition: all .15s ease-out;
                 font-size: 1.5rem;
                 width: 75%;
-                margin: 2rem auto;
+                margin: 1.5rem auto;
                 position: relative;
                 &.enabled{
                     transform: translateY(0px);
@@ -249,7 +255,7 @@
         #login-form-bottom-container{
             // position: absolute;
             // bottom: 50px;
-            margin: 40px auto 17px auto;
+            margin: 20px auto 17px auto;
             width: 100%;    
            // transition: all var(--animation-time) ease-out;
             &.register{
@@ -304,11 +310,12 @@
 <script>
 import axios from 'axios';
 import Loader from './Loader.vue';
-import formOutcome from './formOutcome.vue';
-import { userSettings } from '../storage/userSettings';
+import formOutcome from './FormsComponents/formOutcome.vue';
+import { userSettings } from '@/storage/userSettings';
 import {mapState} from 'pinia';
 import { mapWritableState } from 'pinia';
-import formInput from './formInput.vue';
+import formInput from './FormsComponents/formInput.vue';
+import checkbox from './FormsComponents/checkbox.vue';
 export default{
     data(){
         return{
@@ -316,6 +323,7 @@ export default{
             passwordValue: '',
             repeatPasswordValue: '',
             emailValue: '',
+            remember: false,
             errorMessage: {username: "", password: "", repeatPassword: "", email: ""},
             showRegisterForm: false,
             loading: false,
@@ -329,7 +337,8 @@ export default{
     {
         Loader,
         formOutcome,
-        formInput
+        formInput,
+        checkbox,
     },
     computed:{
         ...mapState(userSettings, ['getLang']),
@@ -350,7 +359,7 @@ export default{
             this.formOutcomeType = 'login'
             this.loading=true;
             axios
-            .post("/api/login", {name: this.usernameValue, password: this.passwordValue})
+            .post("/api/login", {name: this.usernameValue, password: this.passwordValue, remember: this.remember})
             .then(res =>{
                 if(!res.data.validation) this.loginValidationError = true
                 else{

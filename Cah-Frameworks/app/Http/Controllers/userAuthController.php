@@ -29,8 +29,15 @@ class userAuthController extends Controller
             'password' => Hash::make($input['password'])
         ]);
  
-        $token = $user->createToken('auth-token');
-        $token->expires_at = now()->addMinutes(120);
+        //Set token duration
+
+            $token = $user->createToken('auth-token', ['none']);
+            $accessTokenModel = $token->accessToken;
+            $accessTokenModel->expires_at = now()->addMinutes(120);
+            $accessTokenModel->save();
+
+
+
         $responseData = ['status' => true, 'name' => $input['name']];
 
         return response($responseData)->withCookie('auth-token', $token->plainTextToken);
@@ -49,8 +56,19 @@ class userAuthController extends Controller
         
 
         if(Hash::check(request('password'), $user->getAuthPassword())){
-            $token = $user->createToken(time());
-            $token->expires_at = now()->addMinutes(120);
+            $token = $user->createToken('auth-token', ['none']);
+
+            //set expiration time
+            if(request('remember')===true){
+                $token = $user->createToken('auth-token', ['remember']);
+            }
+            else{
+                $accessTokenModel = $token->accessToken;
+                $accessTokenModel->expires_at = now()->addMinutes(120);
+                $accessTokenModel->save();
+            }
+
+            
             $responseData = ['validation' => true];
             return response($responseData)->withCookie('auth-token', $token->plainTextToken); 
         }
@@ -72,9 +90,9 @@ class userAuthController extends Controller
         $user = Auth::user();
 
         try {
+            $cookie = Cookie::forget('auth-token');
             $deletedTokens = $user->tokens()->delete();
-            //Session::flush();
-            return response()->json(['status' => true]);
+            return response()->json(['status' => true])->withCookie($cookie);
         } catch (Exception $e) {
             return response()->json(['status' => false, 'error' => $e->getMessage()]);
         }

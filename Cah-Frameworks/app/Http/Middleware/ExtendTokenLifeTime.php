@@ -26,6 +26,7 @@ class ExtendTokenLifeTime
             $user = Auth::guard('sanctum')->user();
             $token = $user->currentAccessToken();
             // Extend tokens expiration times
+            if($token->can('remember')) return $response;
             $token->forceFill([
                 'expires_at' => now()->addMinutes(120),
             ])->save();

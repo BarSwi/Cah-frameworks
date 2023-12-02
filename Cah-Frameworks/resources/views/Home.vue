@@ -101,7 +101,7 @@ import buttonsAfterLogin from "../components/buttonsAfterLogin.vue";
 import loginForm from "../components/loginForm.vue";
 import Loader from '../components/Loader.vue';
 import { checkAuth } from "../js/methods";
-import {userSettings} from '../storage/userSettings.js';
+import {userSettings} from '@/storage/userSettings.js';
 import { mapState } from 'pinia';
 import { mapWritableState } from "pinia";
 export default {

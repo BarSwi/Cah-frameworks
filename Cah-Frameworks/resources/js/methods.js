@@ -1,11 +1,11 @@
 import axios from "axios";
-import { userSettings } from "../storage/userSettings";
+import { userSettings } from "@/storage/userSettings";
 
 // Global functions used in the whole app
 //Get specific cookie value by name
 function getCookie(cName) {
         const name = cName + "=";
-        const cDecoded = decodeURIComponent(document.cookie); //to be careful
+        const cDecoded = decodeURIComponent(document.cookie); //safety reasons
         const cArr = cDecoded.split('; ');
         let res;
         cArr.forEach(val => {

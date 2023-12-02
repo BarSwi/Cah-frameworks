@@ -15,7 +15,7 @@
             <div class="icon-register-outcome">
                 <svg width="100%" height="300px"  ref="svg" class = "error" viewBox="0 0 21 20" xmlns="http://www.w3.org/2000/svg">
                     <circle ref="circle" cx="10.5" cy="10" r="5" />
-                    <path ref="line" d="M13,8 L8,12 M8,8 L13,12" /> 
+                    <path ref="line" d="M13,8 L8,13 M8,8 L13,13" /> 
                 </svg>
             </div>
             <div class="text-register-outcome error">
@@ -120,7 +120,7 @@
 </style>
 <script setup>
     import {ref, onMounted,computed} from 'vue'
-    import { userSettings } from '../storage/userSettings';
+    import { userSettings } from '@/storage/userSettings.js';
     const circle = ref(null)
     const line = ref(null)
 
