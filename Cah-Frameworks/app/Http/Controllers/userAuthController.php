@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Models\Guests;
 use Hash;
 use Cookie;
 // use Illuminate\Support\Facades\Session;
@@ -12,6 +13,29 @@ use Cookie;
 
 class userAuthController extends Controller
 {
+    public function __construct()
+    {
+        // Throttle to prevent creating too many users in case of attack
+        $this->applyMiddleware('throttle:1,1', 'createGuest');
+    }
+
+    //Delete tokens if any exists
+    private function deleteTokensIfExist(){
+        $user = auth('sanctum')->user();
+
+        if ($user) {
+            $user->tokens()->delete();
+        }
+        
+    }
+    // Apply specific middleware to specific class
+    private function applyMiddleware($middlewareType, $class)
+    {
+        $this->middleware($middlewareType)->only($class);
+
+    }
+
+
     public function register(Request $request){
 
         $email_regex = 'regex:/^([A-Za-z0-9.\-]*\w)+@+([A-Za-z0-9\-]*\w)+(\.[A-Za-z]*\w)+$/';
@@ -30,7 +54,8 @@ class userAuthController extends Controller
         ]);
  
         //Set token duration
-
+            $this->deleteTokensIfExist();
+            
             $token = $user->createToken('auth-token', ['none']);
             $accessTokenModel = $token->accessToken;
             $accessTokenModel->expires_at = now()->addMinutes(120);
@@ -74,7 +99,26 @@ class userAuthController extends Controller
         }
     }
 
+    public function createGuest(){
+
+        $guest = Guests::create([
+            'name' => 'test',
+        ]);
+
+        $this->deleteTokensIfExist();
+
+        $token = $guest->createToken('auth-token', ['guest']);
+        $accessTokenModel = $token->accessToken;
+        $accessTokenModel->expires_at = now()->addMinutes(120);
+        $accessTokenModel->save();
+
+        $responseData = ['validation' => true];
+        return response($responseData)->withCookie('auth-token', $token->plainTextToken);
+    }
+
     public function authCheck(Request $request){
+        $user = Auth::guard('sanctum')->user();
+        return $user;
         return response()->json(['auth' => true, 'nickname' => Auth::user()->name]);
         
         // if (Auth::check()) {
@@ -85,6 +129,7 @@ class userAuthController extends Controller
 
         // Commented code is not required, since this path is guarded by auth:sanctum, uncomment if anything changes.
     }
+
 
     public function logout(){
         $user = Auth::user();

@@ -93,6 +93,7 @@
                     caret-color: #aaa;
             }
             #checkbox-input-container{
+                width: 100%;
                 margin: 20px auto;
             }
             // .login-form-input-container{

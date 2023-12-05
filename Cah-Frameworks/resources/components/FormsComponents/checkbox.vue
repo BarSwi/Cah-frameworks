@@ -35,10 +35,9 @@
             &:checked + .checkbox-toggle{
                
                 .checkbox-toggle-handler{
-                    background-color: #5c5b5b;
+                    background-color: #a5a1a1;
                     &:after{
-                        transform: translate(20px);
-
+                        transform: translate(15px);
                         //background-color: var(--base-light-green-2);
                     }
                     &:before{
@@ -52,7 +51,7 @@
             transition: all .2s cubic-bezier(0,.35,0,1);
             display: inline-block;
             position: relative;
-            width: 40px;
+            width: 35px;
             height: 20px;
             background-color: #111010;
             border-radius: 30px;

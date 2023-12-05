@@ -25,7 +25,8 @@
             @mouseover="unlockPotentialOn()" 
             @mouseleave="unlockPotentialOff()" 
             @focus="unlockPotentialOn()"
-            @blur="unlockPotentialOff()" class = "guest-button">
+            @blur="unlockPotentialOff()"
+            @click="registerGuest()" class = "guest-button">
                 Graj jako gość
             </button>
         </div>
@@ -138,6 +139,11 @@ export default {
             hook.style.setProperty('overflow','auto');
             this.showLoginForm=false;
         },
+        registerGuest(){
+            axios.post('/api/guest')
+            .then()
+            .catch(e => console.log(e.message));
+        }
     },
     computed:{
         ...mapState(userSettings, ['getLang','Auth']),

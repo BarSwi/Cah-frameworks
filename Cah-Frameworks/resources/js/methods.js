@@ -31,7 +31,8 @@ export function checkAuth(){
         
     })
     .catch((e)=>{
-        console.log(e.message)
+        if(e.response.status==401) console.log("You are not logged in");
+        else  console.log(e.message)
     })
     
 }
