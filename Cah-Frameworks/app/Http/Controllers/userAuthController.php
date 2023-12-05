@@ -81,13 +81,16 @@ class userAuthController extends Controller
         
 
         if(Hash::check(request('password'), $user->getAuthPassword())){
-            $token = $user->createToken('auth-token', ['none']);
+            
+            //Delete any guest tokens
+            $this->deleteTokensIfExist()
 
             //set expiration time
             if(request('remember')===true){
                 $token = $user->createToken('auth-token', ['remember']);
             }
             else{
+                $token = $user->createToken('auth-token', ['none']);
                 $accessTokenModel = $token->accessToken;
                 $accessTokenModel->expires_at = now()->addMinutes(120);
                 $accessTokenModel->save();
@@ -117,8 +120,6 @@ class userAuthController extends Controller
     }
 
     public function authCheck(Request $request){
-        $user = Auth::guard('sanctum')->user();
-        return $user;
         return response()->json(['auth' => true, 'nickname' => Auth::user()->name]);
         
         // if (Auth::check()) {
