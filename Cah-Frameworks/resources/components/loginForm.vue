@@ -62,7 +62,7 @@
             position: relative;
             transition: all var(--animation-time) ease-out;
             transform-origin:center ;
-            background-color: #222;
+            background-color: var(--login-form-bcg-color);
             height: var(--min-height);
             max-height: 100vh;
             width: clamp(300px, 400px, calc(100vw - 20px));   
@@ -78,8 +78,8 @@
                 border-radius: 5px;
                 margin: 3rem auto;
                 padding: 1em .7em;
-                background-color: #333;
-                color: #aaa;
+                background-color: var(--login-form-input-bcg-color);
+                color: var(--login-form-txt-color);
                 border: none;
                 font-size: 1.1em;
                 width: 75%;
@@ -90,7 +90,7 @@
                         top: -50% !important;
                     }
                 }
-                    caret-color: #aaa;
+                color: var(--login-form-txt-color);
             }
             #checkbox-input-container{
                 width: 100%;
@@ -115,7 +115,7 @@
                 width: 100%;
                 font-weight: 900;
                 text-align: center;
-                color: var(--base-light-green);
+                color: var(--login-form-title-color);
                 margin-top: 1.8rem;
                 font-size: 2rem;
             }
@@ -130,7 +130,7 @@
                     justify-content: center !important;
                 }
                 #change-to-register-btn, #change-to-login-btn{
-                    color: var(--base-light-green);
+                    color: var(--login-form-change-btn-color);
                 }
                 #forgot-password-btn{
                     color: white;
@@ -156,7 +156,7 @@
                     opacity: .5;
                 }
                 display: block;
-                background-color: var(--base-light-green);
+                background-color: var(--login-submit-btn);
                 border: none;
                 border-radius: 3px;
                 outline: none;
@@ -178,7 +178,7 @@
                     inset: 0;
                     transition: opacity .3s ease;
                     filter: blur(2px);
-                    border: 1px solid var(--base-light-green);
+                    border: 1px solid var(--login-submit-border);
                 }
                 &:hover{
                     cursor: pointer;
@@ -195,7 +195,7 @@
             .exit-form{
                 display: block;
                 text-align: center;
-                color:#aaa;
+                color:var(--login-form-txt-color);
                 letter-spacing: .1em;
                 text-align: center;
                 background: none;

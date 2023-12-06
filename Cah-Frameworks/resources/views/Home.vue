@@ -151,7 +151,7 @@ export default {
     },
     mounted(){
         if(!this.Auth){
-            //checkAuth is function from methods.js
+            //checkAuth is function from methods.js that checks if suer is authenticated
             checkAuth().then(()=>{
                 this.loaded=true
             })

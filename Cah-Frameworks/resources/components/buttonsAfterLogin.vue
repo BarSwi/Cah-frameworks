@@ -55,7 +55,7 @@
                 transition: color .3s cubic-bezier(.64,.08,.34,1.41);
                 &:hover,&:focus,&:active{
                     cursor: pointer;
-                    color: var(--base-light-green-2);
+                    color: var(--home-page-btn-border);
                     &:after{
                         height: 100%;
                         inset: 0 0 100% 0;
@@ -63,12 +63,12 @@
                 }
                 &:after{
                     transition: all .2s ease-in-out;
-                    background-color: var(--base-dark-green-2);
+                    background-color: var(--home-page-btn-border);
                     content: '';
                     position: absolute;
                     width: 100%;
                     height: 0;  
-                    border: 3px solid var(--base-dark-green-2);
+                    border: 3px solid var(--home-page-btn-border);
                     inset: 100% 0 0 0;
                     transform-origin: center ;
                     background: transparent;

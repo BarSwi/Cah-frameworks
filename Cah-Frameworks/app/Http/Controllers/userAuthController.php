@@ -83,7 +83,7 @@ class userAuthController extends Controller
         if(Hash::check(request('password'), $user->getAuthPassword())){
             
             //Delete any guest tokens
-            $this->deleteTokensIfExist()
+            $this->deleteTokensIfExist();
 
             //set expiration time
             if(request('remember')===true){

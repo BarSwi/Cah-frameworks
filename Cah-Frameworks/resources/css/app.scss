@@ -21,7 +21,9 @@
     color: white;
     --base-dark-green: #09553d;
     --base-dark-black-green: #053325;
-    --base-light-green: #4EF73B;
+    --base-purple-v1: #B15EFF;
+    // --base-light-green: #B15EFF;
+    --base-purple-v2: #9D6292;
     --base-dark-green-2: #08A045;
     --base-light-green-2: #6BBF59;
     --base-light-brown: #DDB771;
@@ -29,8 +31,23 @@
     --light-opacity: 0;
     --navbar-background-color: #0C0E0D;
     --navbar-background-color: black;
-    --navbar-shadow-color: var(--base-light-green);
+    --navbar-shadow-color: var(--base-purple-v1);
     --theme-toggler-background-color: #060e2c;
+    --login-requirment-lock-color:  var(--base-light-brown);
+    --login-form-bcg-color: #222;
+    --login-form-input-bcg-color: #333;
+    --login-form-txt-color: #aaa;
+    --login-form-title-color: var(--base-purple-v1);
+    --login-form-change-btn-color: var(--base-purple-v1);
+    --login-submit-btn: var(--base-purple-v1);
+    --login-submit-border: var(--base-purple-v2);
+    --home-page-btn-txt: var(--base-purple-v1);
+    --home-page-btn-border: var(--base-purple-v1);
+    --form-checkbox-true-bcg: #a5a1a1;
+    --form-checkbox-false-bcg: #111010;
+    --form-checkbox-inside-bcg: rgb(207, 204, 204);
+
+
     
     // --important-button-background-color: #08A045;
     // --less-important-button-background-color: #6BBF59;

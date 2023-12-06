@@ -35,7 +35,7 @@
             &:checked + .checkbox-toggle{
                
                 .checkbox-toggle-handler{
-                    background-color: #a5a1a1;
+                    background-color: var(--form-checkbox-true-bcg);
                     &:after{
                         transform: translate(15px);
                         //background-color: var(--base-light-green-2);
@@ -53,12 +53,12 @@
             position: relative;
             width: 35px;
             height: 20px;
-            background-color: #111010;
+            background-color: var(--form-checkbox-false-bcg);
             border-radius: 30px;
             &:after{
                 content: '';
                 position: absolute;
-                background: rgb(207, 204, 204);
+                background: var(--form-checkbox-inside-bcg);
                 border-radius: 50%;
                 height: 20px;
                 width: 20px;

@@ -22,13 +22,13 @@
             position: relative;
             height: 2.3rem;
             border-radius: 5px;
-            border: 4.5px solid var(--base-light-brown);
+            border: 4.5px solid var(--login-requirment-lock-color);
             transition: all .1s ease-in-out;
             &:after{
                 content: "";
                 transform-origin: center;
                 display: block;
-                background: var(--base-light-brown);
+                background: var(--login-requirment-lock-color);
                 width:  .25em;
                 height: .6em;
                 position: absolute;
@@ -46,7 +46,7 @@
                 bottom: 100%;
                 position: absolute;
                 left: 18%;
-                border: 4.5px solid var(--base-light-brown);
+                border: 4.5px solid var(--login-requirment-lock-color);
                 border-top-right-radius: 50%;
                 border-top-left-radius: 50%;
                 border-bottom: 0;
