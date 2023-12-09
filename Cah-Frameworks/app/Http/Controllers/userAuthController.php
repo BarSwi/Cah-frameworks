@@ -104,6 +104,11 @@ class userAuthController extends Controller
 
     public function createGuest(){
 
+        $latestRecord = Guests::latest()->first();
+        if($latestRecord->exists()){
+            $name = 'guest'.$latestRecord->value('id');
+        }
+        else $name = 'guest1';
         $guest = Guests::create([
             'name' => 'test',
         ]);
@@ -115,7 +120,8 @@ class userAuthController extends Controller
         $accessTokenModel->expires_at = now()->addMinutes(120);
         $accessTokenModel->save();
 
-        $responseData = ['validation' => true];
+        
+        $responseData = ['validation' => true, 'nickname' => $name];
         return response($responseData)->withCookie('auth-token', $token->plainTextToken);
     }
 

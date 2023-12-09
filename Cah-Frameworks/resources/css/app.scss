@@ -26,10 +26,10 @@
     --base-purple-v2: #9D6292;
     --base-dark-green-2: #08A045;
     --base-light-green-2: #6BBF59;
-    --base-light-brown: #DDB771;
+    --base-light-brown: #cfc0a0;
     --background-login-form-color: black;
     --light-opacity: 0;
-    --navbar-background-color: #0C0E0D;
+        // --navbar-background-color: #0C0E0D;
     --navbar-background-color: black;
     --navbar-shadow-color: var(--base-purple-v1);
     --theme-toggler-background-color: #060e2c;
@@ -41,6 +41,7 @@
     --login-form-change-btn-color: var(--base-purple-v1);
     --login-submit-btn: var(--base-purple-v1);
     --login-submit-border: var(--base-purple-v2);
+    --login-form-error-message: yellow;
     --home-page-btn-txt: var(--base-purple-v1);
     --home-page-btn-border: var(--base-purple-v1);
     --form-checkbox-true-bcg: #a5a1a1;

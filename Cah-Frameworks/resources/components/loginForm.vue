@@ -232,16 +232,16 @@
             }
             .error-message{
                 margin: -2rem auto auto auto;
-                color: yellow;
+                color: var(--login-form-error-message);
                 font-size: 1.2rem;
                 word-wrap: break-word;
                 width: 75%;
                 text-align: center;
             }
             .login-form-lower-btn{
-                transition: all .2s ease;
+                transition: all .2s ease-in-out;
                 &:hover, &:focus{
-                    transform: scale(1.03);
+                    transform: scale(1.05);
                 }
             }
             #login-error-validation-message{

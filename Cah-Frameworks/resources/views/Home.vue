@@ -141,13 +141,17 @@ export default {
         },
         registerGuest(){
             axios.post('/api/guest')
-            .then()
+            .then((res) => {
+                this.Auth=true;
+                this.Guest=true;
+                this.Nickname= res.data.nickname;
+            })
             .catch(e => console.log(e.message));
         }
     },
     computed:{
         ...mapState(userSettings, ['getLang','Auth']),
-       // ...mapWritableState(userSettings, ['Auth','Nickname'])
+        ...mapWritableState(userSettings, ['Auth','Nickname','Guest'])
     },
     mounted(){
         if(!this.Auth){
