@@ -6,6 +6,7 @@
     font-size: 1.5rem;
     letter-spacing: 0.2em;
     margin: 2rem;
+    padding: 1.5rem;
     height: $height;
     width: $width;
     border-radius: 30px;
@@ -15,25 +16,45 @@
     &:hover,&:focus,&:active{
         cursor: pointer;
         color: var(--home-page-btn-txt);
-        &:after{
+        &:after, &:before{
+            border-radius: 10px;    
             height: 100%;
-            inset: 0 0 100% 0;
+            width: 100%;
             animation: button-clicker 1s infinite;
         }
     }
-    &:after{
-        transition: all .2s ease-in-out;
-        background-color: var(--home-page-btn-border);
+    // &:after{
+    //     transition: all .2s ease-in-out;
+    //     background-color: var(--home-page-btn-border);
+    //     content: '';
+    //     position: absolute;
+    //     width: 100%;
+    //     background-color: red;
+    //     height: 0;  
+    //     border: 3px solid var(--home-page-btn-border);
+    //     inset: 100% 0 0 0;
+    //     transform-origin: center ;
+    //     background: transparent;
+    //     border-radius: 20px;
+    // }
+    &:after, &:before{
+        transition: all .3s ease;
         content: '';
         position: absolute;
-        width: 100%;
-        background-color: red;
-        height: 0;  
-        border: 3px solid var(--home-page-btn-border);
-        inset: 100% 0 0 0;
-        transform-origin: center ;
-        background: transparent;
-        border-radius: 20px;
+        width: 25%;
+        height: 50%;
+    }
+    &:after{
+        left: 0;
+        bottom: 0;
+        border-bottom: 3px solid var(--base-purple-v1);
+        border-left: 3px solid var(--base-purple-v1);
+    }
+    &:before{
+        right: 0;
+        top: 0;
+        border-top: 3px solid var(--base-purple-v1);
+        border-right: 3px solid var(--base-purple-v1);
     }
     @keyframes button-clicker{
         0% {

@@ -22,16 +22,19 @@
     --base-dark-green: #09553d;
     --base-dark-black-green: #053325;
     --base-purple-v1: #B15EFF;
+    --base-purple-v1-opacity30: rgba(177, 94, 255, .1);
     // --base-light-green: #B15EFF;
     --base-purple-v2: #9D6292;
+    --base-purple-v2-opacity30: rgba(157, 98, 146, .3);
     --base-dark-green-2: #08A045;
     --base-light-green-2: #6BBF59;
     --base-light-brown: #cfc0a0;
     --background-login-form-color: black;
-    --light-opacity: 0;
         // --navbar-background-color: #0C0E0D;
-    --navbar-background-color: black;
+    --navbar-background-color: #131017;
     --navbar-shadow-color: var(--base-purple-v1);
+    --navbar-profile-bcg: rgb(60,40,60);
+    --navbar-profile-border: var(--base-purple-v1);
     --theme-toggler-background-color: #060e2c;
     --login-requirment-lock-color:  var(--base-light-brown);
     --login-form-bcg-color: #222;
@@ -66,22 +69,22 @@ body {
     padding: 0;
     border: 0;
     margin: 0;
-    background-color: black;
+    background-color: #131017;
     position: relative;
     min-height: 100vh;
     height: 100%;
     
 
-    &:before {
-        content: "";
-        inset: 0;
-        position: absolute;
-        z-index: -1;
+    // &:before {
+    //     content: "";
+    //     inset: 0;
+    //     position: absolute;
+    //     z-index: -1;
 
-        transition: opacity var(--transition-theme-method);
-        background-image: var(--light-background-image);
-        opacity: var(--light-opacity);
-    }
+    //     transition: opacity var(--transition-theme-method);
+    //     background-image: var(--light-background-image);
+    //     opacity: var(--light-opacity);
+    // }
 }
 
 a{

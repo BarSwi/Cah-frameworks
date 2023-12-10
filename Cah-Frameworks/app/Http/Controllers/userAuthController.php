@@ -97,20 +97,21 @@ class userAuthController extends Controller
             }
 
             
-            $responseData = ['validation' => true];
+            $responseData = ['validation' => true, 'name' => $credentials['name']];
             return response($responseData)->withCookie('auth-token', $token->plainTextToken); 
         }
     }
 
     public function createGuest(){
 
-        $latestRecord = Guests::latest()->first();
+        $latestRecord = Guests::latest();
+        //return $latestRecord;
         if($latestRecord->exists()){
-            $name = 'guest'.$latestRecord->value('id');
+            $name = 'Guest'.$latestRecord->value('id')+1;
         }
-        else $name = 'guest1';
+        else $name = 'Guest1';
         $guest = Guests::create([
-            'name' => 'test',
+            'name' => $name,
         ]);
 
         $this->deleteTokensIfExist();

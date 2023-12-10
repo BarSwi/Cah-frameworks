@@ -1,7 +1,7 @@
 <template>
     <div class="selection-section" :class = "Auth ? '' : 'blocked'">
         <div class="selection-section-container">
-            <button @click="logout()" class="selection-home-button" id="create-game-btn">{{ getLang('createGameButton') }}</button>
+            <button class="selection-home-button" id="create-game-btn">{{ getLang('createGameButton') }}</button>
             <button class="selection-home-button">{{ getLang('searchGameButton') }}</button>
             <button class="selection-home-button">{{ getLang('createDeckButton') }}</button>
             <button class="selection-home-button">{{ getLang('editDeckButton') }}</button>
@@ -72,7 +72,7 @@
                     inset: 100% 0 0 0;
                     transform-origin: center ;
                     background: transparent;
-                    border-radius: 30px;
+                    border-radius: 15px;
                 }
             }
         }
@@ -87,11 +87,6 @@ import {mapState} from 'pinia'
 export default{
     components:{
         loginRequirment,
-    },
-    methods:{
-        logout(){
-            axios.post('/api/logout');
-        }
     },
     computed:{
         ...mapState(userSettings, ['getLang','Auth']),

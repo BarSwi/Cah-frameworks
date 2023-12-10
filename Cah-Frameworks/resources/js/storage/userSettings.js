@@ -60,8 +60,9 @@ export const userSettings = defineStore('userSettings', {
         }
     },
     actions: {
-        setAuth(authStatus){
+        setAuth(authStatus, guestStatus = false){
             this.Auth = authStatus;
+            this.Guest = guestStatus;
         },
         setNickname(nickname){
             this.Nickname = nickname;

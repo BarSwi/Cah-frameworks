@@ -1,9 +1,8 @@
 
 <template>
     <Loader v-if="!loaded" />
-    <nav v-if="loaded">
-        <top-navbar :showLoginForm="showLoginForm"></top-navbar>
-    </nav>
+    <top-navbar v-if="loaded" :showLoginForm="showLoginForm"></top-navbar>
+
     <main v-if="loaded" id="container-home"  :style="showLoginForm ? 'opacity: 0.3' : ' '">
         <h1>
             Cards Against Hummanity
@@ -38,17 +37,20 @@
     <Transition name="bounce">
         <login-form v-if="showLoginForm" @login-form-off="loginFormOff"></login-form>
     </Transition>
-    <div v-if="showLoginForm" id="login-layer"></div>
+    <!-- <div v-if="showLoginForm" id="login-layer"></div> -->
 </template>
 <style lang = "scss">
     @import '../css/homeBtn.scss';
-    #login-layer{
-        background-color: black;
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        opacity: .6 ;
+    nav{
+        height: 80px;
     }
+    // #login-layer{
+    //     background-color: var(--login-layer-bcg);
+    //     position: absolute;
+    //     width: 100%;
+    //     height: 100%;
+    //     opacity: .6 ;
+    // }
     #container-home{
         min-width: 75%;
         margin: 0 12.5%;
@@ -144,7 +146,7 @@ export default {
             .then((res) => {
                 this.Auth=true;
                 this.Guest=true;
-                this.Nickname= res.data.nickname;
+                this.Nickname= res.data.nickname;   
             })
             .catch(e => console.log(e.message));
         }

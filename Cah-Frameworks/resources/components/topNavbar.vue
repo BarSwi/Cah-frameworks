@@ -1,8 +1,9 @@
 <template>
-    <div id = "top-navbar" :style="showLoginForm ? 'opacity: 0.3' : ' '">
+    <nav id = "top-navbar" :style="showLoginForm ? 'opacity: 0.3' : ' '">
         <theme-toggler></theme-toggler>
-        <div id="div"></div>
-    </div>
+        <profile></profile>
+    </nav>
+
 </template>
 
 <style lang = "scss">
@@ -16,7 +17,7 @@
         display: flex;
         top: 0;
         background-color: var(--navbar-background-color);
-        height: 100px;
+        height: 80px;
         @include bottom-shadow-creator(0,6,5,-5, var(--navbar-shadow-color), moz webkit);
         transition: all var(--transition-theme-method);
     }
@@ -25,10 +26,17 @@
 
 <script>
 import themeToggler from "../components/themeToggle.vue";
+import profile from '../components/NavbarComponents/profile.vue';
+import { userSettings } from "../js/storage/userSettings";
+import { mapState } from "pinia";
 
 export default{
     components:{
         themeToggler,
+        profile,
+    },
+    computed: {
+        ...mapState(userSettings, ['Auth', 'Guest','Nickname'])
     },
     props: ['showLoginForm']
 }
