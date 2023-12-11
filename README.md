@@ -1,4 +1,4 @@
-# verview
+# Overview
 I undertook the task of revamping my initial online multiplayer game by migrating it to modern frameworks. The primary objective was to discern the disparities between employing vanilla JavaScript with PHP and utilizing robust frameworks.
 
 ## Technologies and Skills Acquired
